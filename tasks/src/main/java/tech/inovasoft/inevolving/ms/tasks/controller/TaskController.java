@@ -2,12 +2,14 @@ package tech.inovasoft.inevolving.ms.tasks.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
 import java.util.UUID;
@@ -18,6 +20,9 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/ms/tasks")
 public class TaskController {
 
+    @Autowired
+    private TaskService service;
+
     @Operation(
             summary = "Adicionar uma nova tarefa",
             description = "Retorna a tarefa cadastrada."
@@ -25,8 +30,7 @@ public class TaskController {
     @Async("asyncExecutor")
     @PostMapping
     public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO dto) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(dto)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(dto)));
     }
 
     @Operation(
@@ -36,8 +40,7 @@ public class TaskController {
     @Async("asyncExecutor")
     @PostMapping("/repeat/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity> repeatTask(@PathVariable UUID idUser, @PathVariable UUID idTask) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask)));
     }
 
     @Operation(
@@ -51,8 +54,7 @@ public class TaskController {
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO dto
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, dto)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, dto)));
     }
 
     @Operation(
@@ -66,8 +68,11 @@ public class TaskController {
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO dto
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTasksAndTheirFutureRepetitions(idUser, idTask, dto)));
-        return null;
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, dto)
+                )
+        );
     }
 
     @Operation(
@@ -80,8 +85,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.TODO)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.TODO)));
     }
 
     @Operation(
@@ -94,8 +98,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)));
     }
 
     @Operation(
@@ -108,8 +111,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.DONE)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.DONE)));
     }
 
     @Operation(
@@ -122,8 +124,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.LATE)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.LATE)));
     }
 
     @Operation(
@@ -136,8 +137,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.CANCELED)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.CANCELLED)));
     }
 
     @Operation(
@@ -150,8 +150,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTask(idUser, idTask)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTask(idUser, idTask)));
     }
 
     @Operation(
@@ -164,8 +163,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask)));
     }
 
     @Operation(
@@ -178,8 +176,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable String idObjective
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective)));
     }
 
 
@@ -194,8 +191,7 @@ public class TaskController {
             @PathVariable Date startDate,
             @PathVariable Date endDate
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDateRange(idUser, startDate, endDate)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDateRange(idUser, startDate, endDate)));
     }
 
     @Operation(
@@ -208,8 +204,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date date
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
     }
 
     @Operation(
@@ -221,8 +216,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksLate(
             @PathVariable UUID idUser
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
-        return null;
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
     }
 
 }
