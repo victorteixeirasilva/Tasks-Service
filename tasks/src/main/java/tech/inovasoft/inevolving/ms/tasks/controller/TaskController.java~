@@ -212,15 +212,15 @@ public class TaskController {
     }
 
     @Operation(
-            summary = "Ver todas as tarefas atrasadas",
-            description = "Retorna uma lista de todas as tarefas atrasadas do usuário."
+            summary = "Ver todas as tarefas de uma data",
+            description = "Retorna uma lista de todas as tarefas do usuário para a data informada."
     )
     @Async("asyncExecutor")
     @GetMapping("/late/{idUser}")
-    public CompletableFuture<ResponseEntity> getTasksLate(
+    public CompletableFuture<ResponseEntity> getTasksInDate(
             @PathVariable UUID idUser
     ) {
-//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
+//      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
         return null;
     }
 
