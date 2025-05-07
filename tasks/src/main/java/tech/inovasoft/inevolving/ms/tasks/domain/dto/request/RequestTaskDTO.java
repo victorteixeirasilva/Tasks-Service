@@ -1,12 +1,13 @@
 package tech.inovasoft.inevolving.ms.tasks.domain.dto.request;
 
 
+import java.sql.Date;
 import java.util.UUID;
 
 public record RequestTaskDTO(
         String nameTask,
         String descriptionTask,
-        DateDTO dateTask,
+        Date dateTask,
         String idObjective,
         UUID idUser
 ) {

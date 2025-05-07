@@ -9,6 +9,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 
+import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -190,8 +191,8 @@ public class TaskController {
     @GetMapping("/{idUser}/{startDate}/{endDate}")
     public CompletableFuture<ResponseEntity> getTasksInDateRange(
             @PathVariable UUID idUser,
-            @PathVariable String startDate,
-            @PathVariable String endDate
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
     ) {
 //      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDateRange(idUser, startDate, endDate)));
         return null;
@@ -205,7 +206,7 @@ public class TaskController {
     @GetMapping("/{idUser}/{date}")
     public CompletableFuture<ResponseEntity> getTasksInDate(
             @PathVariable UUID idUser,
-            @PathVariable String date
+            @PathVariable Date date
     ) {
 //      TODO:return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
         return null;
