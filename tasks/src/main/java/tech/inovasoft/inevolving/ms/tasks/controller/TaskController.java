@@ -29,8 +29,8 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @PostMapping
-    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO dto) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(dto)));
+    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(taskDTO)));
     }
 
     @Operation(
@@ -52,9 +52,9 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @RequestBody RequestUpdateTaskDTO dto
+            @RequestBody RequestUpdateTaskDTO updateTaskDTO
     ) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, dto)));
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, updateTaskDTO)));
     }
 
     @Operation(
@@ -66,11 +66,11 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @RequestBody RequestUpdateTaskDTO dto
+            @RequestBody RequestUpdateTaskDTO updateTaskDTO
     ) {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, dto)
+                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, updateTaskDTO)
                 )
         );
     }
@@ -174,15 +174,14 @@ public class TaskController {
     @DeleteMapping("/lock/{idUser}/{idObjective}")
     public CompletableFuture<ResponseEntity> lockTaskByObjective(
             @PathVariable UUID idUser,
-            @PathVariable String idObjective
+            @PathVariable UUID idObjective
     ) {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective)));
     }
 
-
     @Operation(
             summary = "Ver todas as tarefas",
-            description = "Retorna uma lista de todas as tarefas do usuário."
+            description = "Retorna uma lista de todas as tarefas do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
     @GetMapping("/{idUser}/{startDate}/{endDate}")
@@ -218,5 +217,138 @@ public class TaskController {
     ) {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
     }
+
+    @Operation(
+            summary = "Ver todas as tarefas TODO",
+            description = "Retorna uma lista de todas as tarefas TODO do usuário dentro do intervalo de datas fornecido."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/todo/{idUser}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> getTasksToDoInDateRange(
+            @PathVariable UUID idUser,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
+    ) {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO)));
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas TODO de uma data",
+            description = "Retorna uma lista de todas as tarefas TODO do usuário para a data informada."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/todo/{idUser}/{date}")
+    public CompletableFuture<ResponseEntity> getTasksToDoInDate(
+            @PathVariable UUID idUser,
+            @PathVariable Date date
+    ) {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksStatusInDate(idUser, date, Status.TODO)));
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas IN PROGRESS",
+            description = "Retorna uma lista de todas as tarefas IN PROGRESS do usuário dentro do intervalo de datas fornecido."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/progress/{idUser}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> getTasksInProgressInDateRange(
+            @PathVariable UUID idUser,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.IN_PROGRESS)
+                )
+        );
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas IN PROGRESS de uma data",
+            description = "Retorna uma lista de todas as tarefas IN PROGRESS do usuário para a data informada."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/progress/{idUser}/{date}")
+    public CompletableFuture<ResponseEntity> getTasksInProgressInDate(
+            @PathVariable UUID idUser,
+            @PathVariable Date date
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDate(idUser, date, Status.IN_PROGRESS)
+                )
+        );
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas DONE",
+            description = "Retorna uma lista de todas as tarefas DONE do usuário dentro do intervalo de datas fornecido."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/done/{idUser}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> getTasksDoneInDateRange(
+            @PathVariable UUID idUser,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.DONE)
+                )
+        );
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas DONE de uma data",
+            description = "Retorna uma lista de todas as tarefas DONE do usuário para a data informada."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/done/{idUser}/{date}")
+    public CompletableFuture<ResponseEntity> getTasksDoneInDate(
+            @PathVariable UUID idUser,
+            @PathVariable Date date
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDate(idUser, date, Status.DONE)
+                )
+        );
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas CANCELED",
+            description = "Retorna uma lista de todas as tarefas CANCELED do usuário dentro do intervalo de datas fornecido."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/canceled/{idUser}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> getTasksCanceledInDateRange(
+            @PathVariable UUID idUser,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.CANCELLED)
+                )
+        );
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas CANCELED de uma data",
+            description = "Retorna uma lista de todas as tarefas CANCELED do usuário para a data informada."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/status/canceled/{idUser}/{date}")
+    public CompletableFuture<ResponseEntity> getTasksCanceledInDate(
+            @PathVariable UUID idUser,
+            @PathVariable Date date
+    ) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksStatusInDate(idUser, date, Status.CANCELLED)
+                )
+        );
+    }
+
 
 }

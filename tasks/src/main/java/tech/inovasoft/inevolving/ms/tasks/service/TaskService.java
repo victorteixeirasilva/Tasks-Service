@@ -44,7 +44,7 @@ public class TaskService {
         return null;
     }
 
-    public Object lockTaskByObjective(UUID idUser, String idObjective) {
+    public Object lockTaskByObjective(UUID idUser, UUID idObjective) {
         // TODO: implement
         return null;
     }
@@ -60,6 +60,16 @@ public class TaskService {
     }
 
     public Object getTasksLate(UUID idUser) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksStatusInDate(UUID idUser, Date date, String status) {
         // TODO: implement
         return null;
     }
