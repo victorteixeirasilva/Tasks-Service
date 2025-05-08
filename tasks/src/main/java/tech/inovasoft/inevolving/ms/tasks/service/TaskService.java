@@ -1,17 +1,30 @@
 package tech.inovasoft.inevolving.ms.tasks.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
 
 import java.sql.Date;
 import java.util.UUID;
 
 @Service
 public class TaskService {
-    public Object addTask(RequestTaskDTO dto) {
-        // TODO: implement
-        return null;
+
+    @Autowired
+    private TaskRepository repository;
+
+    public Task addTask(RequestTaskDTO dto) throws DataBaseException {
+        try {
+            var newTask = new Task(dto);
+            return repository.save(newTask);
+        } catch (Exception e) {
+            //TODO: teste
+            throw new DataBaseException("(save)");
+        }
     }
 
     public Object repeatTask(UUID idUser, UUID idTask) {

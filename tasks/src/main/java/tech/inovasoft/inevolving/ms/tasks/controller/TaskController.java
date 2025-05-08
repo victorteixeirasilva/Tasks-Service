@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
@@ -29,7 +30,7 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @PostMapping
-    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) {
+    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) throws DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(taskDTO)));
     }
 
