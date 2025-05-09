@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -146,12 +147,161 @@ public class TaskService {
             task.setIdObjective(dto.idObjective().get());
         }
 
+        if ((task.getIsCopy()) && (task.getIdOriginalTask() != null)) {
+            task.setIsCopy(false);
+            task.setIdOriginalTask(null);
+        }
+
         return addTask(new RequestTaskDTO(task));
     }
 
-    public ResponseUpdateRepeatTaskDTO updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) {
+    public boolean saveUptadeRepeatTask(RequestUpdateRepeatTaskDTO dto, Task oldTask, UUID idTask) throws DataBaseException {
+        //TODO: falta testar
+        oldTask.setIdOriginalTask(idTask);
+        oldTask.setNameTask(dto.nameTask);
+        oldTask.setDescriptionTask(dto.descriptionTask);
+
+        if ((oldTask.getIdObjective() != null) && (dto.idObjective.isEmpty())) {
+            oldTask.setIdObjective(null);
+        } else if (dto.idObjective.isPresent()){
+            oldTask.setIdObjective(dto.idObjective.get());
+        }
+        try {
+            repository.save(oldTask);
+            return true;
+        } catch (Exception e) {
+            //TODO: teste
+            throw new DataBaseException("(save)");
+        }
+    }
+
+    public ResponseUpdateRepeatTaskDTO updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         // TODO: implement
-        return null;
+        int numberRepetitions = 1;
+        int numberDeleteRepetitions = 0;
+        int numberUpdateRepetitions = 1;
+        int numberCreateRepetitions = 0;
+
+        if (startDate.after(endDate)) {
+            // TODO: teste.
+            throw new DateTimeException("Start date must be before end date.");
+        }
+
+        Task task = findById(idUser, idTask);
+        UUID idForSearch = idTask;
+        if (task.getIsCopy()){
+            idForSearch = task.getIdOriginalTask();
+            task.setIsCopy(false);
+            task.setIdOriginalTask(null);
+        }
+        task.setNameTask(dto.nameTask);
+        task.setDescriptionTask(dto.descriptionTask);
+        if (task.getIdObjective() != null) {
+            task.setIdObjective(null);
+            dto.idObjective.ifPresent(task::setIdObjective);
+        }
+        try {
+            repository.save(task);
+        } catch (Exception e) {
+            throw new DataBaseException("(save)");
+        }
+
+        List<Task> oldTasks;
+        try {
+            oldTasks = repository.findAllByIdOriginalTaskAndIsCopy(idForSearch);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdOriginalTaskAndIsCopy)");
+        }
+        numberRepetitions += oldTasks.size();
+
+        Optional<Date> maxOldDate = oldTasks
+                .stream()
+                .map(Task::getDateTask)
+                .max(Date::compareTo);
+
+        if (maxOldDate.isPresent()) {
+            if (maxOldDate.get().before(endDate)) {
+                var resultAddNewTasks = repeatTask(idUser, task.getId(), dto.daysOfTheWeekDTO, maxOldDate.get(), endDate);
+                numberRepetitions += resultAddNewTasks.numberRepetitions();
+                numberCreateRepetitions += resultAddNewTasks.numberRepetitions();
+            }
+        }
+
+        Date currentDate = task.getDateTask();
+        for (Task oldTask : oldTasks) {
+//            while (currentDate.before(endDate)) {
+                if (currentDate.after(task.getDateTask())) {
+                    LocalDate localDate = currentDate.toLocalDate();
+                    DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+                    switch (dayOfWeek) {
+                        case MONDAY:
+                            if (dto.daysOfTheWeekDTO.isMonday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case TUESDAY:
+                            if (dto.daysOfTheWeekDTO.isTuesday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case WEDNESDAY:
+                            if (dto.daysOfTheWeekDTO.isWednesday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case THURSDAY:
+                            if (dto.daysOfTheWeekDTO.isThursday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case FRIDAY:
+                            if (dto.daysOfTheWeekDTO.isFriday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case SATURDAY:
+                            if (dto.daysOfTheWeekDTO.isSaturday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                        case SUNDAY:
+                            if (dto.daysOfTheWeekDTO.isSunday()) {
+                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                    numberUpdateRepetitions++;
+                                }
+                            }
+                            break;
+                    }
+                }
+                currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
+//            }
+        }
+
+        if (maxOldDate.isPresent()) {
+            for (Task oldTask : oldTasks) {
+                if ((oldTask.getDateTask().after(endDate)) && (oldTask.getDateTask().before(task.getDateTask()))) {
+//                  TODO: Refatorar para o método deleteTask(idUser, oldTask.getId());
+                    repository.delete(oldTask);
+                    numberDeleteRepetitions++;
+                }
+            }
+        }
+
+
+
+        return new ResponseUpdateRepeatTaskDTO(numberRepetitions, numberDeleteRepetitions, numberUpdateRepetitions, numberCreateRepetitions);
     }
 
     public Object updateTaskStatus(UUID idUser, UUID idTask, String todo) {

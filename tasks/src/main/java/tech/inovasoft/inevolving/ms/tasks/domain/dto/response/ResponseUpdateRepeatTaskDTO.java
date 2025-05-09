@@ -8,7 +8,11 @@ public record ResponseUpdateRepeatTaskDTO(
         int numberCreateRepetitions
 ) {
     public ResponseUpdateRepeatTaskDTO(
-            int numberRepetitions, int numberDeleteRepetitions, int numberUpdateRepetitions, int numberCreateRepetitions) {
+            int numberRepetitions,
+            int numberDeleteRepetitions,
+            int numberUpdateRepetitions,
+            int numberCreateRepetitions
+    ) {
         this("Successfully update repeated tasks", numberRepetitions, numberDeleteRepetitions, numberUpdateRepetitions, numberCreateRepetitions);
     }
 

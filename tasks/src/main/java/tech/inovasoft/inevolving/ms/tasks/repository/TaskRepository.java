@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t WHERE t.idOriginalTask = :idOriginalTask AND t.isCopy = true")
-    List<Task> findAllByIdObjectiveAndIsCopy(@Param("idOriginalTask") UUID idOriginalTask);
+    List<Task> findAllByIdOriginalTaskAndIsCopy(@Param("idOriginalTask") UUID idOriginalTask);
 
 }

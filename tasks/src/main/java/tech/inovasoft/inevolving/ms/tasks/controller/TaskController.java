@@ -79,7 +79,7 @@ public class TaskController {
             @PathVariable Date startDate,
             @PathVariable Date endDate,
             @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateTasksAndTheirFutureRepetitions(idUser, idTask, startDate, endDate, updateTaskDTO)
