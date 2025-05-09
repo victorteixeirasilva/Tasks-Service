@@ -37,6 +37,15 @@ public class TaskService {
         }
     }
 
+    public ResponseTaskDTO addTask(Task task) throws DataBaseException {
+        try {
+            return new ResponseTaskDTO(repository.save(task));
+        } catch (Exception e) {
+            //TODO: teste
+            throw new DataBaseException("(save)");
+        }
+    }
+
     public Task findById(UUID idUser, UUID idTask) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException {
         Optional<Task> taskOptional;
         try {
@@ -302,10 +311,9 @@ public class TaskService {
     }
 
     public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String todo) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-//        Task task = findById(idUser, idTask);
-//        task.setStatus(todo);
-//        return new ResponseTaskDTO(task);
-        return null;
+        Task task = findById(idUser, idTask);
+        task.setStatus(todo);
+        return addTask(task);
     }
 
     public Object deleteTask(UUID idUser, UUID idTask) {
