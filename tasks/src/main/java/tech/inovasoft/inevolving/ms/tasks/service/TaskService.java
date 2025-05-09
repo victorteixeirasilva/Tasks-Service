@@ -57,16 +57,23 @@ public class TaskService {
         return taskOptional.get();
     }
 
-    public boolean addNewTask(Task task, LocalDate currentDate) throws DataBaseException {
-            //TODO: fazer teste
-            ResponseTaskDTO newTask = addTask(new RequestTaskDTO(
-                    task.getNameTask(),
-                    task.getDescriptionTask(),
-                    currentDate,
-                    Optional.ofNullable(task.getIdObjective()),
-                    task.getIdUser()
+    public boolean addNewTaskCopy(Task task, LocalDate currentDate) throws DataBaseException {
+        try {
+            repository.save(new Task(
+                    new RequestTaskDTO(
+                            task.getNameTask(),
+                            task.getDescriptionTask(),
+                            currentDate,
+                            Optional.ofNullable(task.getIdObjective()),
+                            task.getIdUser()
+                    ),
+                    task.getId()
             ));
             return true;
+        } catch (Exception e) {
+            //TODO: teste
+            throw new DataBaseException("(save)");
+        }
     }
 
     public ResponseRepeatTaskDTO repeatTask(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO, Date startDate, Date endDate) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
@@ -86,37 +93,37 @@ public class TaskService {
                 switch (dayOfWeek) {
                     case MONDAY:
                         if (daysOfTheWeekDTO.isMonday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case TUESDAY:
                         if (daysOfTheWeekDTO.isTuesday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case WEDNESDAY:
                         if (daysOfTheWeekDTO.isWednesday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case THURSDAY:
                         if (daysOfTheWeekDTO.isThursday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case FRIDAY:
                         if (daysOfTheWeekDTO.isFriday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case SATURDAY:
                         if (daysOfTheWeekDTO.isSaturday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                     case SUNDAY:
                         if (daysOfTheWeekDTO.isSunday()) {
-                            if (addNewTask(task, currentDate.toLocalDate())) numberRepetitions++;
+                            if (addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
                         }
                         break;
                 }

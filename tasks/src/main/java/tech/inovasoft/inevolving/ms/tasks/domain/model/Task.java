@@ -44,13 +44,18 @@ public class Task {
         this.idUser = dto.idUser();
     }
 
-    public Task(Task task){
-        this.nameTask = task.getNameTask();
-        this.descriptionTask = task.getDescriptionTask();
-        this.status = task.getStatus();
-        this.dateTask = task.getDateTask();
-        this.idObjective = task.getIdObjective();
-        this.idUser = task.getIdUser();
+    public Task(RequestTaskDTO dto, UUID idOriginalTask) {
+        this.nameTask = dto.nameTask();
+        this.descriptionTask = dto.descriptionTask();
+        this.status = Status.TODO;
+        this.dateTask = Date.valueOf(dto.dateTask());
+        if (dto.idObjective().isPresent()) {
+            //TODO: verificar no serviço de objetivos se esse objetivo existe.
+            this.idObjective = dto.idObjective().get();
+        }
+        this.idUser = dto.idUser();
+        this.idOriginalTask = idOriginalTask;
+        this.isCopy = true;
     }
 
 }
