@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
@@ -38,7 +39,6 @@ public class TaskService {
         Optional<Task> taskOptional;
         try {
             taskOptional = repository.findById(idTask);
-            System.out.println("Task found: " + taskOptional.isPresent());
         } catch (Exception e) {
             //TODO: teste
             throw new DataBaseException("(findById)");
@@ -134,12 +134,12 @@ public class TaskService {
         return new ResponseRepeatTaskDTO(numberRepetitions);
     }
 
-    public Object updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) {
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) {
         // TODO: implement
         return null;
     }
 
-    public Object updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) {
+    public Object updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) {
         // TODO: implement
         return null;
     }

@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
@@ -31,10 +32,6 @@ public class TaskServiceSuccess {
 
     @InjectMocks
     private TaskService service;
-
-    // Given (Dado)
-    // When (Quando)
-    // Then (Então)
 
     @Test
     public void addTaskWithObjective() throws DataBaseException {
@@ -221,6 +218,63 @@ public class TaskServiceSuccess {
         verify(repository, times(1)).findById(idTask);
         verify(repository, times(3)).save(any());
     }
+
+    @Test
+    public void updateTask() {
+        // Given (Dado)
+
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var idObjective = UUID.randomUUID();
+
+        RequestUpdateTaskDTO requestUpdateTaskDTO = new RequestUpdateTaskDTO(
+            "nameTask",
+            "descriptionTask",
+            Optional.of(idObjective)
+        );
+
+        Task oldTask = new Task(
+                UUID.randomUUID(),
+                requestUpdateTaskDTO.nameTask(),
+                requestUpdateTaskDTO.descriptionTask(),
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+
+        Task newTask = oldTask;
+        newTask.setIdObjective(idObjective);
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldTask));
+        when(repository.save(any(Task.class))).thenReturn(newTask);
+        var result = service.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(newTask.getId(), result.id());
+        assertEquals(newTask.getNameTask(), result.nameTask());
+        assertEquals(newTask.getDescriptionTask(), result.descriptionTask());
+        assertEquals(newTask.getStatus(), result.status());
+        assertEquals(newTask.getDateTask(), result.dateTask());
+        assertEquals(newTask.getIdObjective(), result.idObjective());
+        assertEquals(newTask.getIdUser(), result.idUser());
+
+        verify(repository, times(1)).findById(oldTask.getId());
+        verify(repository, times(3)).save(newTask);
+
+    }
+
+    // Given (Dado)
+    // When (Quando)
+    // Then (Então)
 
 
 }

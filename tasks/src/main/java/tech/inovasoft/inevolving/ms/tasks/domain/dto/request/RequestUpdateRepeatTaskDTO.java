@@ -1,11 +1,11 @@
 package tech.inovasoft.inevolving.ms.tasks.domain.dto.request;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public record RequestUpdateTaskDTO(
+public record RequestUpdateRepeatTaskDTO(
         String nameTask,
         String descriptionTask,
-        Optional<UUID> idObjective
+        String idObjective,
+        DaysOfTheWeekDTO daysOfTheWeekDTO
 ) {
 }

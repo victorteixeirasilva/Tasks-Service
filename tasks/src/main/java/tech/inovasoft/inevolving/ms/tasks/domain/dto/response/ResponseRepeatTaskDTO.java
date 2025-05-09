@@ -4,4 +4,9 @@ public record ResponseRepeatTaskDTO(String message, int numberRepetitions) {
     public ResponseRepeatTaskDTO(int numberRepetitions) {
         this("Successfully repeated tasks", numberRepetitions);
     }
+
+    public ResponseRepeatTaskDTO(String message, int numberRepetitions) {
+        this.message = message;
+        this.numberRepetitions = numberRepetitions;
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
@@ -71,15 +72,17 @@ public class TaskController {
             description = "Retorna as tarefas atualizadas."
     )
     @Async("asyncExecutor")
-    @PutMapping("/repeat/{idUser}/{idTask}")
+    @PutMapping("/repeat/{idUser}/{idTask}/{startDate}/{endDate}")
     public CompletableFuture<ResponseEntity> updateTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @RequestBody RequestUpdateTaskDTO updateTaskDTO
+            @PathVariable Date startDate,
+            @PathVariable Date endDate,
+            @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO
     ) {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, updateTaskDTO)
+                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, startDate, endDate, updateTaskDTO)
                 )
         );
     }
