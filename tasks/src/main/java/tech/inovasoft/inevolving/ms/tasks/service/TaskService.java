@@ -8,6 +8,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeat
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -148,7 +149,7 @@ public class TaskService {
         return addTask(new RequestTaskDTO(task));
     }
 
-    public Object updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) {
+    public ResponseUpdateRepeatTaskDTO updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) {
         // TODO: implement
         return null;
     }

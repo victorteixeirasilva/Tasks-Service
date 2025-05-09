@@ -7,8 +7,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
@@ -18,6 +20,8 @@ import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -269,6 +273,163 @@ public class TaskServiceSuccess {
         verify(repository, times(1)).save(any(Task.class));
     }
 
+    @Test
+    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        // Given (Dado)
+        UUID idUser = UUID.randomUUID();
+        UUID idTask = UUID.randomUUID();
+        UUID idObjective = UUID.randomUUID();
+        Date startDate = Date.valueOf("2025-05-12");
+        Date endDate = Date.valueOf("2025-05-18");
+        DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                idObjective,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+
+        RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
+                "nameTask",
+                "descriptionTask",
+                Optional.empty(),
+                daysOfTheWeekDTO
+        );
+
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-14"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-16"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-17"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-19"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-21"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-23"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+        tasks.add(new Task(UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-24"),
+                idObjective,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                false,
+                null));
+
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
+        when(repository.findAllByIdObjectiveAndIsCopy(idTask)).thenReturn(tasks);
+        when(repository.save(any(Task.class))).thenReturn(new Task(
+                UUID.randomUUID(),
+                "nameTask",
+                "descriptionTask",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        ));
+        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idTask, startDate, endDate, requestUpdateRepeatTaskDTO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Successfully update repeated tasks", result.message());
+        assertEquals(8, result.numberRepetitions());
+        assertEquals(4, result.numberUpdateRepetitions());
+        assertEquals(4, result.numberDeleteRepetitions());
+        assertEquals(0, result.numberCreateRepetitions());
+
+        verify(repository, times(1)).findById(idTask);
+        verify(repository, times(4)).save(any());
+    }
     // Given (Dado)
     // When (Quando)
     // Then (Então)
