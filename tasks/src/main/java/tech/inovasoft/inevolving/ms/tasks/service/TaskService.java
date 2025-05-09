@@ -291,7 +291,7 @@ public class TaskService {
 
         if (maxOldDate.isPresent()) {
             for (Task oldTask : oldTasks) {
-                if ((oldTask.getDateTask().after(endDate)) && (oldTask.getDateTask().before(task.getDateTask()))) {
+                if ((oldTask.getDateTask().after(endDate)) || (oldTask.getDateTask().before(task.getDateTask()))) {
 //                  TODO: Refatorar para o método deleteTask(idUser, oldTask.getId());
                     repository.delete(oldTask);
                     numberDeleteRepetitions++;

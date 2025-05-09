@@ -431,7 +431,6 @@ public class TaskServiceSuccess {
         verify(repository, times(4)).save(any());
     }
 
-
     @Test
     public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         // Given (Dado)
@@ -440,7 +439,7 @@ public class TaskServiceSuccess {
         UUID idCopyTask = UUID.randomUUID();
         UUID idObjective = UUID.randomUUID();
         Date startDate = Date.valueOf("2025-05-12");
-        Date endDate = Date.valueOf("2025-05-18");
+        Date endDate = Date.valueOf("2025-05-24");
         DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
         var task = new Task(
                 UUID.randomUUID(),
@@ -589,8 +588,8 @@ public class TaskServiceSuccess {
         assertEquals(4, result.numberDeleteRepetitions());
         assertEquals(0, result.numberCreateRepetitions());
 
-        verify(repository, times(1)).findById(idTask);
         verify(repository, times(4)).save(any());
+        verify(repository, times(4)).delete(any());
     }
     // Given (Dado)
     // When (Quando)
