@@ -175,7 +175,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable Date date
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask, date)));
     }
 

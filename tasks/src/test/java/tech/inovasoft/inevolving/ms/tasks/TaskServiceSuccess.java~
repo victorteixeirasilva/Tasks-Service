@@ -668,7 +668,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void deleteTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void deleteTasksAndTheirFutureRepetitions(){
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();

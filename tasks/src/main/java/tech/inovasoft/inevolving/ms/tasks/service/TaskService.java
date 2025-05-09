@@ -323,9 +323,30 @@ public class TaskService {
         return new ResponseMessageDTO("Successfully delete task");
     }
 
-    public ResponseDeleteTasksDTO deleteTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date date) {
+    public ResponseDeleteTasksDTO deleteTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date date) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         // TODO: implement
-        return null;
+        int numberDeleteRepetitions = 0;
+        Task task = findById(idUser, idTask);
+        UUID idForSearch = idTask;
+
+        if (task.getIsCopy()) {
+            idForSearch = task.getIdOriginalTask();
+        }
+
+        deleteTask(idUser, idTask);
+        numberDeleteRepetitions++;
+
+        List<Task> tasks = repository.findAllByIdOriginalTaskAndIsCopy(idForSearch);
+        if (!tasks.isEmpty()) {
+            for (Task oldTask : tasks) {
+                if (oldTask.getDateTask().after(date)){
+                    deleteTask(idUser, oldTask.getId());
+                    numberDeleteRepetitions++;
+                }
+            }
+        }
+
+        return new ResponseDeleteTasksDTO(numberDeleteRepetitions);
     }
 
     public Object lockTaskByObjective(UUID idUser, UUID idObjective) {
