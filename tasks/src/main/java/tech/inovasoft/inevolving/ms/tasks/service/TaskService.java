@@ -134,9 +134,18 @@ public class TaskService {
         return new ResponseRepeatTaskDTO(numberRepetitions);
     }
 
-    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) {
-        // TODO: implement
-        return null;
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        Task task = findById(idUser, idTask);
+        task.setNameTask(dto.nameTask());
+        task.setDescriptionTask(dto.descriptionTask());
+
+        if ((task.getIdObjective() != null) && dto.idObjective().isEmpty()) {
+            task.setIdObjective(null);
+        } else if (dto.idObjective().isPresent()){
+            task.setIdObjective(dto.idObjective().get());
+        }
+
+        return addTask(new RequestTaskDTO(task));
     }
 
     public Object updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) {

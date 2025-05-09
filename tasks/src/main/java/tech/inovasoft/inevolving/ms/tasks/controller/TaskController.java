@@ -63,7 +63,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, updateTaskDTO)));
     }
 

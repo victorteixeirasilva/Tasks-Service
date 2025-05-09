@@ -220,8 +220,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void updateTask() {
-        // Given (Dado)
+    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
 
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -249,27 +248,25 @@ public class TaskServiceSuccess {
                 null
         );
 
-        Task newTask = oldTask;
-        newTask.setIdObjective(idObjective);
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldTask));
-        when(repository.save(any(Task.class))).thenReturn(newTask);
+        oldTask.setIdObjective(idObjective);
+        when(repository.save(any(Task.class))).thenReturn(oldTask);
         var result = service.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
-        assertEquals(newTask.getId(), result.id());
-        assertEquals(newTask.getNameTask(), result.nameTask());
-        assertEquals(newTask.getDescriptionTask(), result.descriptionTask());
-        assertEquals(newTask.getStatus(), result.status());
-        assertEquals(newTask.getDateTask(), result.dateTask());
-        assertEquals(newTask.getIdObjective(), result.idObjective());
-        assertEquals(newTask.getIdUser(), result.idUser());
+        assertEquals(oldTask.getId(), result.id());
+        assertEquals(oldTask.getNameTask(), result.nameTask());
+        assertEquals(oldTask.getDescriptionTask(), result.descriptionTask());
+        assertEquals(oldTask.getStatus(), result.status());
+        assertEquals(oldTask.getDateTask(), result.dateTask());
+        assertEquals(oldTask.getIdObjective(), result.idObjective());
+        assertEquals(oldTask.getIdUser(), result.idUser());
 
-        verify(repository, times(1)).findById(oldTask.getId());
-        verify(repository, times(3)).save(newTask);
-
+        verify(repository, times(1)).findById(any(UUID.class));
+        verify(repository, times(1)).save(any(Task.class));
     }
 
     // Given (Dado)
