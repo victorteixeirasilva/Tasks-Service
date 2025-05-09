@@ -5,7 +5,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -129,10 +131,39 @@ public class TaskServiceSuccess {
     @Test
     public void repeatTask() {
         // Given (Dado)
-
+        UUID idUser = UUID.randomUUID();
+        UUID idTask = UUID.randomUUID();
+        DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
 
         // When (Quando)
+        when(repository
+                .findById(any(UUID.class)))
+                .thenReturn(Optional.of(
+                        new Task(
+                                idTask,
+                                "nameTask",
+                                "descriptionTask",
+                                Status.TODO, Date.valueOf("2025-05-12"),
+                                null,
+                                idUser,
+                                null,
+                                null,
+                                false,
+                                false,
+                                false,
+                                null
+                        )
+                ));
+        when(repository.save(any(Task.class))).thenReturn(any(Task.class));
+        ResponseRepeatTaskDTO result = service.repeatTask(idUser, idTask, daysOfTheWeekDTO);
+
         // Then (Então)
+        assertNotNull(result);
+        assertEquals("Successfully repeated tasks", result.message());
+        assertEquals(4, result.numberRepetitions());
+
+        verify(repository, times(4)).findById(idTask);
+        verify(repository, times(4)).save(any());
     }
 
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -28,7 +29,7 @@ public class TaskService {
         }
     }
 
-    public Object repeatTask(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO) {
+    public ResponseRepeatTaskDTO repeatTask(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO) {
         // TODO: implement
         return null;
     }
