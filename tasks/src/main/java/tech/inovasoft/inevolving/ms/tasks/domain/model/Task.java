@@ -43,4 +43,14 @@ public class Task {
         }
         this.idUser = dto.idUser();
     }
+
+    public Task(Task task){
+        this.nameTask = task.getNameTask();
+        this.descriptionTask = task.getDescriptionTask();
+        this.status = task.getStatus();
+        this.dateTask = task.getDateTask();
+        this.idObjective = task.getIdObjective();
+        this.idUser = task.getIdUser();
+    }
+
 }

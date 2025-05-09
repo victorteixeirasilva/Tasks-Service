@@ -9,6 +9,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
@@ -129,41 +130,81 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void repeatTask() {
+    public void findById() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
-        DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
+
+        var task = new Task(
+            idTask,
+            "Name Task",
+            "Description Task",
+            Status.TODO,
+            Date.valueOf("2025-05-12"),
+            null,
+            idUser,
+            null,
+            null,
+            false,
+            false,
+            false,
+            null
+        );
 
         // When (Quando)
-        when(repository
-                .findById(any(UUID.class)))
-                .thenReturn(Optional.of(
-                        new Task(
-                                idTask,
-                                "nameTask",
-                                "descriptionTask",
-                                Status.TODO, Date.valueOf("2025-05-12"),
-                                null,
-                                idUser,
-                                null,
-                                null,
-                                false,
-                                false,
-                                false,
-                                null
-                        )
-                ));
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
+        var result = service.findById(idUser, idTask);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(task.getId(), result.getId());
+        assertEquals(task.getNameTask(), result.getNameTask());
+        assertEquals(task.getDescriptionTask(), result.getDescriptionTask());
+        assertEquals(task.getStatus(), result.getStatus());
+        assertEquals(task.getDateTask(), result.getDateTask());
+        assertEquals(task.getIdObjective(), result.getIdObjective());
+        assertEquals(task.getIdUser(), result.getIdUser());
+
+        verify(repository, times(1)).findById(idTask);
+    }
+
+    @Test
+    public void repeatTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        // Given (Dado)
+        UUID idUser = UUID.randomUUID();
+        UUID idTask = UUID.randomUUID();
+        Date startDate = Date.valueOf("2025-05-12");
+        Date endDate = Date.valueOf("2025-05-18");
+        DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         when(repository.save(any(Task.class))).thenReturn(any(Task.class));
-        ResponseRepeatTaskDTO result = service.repeatTask(idUser, idTask, daysOfTheWeekDTO);
+        ResponseRepeatTaskDTO result = service.repeatTask(idUser, idTask, daysOfTheWeekDTO, startDate, endDate);
 
         // Then (Então)
         assertNotNull(result);
         assertEquals("Successfully repeated tasks", result.message());
         assertEquals(4, result.numberRepetitions());
 
-        verify(repository, times(4)).findById(idTask);
-        verify(repository, times(4)).save(any());
+        verify(repository, times(1)).findById(idTask);
+        verify(repository, times(3)).save(any());
     }
+
 
 }

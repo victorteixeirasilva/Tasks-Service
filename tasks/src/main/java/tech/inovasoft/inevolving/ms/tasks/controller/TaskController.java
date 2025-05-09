@@ -10,6 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
@@ -40,9 +41,15 @@ public class TaskController {
             description = "Retorna a quantidade de vezes que a tarefa foi repetida"
     )
     @Async("asyncExecutor")
-    @PostMapping("/repeat/{idUser}/{idTask}")
-    public CompletableFuture<ResponseEntity> repeatTask(@PathVariable UUID idUser, @PathVariable UUID idTask, @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask, daysOfTheWeekDTO)));
+    @PostMapping("/repeat/{idUser}/{idTask}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> repeatTask(
+            @PathVariable UUID idUser,
+            @PathVariable UUID idTask,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate,
+            @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)));
     }
 
     @Operation(
