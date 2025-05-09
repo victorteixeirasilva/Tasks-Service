@@ -170,12 +170,13 @@ public class TaskController {
             description = "Retorna confirmação que as tarefas foram removidas, e a quantidade de tarefas removidas."
     )
     @Async("asyncExecutor")
-    @DeleteMapping("/repeat/{idUser}/{idTask}")
+    @DeleteMapping("/repeat/{idUser}/{idTask}/{date}")
     public CompletableFuture<ResponseEntity> deleteTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable Date date
     ) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask)));
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask, date)));
     }
 
     @Operation(

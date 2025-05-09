@@ -9,10 +9,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
@@ -615,12 +612,11 @@ public class TaskServiceSuccess {
                 null
         );
 
-        var expectedTask = task;
-        expectedTask.setStatus(Status.IN_PROGRESS);
+        task.setStatus(Status.IN_PROGRESS);
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
-        when(repository.save(any(Task.class))).thenReturn(expectedTask);
+        when(repository.save(any(Task.class))).thenReturn(task);
         ResponseTaskDTO result = service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS);
         // Then (Então)
 
@@ -669,6 +665,57 @@ public class TaskServiceSuccess {
 
         verify(repository, times(1)).findById(idTask);
         verify(repository, times(1)).delete(task);
+    }
+
+    @Test
+    public void deleteTasksAndTheirFutureRepetitions(){
+        // Given (Dado)
+        var idTask = UUID.randomUUID();
+        var idUser = UUID.randomUUID();
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+        List<Task> tasks = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Name Task",
+                    "Description Task",
+                    Status.TODO,
+                    Date.valueOf("2025-05-13"),
+                    null,
+                    idUser,
+                    null,
+                    idTask,
+                    false,
+                    false,
+                    true,
+                    null
+            ));
+        }
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
+        when(repository.findAllByIdOriginalTaskAndIsCopy(idTask)).thenReturn(tasks);
+        doNothing().when(repository).delete(any(Task.class));
+        ResponseDeleteTasksDTO result = service.deleteTasksAndTheirFutureRepetitions(idUser, idTask, task.getDateTask());
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Successfully delete tasks", result.message());
+        assertEquals(6, result.numberOfDeletedTasks());
     }
 
     // Given (Dado)

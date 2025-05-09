@@ -6,10 +6,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -298,8 +295,7 @@ public class TaskService {
         if (maxOldDate.isPresent()) {
             for (Task oldTask : oldTasks) {
                 if ((oldTask.getDateTask().after(endDate)) || (oldTask.getDateTask().before(task.getDateTask()))) {
-//                  TODO: Refatorar para o método deleteTask(idUser, oldTask.getId());
-                    repository.delete(oldTask);
+                    deleteTask(idUser, oldTask.getId());
                     numberDeleteRepetitions++;
                 }
             }
@@ -321,12 +317,13 @@ public class TaskService {
         try {
             repository.delete(task);
         } catch (Exception e) {
+            //TODO: teste
             throw new DataBaseException("(delete)");
         }
         return new ResponseMessageDTO("Successfully delete task");
     }
 
-    public Object deleteTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask) {
+    public ResponseDeleteTasksDTO deleteTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date date) {
         // TODO: implement
         return null;
     }
