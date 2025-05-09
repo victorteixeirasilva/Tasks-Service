@@ -316,9 +316,14 @@ public class TaskService {
         return addTask(task);
     }
 
-    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) {
-        // TODO: implement
-        return null;
+    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        Task task = findById(idUser, idTask);
+        try {
+            repository.delete(task);
+        } catch (Exception e) {
+            throw new DataBaseException("(delete)");
+        }
+        return new ResponseMessageDTO("Successfully delete task");
     }
 
     public Object deleteTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask) {

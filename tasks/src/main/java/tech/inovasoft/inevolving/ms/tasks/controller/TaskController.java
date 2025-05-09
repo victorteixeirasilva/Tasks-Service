@@ -161,7 +161,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> deleteTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTask(idUser, idTask)));
     }
 
