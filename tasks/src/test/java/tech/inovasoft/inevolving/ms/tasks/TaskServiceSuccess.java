@@ -16,6 +16,7 @@ import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,7 +45,8 @@ public class TaskServiceSuccess {
         var taskDTO = new RequestTaskDTO(
                 "nameTask",
                 "descriptionTask",
-                Date.valueOf("2025-01-01"),
+                LocalDate.of(2025, 1, 1),
+//                Date.valueOf("2025-01-01"),
                 Optional.of(idObjective),
                 idUser
         );
@@ -54,7 +56,7 @@ public class TaskServiceSuccess {
             taskDTO.nameTask(),
             taskDTO.descriptionTask(),
             Status.TODO,
-            taskDTO.dateTask(),
+            Date.valueOf(taskDTO.dateTask()),
             idObjective,
             idUser,
             null,
@@ -91,7 +93,7 @@ public class TaskServiceSuccess {
         var taskDTO = new RequestTaskDTO(
                 "nameTask",
                 "descriptionTask",
-                Date.valueOf("2025-01-01"),
+                LocalDate.of(2025, 1, 1),
                 Optional.empty(),
                 idUser
         );
@@ -101,7 +103,7 @@ public class TaskServiceSuccess {
             taskDTO.nameTask(),
             taskDTO.descriptionTask(),
             Status.TODO,
-            taskDTO.dateTask(),
+            Date.valueOf(taskDTO.dateTask()),
             idObjective,
             idUser,
             null,
@@ -194,7 +196,21 @@ public class TaskServiceSuccess {
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
-        when(repository.save(any(Task.class))).thenReturn(any(Task.class));
+        when(repository.save(any(Task.class))).thenReturn(new Task(
+                UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        ));
         ResponseRepeatTaskDTO result = service.repeatTask(idUser, idTask, daysOfTheWeekDTO, startDate, endDate);
 
         // Then (Então)

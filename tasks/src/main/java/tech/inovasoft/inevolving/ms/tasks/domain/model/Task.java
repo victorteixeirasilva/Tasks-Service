@@ -36,7 +36,7 @@ public class Task {
         this.nameTask = dto.nameTask();
         this.descriptionTask = dto.descriptionTask();
         this.status = Status.TODO;
-        this.dateTask = dto.dateTask();
+        this.dateTask = Date.valueOf(dto.dateTask());
         if (dto.idObjective().isPresent()) {
             //TODO: verificar no serviço de objetivos se esse objetivo existe.
             this.idObjective = dto.idObjective().get();
