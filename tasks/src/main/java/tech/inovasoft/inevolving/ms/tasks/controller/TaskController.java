@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
@@ -40,8 +41,8 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @PostMapping("/repeat/{idUser}/{idTask}")
-    public CompletableFuture<ResponseEntity> repeatTask(@PathVariable UUID idUser, @PathVariable UUID idTask) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask)));
+    public CompletableFuture<ResponseEntity> repeatTask(@PathVariable UUID idUser, @PathVariable UUID idTask, @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO) {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask, daysOfTheWeekDTO)));
     }
 
     @Operation(

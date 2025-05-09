@@ -11,12 +11,8 @@ import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -72,15 +68,71 @@ public class TaskServiceSuccess {
 
         // Then (Então)
         assertNotNull(result);
-        assertEquals(expectedTask.getId(), result.getId());
-        assertEquals(expectedTask.getNameTask(), result.getNameTask());
-        assertEquals(expectedTask.getDescriptionTask(), result.getDescriptionTask());
-        assertEquals(expectedTask.getStatus(), result.getStatus());
-        assertEquals(expectedTask.getDateTask(), result.getDateTask());
-        assertEquals(expectedTask.getIdObjective(), result.getIdObjective());
-        assertEquals(expectedTask.getIdUser(), result.getIdUser());
+        assertEquals(expectedTask.getId(), result.id());
+        assertEquals(expectedTask.getNameTask(), result.nameTask());
+        assertEquals(expectedTask.getDescriptionTask(), result.descriptionTask());
+        assertEquals(expectedTask.getStatus(), result.status());
+        assertEquals(expectedTask.getDateTask(), result.dateTask());
+        assertEquals(expectedTask.getIdObjective(), result.idObjective());
+        assertEquals(expectedTask.getIdUser(), result.idUser());
 
         verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    public void addTaskObjectiveIsEmpty() throws DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var idObjective = UUID.randomUUID();
+
+        var taskDTO = new RequestTaskDTO(
+                "nameTask",
+                "descriptionTask",
+                Date.valueOf("2025-01-01"),
+                Optional.empty(),
+                idUser
+        );
+
+        Task expectedTask = new Task(
+            UUID.randomUUID(),
+            taskDTO.nameTask(),
+            taskDTO.descriptionTask(),
+            Status.TODO,
+            taskDTO.dateTask(),
+            idObjective,
+            idUser,
+            null,
+            null,
+            false,
+            false,
+            false,
+            null
+        );
+
+        // When (Quando)
+        when(repository.save(any(Task.class))).thenReturn(expectedTask);
+        var result = service.addTask(taskDTO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTask.getId(), result.id());
+        assertEquals(expectedTask.getNameTask(), result.nameTask());
+        assertEquals(expectedTask.getDescriptionTask(), result.descriptionTask());
+        assertEquals(expectedTask.getStatus(), result.status());
+        assertEquals(expectedTask.getDateTask(), result.dateTask());
+        assertEquals(expectedTask.getIdObjective(), result.idObjective());
+        assertEquals(expectedTask.getIdUser(), result.idUser());
+
+        verify(repository, times(1)).save(any());
+    }
+
+    @Test
+    public void repeatTask() {
+        // Given (Dado)
+
+
+        // When (Quando)
+        // Then (Então)
     }
 
 }

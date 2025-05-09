@@ -2,8 +2,10 @@ package tech.inovasoft.inevolving.ms.tasks.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
@@ -17,17 +19,16 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
-    public Task addTask(RequestTaskDTO dto) throws DataBaseException {
+    public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException {
         try {
-            var newTask = new Task(dto);
-            return repository.save(newTask);
+            return new ResponseTaskDTO(repository.save(new Task(dto)));
         } catch (Exception e) {
             //TODO: teste
             throw new DataBaseException("(save)");
         }
     }
 
-    public Object repeatTask(UUID idUser, UUID idTask) {
+    public Object repeatTask(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO) {
         // TODO: implement
         return null;
     }
