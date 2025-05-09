@@ -9,6 +9,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
@@ -636,7 +637,39 @@ public class TaskServiceSuccess {
         verify(repository, times(1)).save(any());
     }
 
+    @Test
+    public void deleteTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        // Given (Dado)
+        var idTask = UUID.randomUUID();
+        var idUser = UUID.randomUUID();
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
 
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
+        doNothing().when(repository).delete(any(Task.class));
+        ResponseMessageDTO result = service.deleteTask(idUser, idTask);
+        // Then (Então)
+
+        assertNotNull(result);
+        assertEquals("Successfully delete task", result.message());
+
+        verify(repository, times(1)).findById(idTask);
+        verify(repository, times(1)).delete(task);
+    }
 
     // Given (Dado)
     // When (Quando)

@@ -6,6 +6,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
@@ -165,7 +166,6 @@ public class TaskService {
     }
 
     public boolean saveUpdateRepeatTask(RequestUpdateRepeatTaskDTO dto, Task oldTask, UUID idTask) throws DataBaseException {
-        //TODO: falta testar
         oldTask.setIdOriginalTask(idTask);
         oldTask.setNameTask(dto.nameTask);
         oldTask.setDescriptionTask(dto.descriptionTask);
@@ -316,7 +316,7 @@ public class TaskService {
         return addTask(task);
     }
 
-    public Object deleteTask(UUID idUser, UUID idTask) {
+    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) {
         // TODO: implement
         return null;
     }
