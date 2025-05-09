@@ -155,7 +155,7 @@ public class TaskService {
         return addTask(new RequestTaskDTO(task));
     }
 
-    public boolean saveUptadeRepeatTask(RequestUpdateRepeatTaskDTO dto, Task oldTask, UUID idTask) throws DataBaseException {
+    public boolean saveUpdateRepeatTask(RequestUpdateRepeatTaskDTO dto, Task oldTask, UUID idTask) throws DataBaseException {
         //TODO: falta testar
         oldTask.setIdOriginalTask(idTask);
         oldTask.setNameTask(dto.nameTask);
@@ -163,9 +163,8 @@ public class TaskService {
 
         if ((oldTask.getIdObjective() != null) && (dto.idObjective.isEmpty())) {
             oldTask.setIdObjective(null);
-        } else if (dto.idObjective.isPresent()){
-            oldTask.setIdObjective(dto.idObjective.get());
-        }
+        } else dto.idObjective.ifPresent(oldTask::setIdObjective);
+
         try {
             repository.save(oldTask);
             return true;
@@ -176,7 +175,6 @@ public class TaskService {
     }
 
     public ResponseUpdateRepeatTaskDTO updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        // TODO: implement
         int numberRepetitions = 1;
         int numberDeleteRepetitions = 0;
         int numberUpdateRepetitions = 1;
@@ -210,6 +208,7 @@ public class TaskService {
         try {
             oldTasks = repository.findAllByIdOriginalTaskAndIsCopy(idForSearch);
         } catch (Exception e) {
+            //TODO: teste
             throw new DataBaseException("(findAllByIdOriginalTaskAndIsCopy)");
         }
         numberRepetitions += oldTasks.size();
@@ -229,56 +228,55 @@ public class TaskService {
 
         Date currentDate = task.getDateTask();
         for (Task oldTask : oldTasks) {
-//            while (currentDate.before(endDate)) {
                 if (currentDate.after(task.getDateTask())) {
                     LocalDate localDate = currentDate.toLocalDate();
                     DayOfWeek dayOfWeek = localDate.getDayOfWeek();
                     switch (dayOfWeek) {
                         case MONDAY:
                             if (dto.daysOfTheWeekDTO.isMonday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case TUESDAY:
                             if (dto.daysOfTheWeekDTO.isTuesday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case WEDNESDAY:
                             if (dto.daysOfTheWeekDTO.isWednesday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case THURSDAY:
                             if (dto.daysOfTheWeekDTO.isThursday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case FRIDAY:
                             if (dto.daysOfTheWeekDTO.isFriday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case SATURDAY:
                             if (dto.daysOfTheWeekDTO.isSaturday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
                             break;
                         case SUNDAY:
                             if (dto.daysOfTheWeekDTO.isSunday()) {
-                                if (saveUptadeRepeatTask(dto, oldTask, idTask)) {
+                                if (saveUpdateRepeatTask(dto, oldTask, idTask)) {
                                     numberUpdateRepetitions++;
                                 }
                             }
@@ -286,7 +284,6 @@ public class TaskService {
                     }
                 }
                 currentDate = Date.valueOf(currentDate.toLocalDate().plusDays(1));
-//            }
         }
 
         if (maxOldDate.isPresent()) {
@@ -304,8 +301,10 @@ public class TaskService {
         return new ResponseUpdateRepeatTaskDTO(numberRepetitions, numberDeleteRepetitions, numberUpdateRepetitions, numberCreateRepetitions);
     }
 
-    public Object updateTaskStatus(UUID idUser, UUID idTask, String todo) {
-        // TODO: implement
+    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String todo) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+//        Task task = findById(idUser, idTask);
+//        task.setStatus(todo);
+//        return new ResponseTaskDTO(task);
         return null;
     }
 

@@ -10,6 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
@@ -591,6 +592,52 @@ public class TaskServiceSuccess {
         verify(repository, times(4)).save(any());
         verify(repository, times(4)).delete(any());
     }
+
+    @Test
+    public void updateTaskStatus() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        // Given (Dado)
+        var idTask = UUID.randomUUID();
+        var idUser = UUID.randomUUID();
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+
+        var expectedTask = task;
+        expectedTask.setStatus(Status.IN_PROGRESS);
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
+        when(repository.save(any(Task.class))).thenReturn(expectedTask);
+        ResponseTaskDTO result = service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS);
+        // Then (Então)
+
+        assertNotNull(result);
+        assertEquals(Status.IN_PROGRESS, result.status());
+        assertEquals(task.getNameTask(), result.nameTask());
+        assertEquals(task.getDescriptionTask(), result.descriptionTask());
+        assertEquals(task.getId(), result.id());
+        assertEquals(task.getDateTask(), result.dateTask());
+        assertEquals(task.getIdObjective(), result.idObjective());
+        assertEquals(task.getIdUser(), result.idUser());
+
+        verify(repository, times(1)).findById(idTask);
+        verify(repository, times(1)).save(any());
+    }
+
+
+
     // Given (Dado)
     // When (Quando)
     // Then (Então)

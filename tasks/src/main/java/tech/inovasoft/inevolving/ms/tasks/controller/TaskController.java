@@ -96,7 +96,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusToDo(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.TODO)));
     }
 
@@ -109,7 +109,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusInProgress(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)));
     }
 
@@ -122,7 +122,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusDone(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.DONE)));
     }
 
@@ -135,7 +135,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusLate(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.LATE)));
     }
 
@@ -148,7 +148,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusCanceled(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.CANCELLED)));
     }
 
