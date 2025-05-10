@@ -775,7 +775,7 @@ public class TaskServiceSuccess {
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
-        when(repository.findAllByIdOriginalTaskAndIsCopy(taskCopy.getId())).thenReturn(tasks);
+        when(repository.findAllByIdOriginalTaskAndIsCopy(taskCopy.getIdOriginalTask())).thenReturn(tasks);
         doNothing().when(repository).delete(any(Task.class));
         ResponseDeleteTasksDTO result = service.deleteTasksAndTheirFutureRepetitions(idUser, taskCopy.getId(), taskCopy.getDateTask());
 
