@@ -718,6 +718,75 @@ public class TaskServiceSuccess {
         assertEquals(6, result.numberOfDeletedTasks());
     }
 
+    @Test
+    public void deleteTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+        // Given (Dado)
+        var idTask = UUID.randomUUID();
+        var idUser = UUID.randomUUID();
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-13"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+        var taskCopy = new Task(
+                UUID.randomUUID(),
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-13"),
+                null,
+                idUser,
+                null,
+                idTask,
+                false,
+                false,
+                true,
+                null
+        );
+        List<Task> tasks = new ArrayList<>();
+        tasks.add(task);
+        for (int i = 1; i <= 5; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Name Task",
+                    "Description Task",
+                    Status.TODO,
+                    Date.valueOf("2025-05-14"),
+                    null,
+                    idUser,
+                    null,
+                    idTask,
+                    false,
+                    false,
+                    true,
+                    null
+            ));
+        }
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
+        when(repository.findAllByIdOriginalTaskAndIsCopy(taskCopy.getId())).thenReturn(tasks);
+        doNothing().when(repository).delete(any(Task.class));
+        ResponseDeleteTasksDTO result = service.deleteTasksAndTheirFutureRepetitions(idUser, taskCopy.getId(), taskCopy.getDateTask());
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Successfully delete tasks", result.message());
+        assertEquals(6, result.numberOfDeletedTasks());
+    }
+
+
+
     // Given (Dado)
     // When (Quando)
     // Then (Então)
