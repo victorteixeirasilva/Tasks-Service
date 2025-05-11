@@ -12,7 +12,7 @@ public record RequestTaskDTO(
         String nameTask,
         String descriptionTask,
         LocalDate dateTask,
-        Optional<UUID> idObjective,
+        UUID idObjective,
         UUID idUser
 ) {
     public RequestTaskDTO(Task task) {
@@ -20,7 +20,7 @@ public record RequestTaskDTO(
                 task.getNameTask(),
                 task.getDescriptionTask(),
                 task.getDateTask().toLocalDate(),
-                Optional.of(task.getIdObjective()),
+                task.getIdObjective(),
                 task.getIdUser()
         );
     }

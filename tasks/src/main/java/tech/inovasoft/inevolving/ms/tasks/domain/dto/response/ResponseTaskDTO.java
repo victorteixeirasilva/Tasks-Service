@@ -3,6 +3,7 @@ package tech.inovasoft.inevolving.ms.tasks.domain.dto.response;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 
 import java.sql.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 public record ResponseTaskDTO(

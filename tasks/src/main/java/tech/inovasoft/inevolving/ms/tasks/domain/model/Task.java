@@ -37,11 +37,13 @@ public class Task {
         this.descriptionTask = dto.descriptionTask();
         this.status = Status.TODO;
         this.dateTask = Date.valueOf(dto.dateTask());
-        if (dto.idObjective().isPresent()) {
-            //TODO: verificar no serviço de objetivos se esse objetivo existe.
-            this.idObjective = dto.idObjective().get();
+        if (dto.idObjective() != null) {
+            this.setIdObjective(dto.idObjective());
         }
+        //TODO: verificar no serviço de objetivos se esse objetivo existe.
+        this.setIdObjective(dto.idUser());
         this.idUser = dto.idUser();
+        this.isCopy = false;
     }
 
     public Task(RequestTaskDTO dto, UUID idOriginalTask) {
@@ -49,10 +51,13 @@ public class Task {
         this.descriptionTask = dto.descriptionTask();
         this.status = Status.TODO;
         this.dateTask = Date.valueOf(dto.dateTask());
-        if (dto.idObjective().isPresent()) {
-            //TODO: verificar no serviço de objetivos se esse objetivo existe.
-            this.idObjective = dto.idObjective().get();
+
+        if (dto.idObjective() != null) {
+            this.setIdObjective(dto.idObjective());
         }
+        //TODO: verificar no serviço de objetivos se esse objetivo existe.
+        this.setIdObjective(dto.idUser());
+
         this.idUser = dto.idUser();
         this.idOriginalTask = idOriginalTask;
         this.isCopy = true;

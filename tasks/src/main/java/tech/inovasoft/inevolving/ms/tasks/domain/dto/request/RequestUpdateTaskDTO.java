@@ -6,6 +6,6 @@ import java.util.UUID;
 public record RequestUpdateTaskDTO(
         String nameTask,
         String descriptionTask,
-        Optional<UUID> idObjective
+        UUID idObjective
 ) {
 }

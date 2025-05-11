@@ -12,6 +12,6 @@ import java.util.UUID;
 public class RequestUpdateRepeatTaskDTO{
     public String nameTask;
     public String descriptionTask;
-    public Optional<UUID> idObjective;
+    public UUID idObjective;
     public DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO();
 }

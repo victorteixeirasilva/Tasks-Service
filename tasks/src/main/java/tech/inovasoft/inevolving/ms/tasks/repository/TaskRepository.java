@@ -6,7 +6,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -14,5 +16,15 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t WHERE t.idOriginalTask = :idOriginalTask AND t.isCopy = true")
     List<Task> findAllByIdOriginalTaskAndIsCopy(@Param("idOriginalTask") UUID idOriginalTask);
+
+    List<Task> findAllByIdObjective(UUID idObjective);
+
+    @Query("SELECT t FROM Task t WHERE t.idOriginalTask = :idOriginalTask AND t.isCopy = true AND t.dateTask >= :specificDate")
+    List<Task> findAllByIdOriginalTaskAndIsCopy(
+            @Param("idOriginalTask") UUID idOriginalTask,
+            @Param("specificDate") Date specificDate);
+
+    @Query("SELECT t FROM Task t WHERE DATE(t.dateTask) = :specificDate AND (t.id = :id OR t.idOriginalTask = :id)")
+    Optional<Task> findByIdOriginalTaskOrIdTask(@Param("specificDate") Date specificDate, @Param("id") UUID id);
 
 }
