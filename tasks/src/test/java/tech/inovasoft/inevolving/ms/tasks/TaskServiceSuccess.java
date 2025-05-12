@@ -17,7 +17,10 @@ import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.implementation.TaskRepositoryImplementation;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
+import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
+import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
+import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,15 +31,23 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskServiceSuccess {
+//TODO: SUPER IMPORTANTE SEPARAR CLASSE DE TESTE E COBRIR TODOS OS PONTOS PENDENTES
 
     @Mock
     private JpaRepositoryInterface repository;
 
     @Mock
-    private TaskRepositoryImplementation taskRepository;
+    private TaskRepository taskRepository;
 
     @InjectMocks
-    private SimpleTaskService service;
+    private TaskService service;
+
+    @InjectMocks
+    private SimpleTaskService simpleTaskService;
+
+    @InjectMocks
+    private RecurringTaskService recurringTaskService;
+
 
     @Test
     public void addTask() throws DataBaseException {
@@ -70,7 +81,7 @@ public class TaskServiceSuccess {
 
         // When (Quando)
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
-        var result = service.addTask(taskDTO);
+        var result = simpleTaskService.addTask(taskDTO);
 
         // Then (Então)
         assertNotNull(result);
@@ -109,7 +120,7 @@ public class TaskServiceSuccess {
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
-        var result = service.findById(idUser, idTask);
+        var result = taskRepository.findById(idUser, idTask);
 
         // Then (Então)
         assertNotNull(result);
@@ -165,7 +176,7 @@ public class TaskServiceSuccess {
                 false,
                 null
         ));
-        ResponseRepeatTaskDTO result = service.repeatTask(idUser, idTask, daysOfTheWeekDTO, startDate, endDate);
+        ResponseRepeatTaskDTO result = recurringTaskService.addTasks(idUser, idTask, daysOfTheWeekDTO, startDate, endDate);
 
         // Then (Então)
         assertNotNull(result);
@@ -207,7 +218,7 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldTask));
         oldTask.setIdObjective(idObjective);
         when(repository.save(any(Task.class))).thenReturn(oldTask);
-        var result = service.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
+        var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
@@ -354,7 +365,7 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(any(Task.class));
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
@@ -389,7 +400,7 @@ public class TaskServiceSuccess {
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         when(repository.save(any(Task.class))).thenReturn(task);
-        ResponseTaskDTO result = service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS);
+        ResponseTaskDTO result = simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS);
         // Then (Então)
 
         assertNotNull(result);
@@ -429,7 +440,7 @@ public class TaskServiceSuccess {
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         doNothing().when(repository).delete(any(Task.class));
-        ResponseMessageDTO result = service.deleteTask(idUser, idTask);
+        ResponseMessageDTO result = simpleTaskService.deleteTask(idUser, idTask);
         // Then (Então)
 
         assertNotNull(result);
@@ -482,7 +493,7 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         when(repository.findAllByIdOriginalTaskAndIsCopy(idTask)).thenReturn(tasks);
         doNothing().when(repository).delete(any(Task.class));
-        ResponseDeleteTasksDTO result = service.deleteTasksAndTheirFutureRepetitions(idUser, idTask, task.getDateTask());
+        ResponseDeleteTasksDTO result = recurringTaskService.deleteTasks(idUser, idTask, task.getDateTask());
 
         // Then (Então)
         assertNotNull(result);
@@ -549,7 +560,7 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
         when(repository.findAllByIdOriginalTaskAndIsCopy(taskCopy.getIdOriginalTask())).thenReturn(tasks);
         doNothing().when(repository).delete(any(Task.class));
-        ResponseDeleteTasksDTO result = service.deleteTasksAndTheirFutureRepetitions(idUser, taskCopy.getId(), taskCopy.getDateTask());
+        ResponseDeleteTasksDTO result = recurringTaskService.deleteTasks(idUser, taskCopy.getId(), taskCopy.getDateTask());
 
         // Then (Então)
         assertNotNull(result);
@@ -691,7 +702,7 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(any(Task.class));
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
@@ -839,7 +850,7 @@ public class TaskServiceSuccess {
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(taskCopy);
 
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
