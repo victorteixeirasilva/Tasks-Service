@@ -321,8 +321,6 @@ public class TaskService {
 //    }
 
     public ResponseUpdateRepeatTaskDTO updateTasksAndTheirFutureRepetitions(UUID idUser, UUID idTask, Date startDate, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        //TODO: Deletar tarefas futuras e adicionar novamente
-
         validRange(startDate, endDate);
 
         Task task = findById(idUser, idTask);
