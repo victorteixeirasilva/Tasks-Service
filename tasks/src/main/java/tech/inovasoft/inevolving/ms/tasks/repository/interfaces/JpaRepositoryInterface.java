@@ -1,4 +1,4 @@
-package tech.inovasoft.inevolving.ms.tasks.repository;
+package tech.inovasoft.inevolving.ms.tasks.repository.interfaces;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, UUID> {
+public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
 
     @Query("SELECT t FROM Task t WHERE t.idOriginalTask = :idOriginalTask AND t.isCopy = true")
     List<Task> findAllByIdOriginalTaskAndIsCopy(@Param("idOriginalTask") UUID idOriginalTask);

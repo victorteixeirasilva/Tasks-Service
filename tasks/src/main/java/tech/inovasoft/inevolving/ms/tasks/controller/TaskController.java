@@ -11,8 +11,11 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
+import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
@@ -25,7 +28,13 @@ import java.util.concurrent.CompletableFuture;
 public class TaskController {
 
     @Autowired
+    private SimpleTaskService simpleTaskService;
+
+    @Autowired
     private TaskService service;
+
+    @Autowired
+    private RecurringTaskService recurringTaskService;
 
     @Operation(
             summary = "Adicionar uma nova tarefa",
@@ -34,7 +43,7 @@ public class TaskController {
     @Async("asyncExecutor")
     @PostMapping
     public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) throws DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.addTask(taskDTO)));
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.addTask(taskDTO)));
     }
 
     @Operation(
@@ -49,8 +58,8 @@ public class TaskController {
             @PathVariable Date startDate,
             @PathVariable Date endDate,
             @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.repeatTask(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(recurringTaskService.addTasks(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)));
     }
 
     @Operation(
@@ -63,8 +72,8 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTask(idUser, idTask, updateTaskDTO)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)));
     }
 
     @Operation(
@@ -72,17 +81,16 @@ public class TaskController {
             description = "Retorna as tarefas atualizadas."
     )
     @Async("asyncExecutor")
-    @PutMapping("/repeat/{idUser}/{idTask}/{startDate}/{endDate}")
+    @PutMapping("/repeat/{idUser}/{idTask}/{endDate}")
     public CompletableFuture<ResponseEntity> updateTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @PathVariable Date startDate,
             @PathVariable Date endDate,
             @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateTasksAndTheirFutureRepetitions(idUser, idTask, startDate, endDate, updateTaskDTO)
+                        recurringTaskService.updateTasks(idUser, idTask, endDate, updateTaskDTO)
                 )
         );
     }
@@ -96,8 +104,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusToDo(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.TODO)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTaskStatus(idUser, idTask, Status.TODO)));
     }
 
     @Operation(
@@ -109,8 +117,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusInProgress(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)));
     }
 
     @Operation(
@@ -122,8 +130,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusDone(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.DONE)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTaskStatus(idUser, idTask, Status.DONE)));
     }
 
     @Operation(
@@ -135,8 +143,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusLate(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.LATE)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTaskStatus(idUser, idTask, Status.LATE)));
     }
 
     @Operation(
@@ -148,8 +156,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> updateTaskStatusCanceled(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.updateTaskStatus(idUser, idTask, Status.CANCELLED)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTaskStatus(idUser, idTask, Status.CANCELLED)));
     }
 
     @Operation(
@@ -161,8 +169,8 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> deleteTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTask(idUser, idTask)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.deleteTask(idUser, idTask)));
     }
 
     @Operation(
@@ -175,8 +183,8 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable Date date
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.deleteTasksAndTheirFutureRepetitions(idUser, idTask, date)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(recurringTaskService.deleteTasks(idUser, idTask, date)));
     }
 
     @Operation(

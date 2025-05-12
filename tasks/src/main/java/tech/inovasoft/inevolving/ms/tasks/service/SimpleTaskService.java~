@@ -1,0 +1,88 @@
+package tech.inovasoft.inevolving.ms.tasks.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
+
+import java.sql.Date;
+import java.time.DateTimeException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.*;
+
+@Service
+public class SimpleTaskService {
+
+    @Autowired
+    private TaskRepository repository;
+
+
+    public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException {
+        return new ResponseTaskDTO(repository.saveInDataBase(new Task(dto)));
+    }
+
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        Task task = repository.findById(idUser, idTask);
+        task.setNameTask(dto.nameTask());
+        task.setDescriptionTask(dto.descriptionTask());
+        task.setIdObjective(dto.idObjective());
+
+
+        if (task.getIsCopy()) {
+            task.setIsCopy(false);
+            task.setIdOriginalTask(null);
+        }
+
+        return new ResponseTaskDTO(repository.saveInDataBase(task));
+    }
+
+    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String todo) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        Task task = repository.findById(idUser, idTask);
+        task.setStatus(todo);
+        return new ResponseTaskDTO(repository.saveInDataBase(task));
+    }
+
+    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        Task task = repository.findById(idUser, idTask);
+        return repository.deleteTask(task);
+    }
+
+    public Object lockTaskByObjective(UUID idUser, UUID idObjective) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksInDateRange(UUID idUser, Date startDate, Date endDate) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksInDate(UUID idUser, Date date) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksLate(UUID idUser) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) {
+        // TODO: implement
+        return null;
+    }
+
+    public Object getTasksStatusInDate(UUID idUser, Date date, String status) {
+        // TODO: implement
+        return null;
+    }
+}

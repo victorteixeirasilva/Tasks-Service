@@ -11,11 +11,13 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeat
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
-import tech.inovasoft.inevolving.ms.tasks.repository.TaskRepository;
-import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
+import tech.inovasoft.inevolving.ms.tasks.repository.implementation.TaskRepositoryImplementation;
+import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
+import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -28,10 +30,13 @@ import static org.mockito.Mockito.*;
 public class TaskServiceSuccess {
 
     @Mock
-    private TaskRepository repository;
+    private JpaRepositoryInterface repository;
+
+    @Mock
+    private TaskRepositoryImplementation taskRepository;
 
     @InjectMocks
-    private TaskService service;
+    private SimpleTaskService service;
 
     @Test
     public void addTask() throws DataBaseException {
@@ -43,7 +48,6 @@ public class TaskServiceSuccess {
                 "nameTask",
                 "descriptionTask",
                 LocalDate.of(2025, 1, 1),
-//                Date.valueOf("2025-01-01"),
                 idObjective,
                 idUser
         );
@@ -65,7 +69,7 @@ public class TaskServiceSuccess {
         );
 
         // When (Quando)
-        when(repository.save(any(Task.class))).thenReturn(expectedTask);
+        when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
         var result = service.addTask(taskDTO);
 
         // Then (Então)
@@ -78,11 +82,11 @@ public class TaskServiceSuccess {
         assertEquals(expectedTask.getIdObjective(), result.idObjective());
         assertEquals(expectedTask.getIdUser(), result.idUser());
 
-        verify(repository, times(1)).save(any());
+        verify(taskRepository, times(1)).saveInDataBase(any());
     }
 
     @Test
-    public void findById() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void findById() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -121,7 +125,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void repeatTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void repeatTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -170,7 +174,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
 
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -220,7 +224,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -350,21 +354,17 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(any(Task.class));
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idTask, startDate, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
         assertEquals("Successfully update repeated tasks", result.message());
-//        assertEquals(8, result.numberRepetitions());
-//        assertEquals(4, result.numberUpdateRepetitions());
-//        assertEquals(4, result.numberDeleteRepetitions());
-//        assertEquals(0, result.numberCreateRepetitions());
 
 
     }
 
     @Test
-    public void updateTaskStatus() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void updateTaskStatus() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -406,7 +406,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void deleteTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void deleteTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -440,7 +440,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void deleteTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void deleteTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -491,7 +491,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void deleteTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void deleteTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -558,7 +558,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -691,21 +691,16 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(any(Task.class));
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, startDate, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
         assertEquals("Successfully update repeated tasks", result.message());
-//        assertEquals(8, result.numberRepetitions());
-//        assertEquals(4, result.numberUpdateRepetitions());
-//        assertEquals(4, result.numberDeleteRepetitions());
-//        assertEquals(0, result.numberCreateRepetitions());
-
 
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException {
+    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -843,45 +838,12 @@ public class TaskServiceSuccess {
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(taskCopy));
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(repository.save(any(Task.class))).thenReturn(taskCopy);
-//        when(repository.findByIdOriginalTaskOrIdTask(any(), any())).thenAnswer(invocation -> {
-//            Date date = invocation.getArgument(0);
-//            UUID id = invocation.getArgument(1);
-//
-//            System.out.println("Mock chamado com: Date=" + date + " UUID=" + id); // Debug
-//
-//            // Certifique-se de que está comparando com a mesma classe de data
-//            Date referenceDate = Date.valueOf("2025-05-24");
-//            Date convertedDate = new Date(date.getTime()); // Garantindo que ambas as datas sejam java.sql.Date
-//
-//            // Retornar se houver um ID correspondente
-//            if (id.equals(task6.getId())) {
-//                return Optional.of(task6);
-//            } else if (id.equals(task5.getId())) {
-//                return Optional.of(task5);
-//            } else if (id.equals(task4.getId())) {
-//                return Optional.of(task4);
-//            } else if (id.equals(taskCopy.getId())) {
-//                return Optional.of(taskCopy);
-//            }
-//
-//            // Verifica se a data é maior que 2025-05-24
-//            if (convertedDate.after(referenceDate)) {
-//                System.out.println("Data maior que 2025-05-24, retornando Optional.empty()");
-//                return Optional.empty();
-//            }
-//
-//            return Optional.empty();
-//        });
-        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, startDate, endDate, requestUpdateRepeatTaskDTO);
+
+        ResponseUpdateRepeatTaskDTO result = service.updateTasksAndTheirFutureRepetitions(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
 
         // Then (Então)
         assertNotNull(result);
         assertEquals("Successfully update repeated tasks", result.message());
-//        assertEquals(8, result.numberRepetitions());
-//        assertEquals(4, result.numberUpdateRepetitions());
-//        assertEquals(4, result.numberDeleteRepetitions());
-//        assertEquals(9, result.numberCreateRepetitions());
-
 
     }
 
