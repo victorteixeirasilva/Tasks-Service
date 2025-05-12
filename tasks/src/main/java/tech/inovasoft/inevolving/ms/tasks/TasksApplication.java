@@ -3,7 +3,6 @@ package tech.inovasoft.inevolving.ms.tasks;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.Date;
 import java.util.TimeZone;
 
 @SpringBootApplication
