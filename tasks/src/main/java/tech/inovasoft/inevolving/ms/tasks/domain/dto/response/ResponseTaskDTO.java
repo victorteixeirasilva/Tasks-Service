@@ -16,7 +16,7 @@ public record ResponseTaskDTO(
         UUID idUser,
         String cancellationReason
 ) {
-    // Construtor que recebe um Task e delega para o construtor canônico
+
     public ResponseTaskDTO(Task task) {
         this(
                 task.getId(),

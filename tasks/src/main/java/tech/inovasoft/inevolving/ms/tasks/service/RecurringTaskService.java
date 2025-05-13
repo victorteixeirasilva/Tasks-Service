@@ -20,7 +20,6 @@ import java.util.UUID;
 
 @Service
 public class RecurringTaskService {
-
     @Autowired
     private TaskRepository repository;
 
@@ -41,37 +40,44 @@ public class RecurringTaskService {
                 switch (dayOfWeek) {
                     case MONDAY:
                         if (daysOfTheWeekDTO.isMonday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case TUESDAY:
                         if (daysOfTheWeekDTO.isTuesday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case WEDNESDAY:
                         if (daysOfTheWeekDTO.isWednesday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case THURSDAY:
                         if (daysOfTheWeekDTO.isThursday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case FRIDAY:
                         if (daysOfTheWeekDTO.isFriday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case SATURDAY:
                         if (daysOfTheWeekDTO.isSaturday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                     case SUNDAY:
                         if (daysOfTheWeekDTO.isSunday()) {
-                            if (repository.addNewTaskCopy(task, currentDate.toLocalDate())) numberRepetitions++;
+                            repository.addNewTaskCopy(task, currentDate.toLocalDate());
+                            numberRepetitions++;
                         }
                         break;
                 }

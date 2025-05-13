@@ -8,4 +8,8 @@ public class DataBaseException extends Exception{
     public DataBaseException(String message) {
         super("Error in integration with Database " + message);
     }
+
+    public DataBaseException(String message, Throwable cause) {
+        super("Error in integration with Database " + message, cause);
+    }
 }
