@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -144,6 +145,23 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdOriginalTaskAndIsCopy)");
         }
         return allTasks;
+    }
+
+    /**
+     * @desciprion - Method responsible for finding all tasks of a specific objective | Metodo responsible for procurar todas as tarefas de um determinado objetivo.
+     * @param idObjective - ID of the objective that will be searched. (ID do objetivo que vai ser procurado.)
+     * @return - Returns a list of tasks that belong to the objective. (Lista de tarefas que pertencem ao objetivo.)
+     * @throws DataBaseException - Error occurs if there is a problem in the DBMS finding the task in the bank. (Erro acontece caso tenha algum problema no SGBD para encontrar a tarefa no banco.)
+     */
+    @Override
+    public List<Task> findAllByIdObjective(UUID idObjective) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByIdObjective(idObjective);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdObjective)", e.getCause());
+        }
+        return tasks;
     }
 
 }

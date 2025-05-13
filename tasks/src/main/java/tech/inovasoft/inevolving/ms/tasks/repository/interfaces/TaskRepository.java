@@ -31,4 +31,6 @@ public interface TaskRepository {
 
     List<Task> findAllIsCopyTask(UUID idForSearch) throws DataBaseException;
 
+    List<Task> findAllByIdObjective(UUID idForSearch) throws DataBaseException;
+
 }

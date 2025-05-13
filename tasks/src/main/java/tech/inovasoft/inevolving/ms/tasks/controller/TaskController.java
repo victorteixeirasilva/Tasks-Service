@@ -192,12 +192,13 @@ public class TaskController {
             description = "Retorna confirmação que as tarefas foram bloqueadas, e a quantidade de tarefas removidas, e a quantidade de tarefas bloqueadas."
     )
     @Async("asyncExecutor")
-    @DeleteMapping("/lock/{idUser}/{idObjective}")
+    @DeleteMapping("/lock/{completionDate}/{idUser}/{idObjective}")
     public CompletableFuture<ResponseEntity> lockTaskByObjective(
+            @PathVariable Date completionDate,
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective
-    ) {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective)));
+    ) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective, completionDate)));
     }
 
     @Operation(

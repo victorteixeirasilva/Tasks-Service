@@ -22,6 +22,9 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private SimpleTaskService simpleTaskService;
+
     /**
      * @desciprion - Lock old tasks based on the goal, and delete tasks after the goal completion date. | Bloquear tarefas antigas com base no objetivo, e excluir as tarefas posteriores a data de conclusão do objetivo.
      * @param idUser - id of user | id do usuário
@@ -29,9 +32,20 @@ public class TaskService {
      * @param completionDate - goal completion date | data de conclusão do objetivo
      * @return - Block confirmation | Confirmacao de bloqueio
      */
-    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective, Date completionDate) {
-        // TODO: implement
-        return null;
+    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective, Date completionDate) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+        List<Task> tasks = repository.findAllByIdObjective(idObjective);
+        for (Task task : tasks) {
+            if (!task.getIdUser().equals(idUser)) {
+                throw new UserWithoutAuthorizationAboutTheTaskException();
+            }
+            if (task.getDateTask().after(completionDate)) {
+                simpleTaskService.deleteTask(task.getId(), idUser);
+            } else {
+                task.setBlockedByObjective(true);
+                repository.saveInDataBase(task);
+            }
+        }
+        return new ResponseMessageDTO("Tasks locked!");
     }
 
     /**

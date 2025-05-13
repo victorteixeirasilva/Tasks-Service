@@ -32,15 +32,54 @@ import static org.mockito.Mockito.*;
 public class TaskServiceSuccess {
 
     @Mock
-    private JpaRepositoryInterface repository;
+    private TaskRepository taskRepository;
 
     @Mock
-    private TaskRepository taskRepository;
+    private SimpleTaskService simpleTaskService;
 
     @InjectMocks
     private TaskService service;
 
-    // Given (Dado)
-    // When (Quando)
-    // Then (Então)
+
+    @Test
+    public void lockTaskByObjective() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var idObjective = UUID.randomUUID();
+
+        List<Task> tasks = new ArrayList<>();
+        LocalDate currentDate = LocalDate.of(2025, 5, 13);
+        for (int i = 1; i <= 10; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Task " + i,
+                    "Description " + i,
+                    Status.TODO,
+                    Date.valueOf(currentDate),
+                    idObjective,
+                    idUser,
+                    null,
+                    null,
+                    false,
+                    false,
+                    false,
+                    null
+            ));
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // When (Quando)
+        when(taskRepository.findAllByIdObjective(idObjective)).thenReturn(tasks);
+        when(simpleTaskService.deleteTask(any(UUID.class), any(UUID.class))).thenReturn(new ResponseMessageDTO(""));
+        when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(new Task());
+        var result = service.lockTaskByObjective(idUser, idObjective, Date.valueOf("2025-05-17"));
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Tasks locked!", result.message());
+
+        verify(taskRepository, times(1)).findAllByIdObjective(idObjective);
+        verify(simpleTaskService, times(5)).deleteTask(any(UUID.class), any(UUID.class));
+        verify(taskRepository, times(5)).saveInDataBase(any(Task.class));
+    }
 }

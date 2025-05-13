@@ -277,22 +277,4 @@ public class TaskRepositoryFaliure {
         verify(repository, times(1)).findAllByIdOriginalTaskAndIsCopy(any(UUID.class));
     }
 
-    @Test
-    public void findAllByIdObjective() throws DataBaseException{
-        // Given (Dado)
-        UUID idObjective = UUID.randomUUID();
-
-        // When (Quando)
-        when(repository.findAllByIdObjective(any(UUID.class))).thenThrow(new RuntimeException());
-        var result = assertThrows(DataBaseException.class, () -> {
-            taskRepository.findAllByIdObjective(idObjective);
-        });
-
-        // Then (Então)
-        assertNotNull(result);
-        assertEquals("Error in integration with Database (findAllByIdObjective)", result.getMessage());
-
-        verify(repository, times(1)).findAllByIdObjective(any(UUID.class));
-    }
-
 }

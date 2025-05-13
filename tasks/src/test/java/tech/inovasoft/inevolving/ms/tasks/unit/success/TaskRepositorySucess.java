@@ -15,6 +15,7 @@ import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInt
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -219,6 +220,41 @@ public class TaskRepositorySucess {
         assertEquals(task.getId(), result.getFirst().getId());
 
         verify(repository, times(1)).findAllByIdOriginalTaskAndIsCopy(any(UUID.class));
+    }
+
+    @Test
+    public void findAllByIdObjective() throws DataBaseException {
+        // Given (Dado)
+        var idObjective = UUID.randomUUID();
+
+        List<Task> expectedTasks = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            expectedTasks.add(
+                    new Task(
+                            UUID.randomUUID(),
+                            "Name Task",
+                            "Description Task",
+                            Status.TODO,
+                            Date.valueOf("2025-05-12"),
+                            null,
+                            idObjective,
+                            null,
+                            null,
+                            false,
+                            false,
+                            false,
+                            null
+                    )
+            );
+        }
+
+        // When (Quando)
+        when(repository.findAllByIdObjective(any(UUID.class))).thenReturn(expectedTasks);
+        var result = taskRepository.findAllByIdObjective(idObjective);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTasks.size(), result.size());
     }
 
 }
