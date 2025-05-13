@@ -29,7 +29,7 @@ public class SimpleTaskService {
 
     /**
      * @desciprion -  Method to update an existing task. | Metodo para atualizar uma tarefa existente.
-     * @param idUser - ID of the user. | ID do usuario.
+     * @param idUser - ID of the user. | ID do usuário.
      * @param idTask - ID of the task. | ID da tarefa.
      * @param dto - DTO (Data Transfer Object) to update the task. | DTO (Data Transfer Object) para atualizar a tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.

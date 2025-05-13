@@ -22,31 +22,71 @@ public class TaskService {
     @Autowired
     private TaskRepository repository;
 
-    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective) {
+    /**
+     * @desciprion - Lock old tasks based on the goal, and delete tasks after the goal completion date. | Bloquear tarefas antigas com base no objetivo, e excluir as tarefas posteriores a data de conclusão do objetivo.
+     * @param idUser - id of user | id do usuário
+     * @param idObjective - id of objective | id do objetivo
+     * @param completionDate - goal completion date | data de conclusão do objetivo
+     * @return - Block confirmation | Confirmacao de bloqueio
+     */
+    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective, Date completionDate) {
         // TODO: implement
         return null;
     }
 
+    /**
+     * @desciprion - Get tasks in date range | Obter tarefas no intervalo de datas
+     * @param idUser - id of user | id do usuário
+     * @param startDate - start date | data de inicio
+     * @param endDate - end date | data de fim
+     * @return - List of tasks | Lista de tarefas
+     */
     public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) {
         // TODO: implement
         return null;
     }
 
+    /**
+     * @desciprion - Get tasks in date | Obter tarefas na data
+     * @param idUser - id of user | id do usuário
+     * @param date - date | data
+     * @return - List of tasks | Lista de tarefas
+     */
     public List<Task> getTasksInDate(UUID idUser, Date date) {
         // TODO: implement
         return null;
     }
 
+    /**
+     * @desciprion - Get tasks late | Obter tarefas atrasadas
+     * @param idUser - id of user | id do usuário
+     * @return - List of tasks | Lista de tarefas
+     */
     public List<Task> getTasksLate(UUID idUser) {
         // TODO: implement
         return null;
     }
 
+    /**
+     * @desciprion - Get tasks by status in date range | Obter tarefas por status no intervalo de datas
+     * @param idUser - id of user | id do usuário
+     * @param startDate - start date | data de inicio
+     * @param endDate - end date | data de fim
+     * @param status - status | status
+     * @return - List of tasks | Lista de tarefas
+     */
     public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) {
         // TODO: implement
         return null;
     }
 
+    /**
+     * @desciprion - Get tasks by status in date | Obter tarefas por status na data
+     * @param idUser - id of user | id do usuário
+     * @param date - date | data
+     * @param status - status | status
+     * @return - List of tasks | Lista de tarefas
+     */
     public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) {
         // TODO: implement
         return null;

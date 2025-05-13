@@ -26,6 +26,15 @@ public class RecurringTaskService {
     @Autowired
     private SimpleTaskService simpleTaskService;
 
+    /**
+     * @desciprion - add new tasks | adicionar uma nova tarefa.
+     * @param idUser - ID of the user. | ID do usuário.
+     * @param idTask - ID of the task. | ID da tarefa.
+     * @param daysOfTheWeekDTO - DTO (Data Transfer Object) of days of the week. | DTO (Data Transfer Object) de dias da semana.
+     * @param startDate - start date. | data de inicio.
+     * @param endDate - end date. | data de fim.
+     * @return - number of repetitions. | quantidade de repeticoes.
+     */
     public ResponseRepeatTaskDTO addTasks(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO, Date startDate, Date endDate) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         validDateRange(startDate, endDate);
 
@@ -88,6 +97,14 @@ public class RecurringTaskService {
         return new ResponseRepeatTaskDTO(numberRepetitions);
     }
 
+    /**
+     * @desciprion - Update tasks | Atualizar tarefas.
+     * @param idUser - ID of the user. | ID do usuário.
+     * @param idTask - ID of the task. | ID da tarefa.
+     * @param endDate - end date. | data de fim.
+     * @param dto - DTO (Data Transfer Object) of update tasks. | DTO (Data Transfer Object) de atualizacao de tarefas.
+     * @return - Return a confirmation message that the process was successful. | Retorna uma mensagem de confirmação que o precesso foi realizado com sucesso.
+     */
     public ResponseUpdateRepeatTaskDTO updateTasks(UUID idUser, UUID idTask, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
 
         Task task = repository.findById(idUser, idTask);
@@ -123,12 +140,24 @@ public class RecurringTaskService {
 
     }
 
-    public void validDateRange(Date startDate, Date endDate) {
+    /**
+     * @desciprion - Check if the start date is before the end date. | Verifique se a data de inicio eh antes da data de fim.
+     * @param startDate - start date. | data de inicio.
+     * @param endDate - end date. | data de fim.
+     */
+    private void validDateRange(Date startDate, Date endDate) {
         if (startDate.after(endDate)) {
             throw new DateTimeException("Start date must be before end date.");
         }
     }
 
+    /**
+     * @desciprion - Delete tasks | Deletar tarefas.
+     * @param idUser - ID of the user. | ID do usuário.
+     * @param idTask - ID of the task. | ID da tarefa.
+     * @param date - start date. | A partir da data.
+     * @return - Return a confirmation message that the process was successful. | Retorna uma mensagem de confirmação que o precesso foi realizado com sucesso.
+     */
     public ResponseDeleteTasksDTO deleteTasks(UUID idUser, UUID idTask, Date date) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         int numberDeleteRepetitions = 0;
         Task task = repository.findById(idUser, idTask);
