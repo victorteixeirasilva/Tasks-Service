@@ -58,7 +58,6 @@ public class TaskService {
         List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksInDateRangeException();
         }
 
@@ -75,7 +74,6 @@ public class TaskService {
         List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksInDateException();
         }
 
@@ -91,7 +89,6 @@ public class TaskService {
         List<Task> tasks = repository.findAllByIdUserAndStatus(idUser, Status.LATE);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksWithStatusLateException();
         }
 

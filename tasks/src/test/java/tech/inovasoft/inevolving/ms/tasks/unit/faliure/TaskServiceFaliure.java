@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -78,7 +75,7 @@ public class TaskServiceFaliure {
     }
 
     @Test
-    public void getTasksInDateRangeNotFoundTasksInDateRangeException() throws NotFoundTasksInDateRangeException {
+    public void getTasksInDateRangeNotFoundTasksInDateRangeException() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date startDate = Date.valueOf("2025-05-01");
@@ -98,4 +95,45 @@ public class TaskServiceFaliure {
 
         verify(taskRepository, times(1)).findAllByIdUserAndDateRange(idUser, startDate, endDate);
     }
+
+    @Test
+    public void getTasksInDateNotFoundTasksInDateException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date date = Date.valueOf("2025-05-14");
+        List<Task> tasks = new ArrayList<>();
+
+        // When (Quando)
+        when(taskRepository.findAllByIdUserAndDate(idUser, date)).thenReturn(tasks);
+        var result = assertThrows(NotFoundTasksInDateException.class, () -> {
+            service.getTasksInDate(idUser, date);
+        });
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Tasks not found in date", result.getMessage());
+
+        verify(taskRepository, times(1)).findAllByIdUserAndDate(idUser, date);
+    }
+
+    @Test
+    public void getTasksLateNotFoundTasksWithStatusLateException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date date = Date.valueOf("2025-05-14");
+        List<Task> tasks = new ArrayList<>();
+
+        // When (Quando)
+        when(taskRepository.findAllByIdUserAndStatus(idUser, Status.LATE)).thenReturn(tasks);
+        var result = assertThrows(NotFoundTasksWithStatusLateException.class, () -> {
+            service.getTasksLate(idUser);
+        });
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Tasks with status late not found", result.getMessage());
+
+        verify(taskRepository, times(1)).findAllByIdUserAndStatus(idUser, Status.LATE);
+    }
+
 }
