@@ -8,6 +8,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -55,11 +56,15 @@ public class TaskService {
      * @param endDate - end date | data de fim
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) {
-        // TODO: Crie o teste que falhe.
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o codigo.
-        return null;
+    public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) throws NotFoundTasksInDateRangeException {
+        List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
+
+        if (tasks.isEmpty()) {
+            // TODO: Falta Teste
+            throw new NotFoundTasksInDateRangeException();
+        }
+
+        return tasks;
     }
 
     /**

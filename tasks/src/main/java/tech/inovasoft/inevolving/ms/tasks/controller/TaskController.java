@@ -12,6 +12,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeat
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
@@ -211,7 +212,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) {
+    ) throws NotFoundTasksInDateRangeException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDateRange(idUser, startDate, endDate)));
     }
 
