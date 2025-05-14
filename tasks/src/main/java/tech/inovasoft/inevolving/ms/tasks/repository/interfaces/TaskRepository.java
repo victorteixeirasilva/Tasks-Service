@@ -38,4 +38,6 @@ public interface TaskRepository {
     List<Task> findAllByIdUserAndDate(UUID idUser, Date date);
 
     List<Task> findAllByIdUserAndStatus(UUID idUser, String status);
+
+    List<Task> findAllByStatusAndDateRange(UUID idUser, Date startDate, Date endDate, String todo);
 }

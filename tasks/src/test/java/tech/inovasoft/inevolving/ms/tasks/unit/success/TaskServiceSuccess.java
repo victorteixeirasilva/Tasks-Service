@@ -189,4 +189,42 @@ public class TaskServiceSuccess {
         verify(taskRepository, times(1)).findAllByIdUserAndStatus(idUser, Status.LATE);
     }
 
+    @Test
+    public void getTasksStatusInDateRange() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date startDate = Date.valueOf("2025-05-01");
+        Date endDate = Date.valueOf("2025-05-31");
+        List<Task> tasks = new ArrayList<>();
+        LocalDate currentDate = LocalDate.of(2025, 5, 1);
+        for (int i = 1; i <= 31; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Task " + i,
+                    "Description " + i,
+                    Status.TODO,
+                    Date.valueOf(currentDate),
+                    null,
+                    idUser,
+                    null,
+                    null,
+                    false,
+                    false,
+                    false,
+                    null
+            ));
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // When (Quando)
+        when(taskRepository.findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO)).thenReturn(tasks);
+        var result = service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(31, result.size());
+
+        verify(taskRepository, times(1)).findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO);
+    }
+
 }
