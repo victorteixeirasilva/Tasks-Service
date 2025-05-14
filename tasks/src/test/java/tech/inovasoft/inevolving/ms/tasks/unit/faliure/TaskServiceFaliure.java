@@ -97,7 +97,7 @@ public class TaskServiceFaliure {
     }
 
     @Test
-    public void getTasksInDateNotFoundTasksInDateException() {
+    public void getTasksInDateNotFoundTasksInDateException() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-14");

@@ -70,7 +70,7 @@ public class TaskService {
      * @param date - date | data
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateException {
+    public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateException, DataBaseException {
         List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date);
 
         if (tasks.isEmpty()) {

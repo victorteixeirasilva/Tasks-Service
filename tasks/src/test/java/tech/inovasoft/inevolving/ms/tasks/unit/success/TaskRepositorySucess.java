@@ -296,7 +296,7 @@ public class TaskRepositorySucess {
     }
 
     @Test
-    public void findAllByIdUserAndDate() {
+    public void findAllByIdUserAndDate() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-12");

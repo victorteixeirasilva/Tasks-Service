@@ -120,7 +120,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksInDate() throws NotFoundTasksInDateException {
+    public void getTasksInDate() throws NotFoundTasksInDateException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-14");
