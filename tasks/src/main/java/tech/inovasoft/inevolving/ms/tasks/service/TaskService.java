@@ -107,10 +107,15 @@ public class TaskService {
      * @param status - status | status
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) {
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o código.
-        return null;
+    public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) throws NotFoundTasksWithStatusException {
+        List<Task> tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status);
+
+        if (tasks.isEmpty()) {
+            // TODO: Falta Teste Da Falha
+            throw new NotFoundTasksWithStatusException(status);
+        }
+
+        return tasks;
     }
 
     /**
