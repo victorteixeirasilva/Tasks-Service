@@ -225,7 +225,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) {
+    ) throws NotFoundTasksInDateRangeException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
     }
 

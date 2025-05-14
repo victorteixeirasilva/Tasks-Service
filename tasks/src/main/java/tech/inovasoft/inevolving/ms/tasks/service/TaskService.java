@@ -74,10 +74,15 @@ public class TaskService {
      * @param date - date | data
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksInDate(UUID idUser, Date date) {
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o codigo.
-        return null;
+    public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateRangeException {
+        List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date);
+
+        if (tasks.isEmpty()) {
+            // TODO: Falta Teste Da Falha
+            throw new NotFoundTasksInDateRangeException();
+        }
+
+        return tasks;
     }
 
     /**
