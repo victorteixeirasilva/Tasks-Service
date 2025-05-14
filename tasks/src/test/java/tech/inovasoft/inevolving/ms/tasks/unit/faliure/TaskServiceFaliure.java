@@ -157,4 +157,23 @@ public class TaskServiceFaliure {
         verify(taskRepository, times(1)).findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO);
     }
 
+    @Test
+    public void getTasksStatusInDateNotFoundTasksWithStatusException() throws NotFoundTasksWithStatusException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date date = Date.valueOf("2025-05-14");
+        List<Task> tasks = new ArrayList<>();
+
+        // When (Quando)
+        when(taskRepository.findAllByStatusAndDate(idUser, date, Status.TODO)).thenReturn(tasks);
+        var result = assertThrows(NotFoundTasksWithStatusException.class, () -> {
+            service.getTasksStatusInDate(idUser, date, Status.TODO);
+        });
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Tasks with status " + Status.TODO + " not found", result.getMessage());
+
+        verify(taskRepository, times(1)).findAllByStatusAndDate(idUser, date, Status.TODO);
+    }
 }
