@@ -333,4 +333,40 @@ public class TaskRepositorySucess {
         verify(repository, times(1)).findAllByIdUserAndDate(any(UUID.class), any(Date.class));
     }
 
+    @Test
+    public void findAllByIdUserAndStatus() throws DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        List<Task> expectedTasks = new ArrayList<>();
+        expectedTasks.add(
+                new Task(
+                        UUID.randomUUID(),
+                        "Name Task",
+                        "Description Task",
+                        Status.TODO,
+                        Date.valueOf("2025-05-12"),
+                        UUID.randomUUID(),
+                        idUser,
+                        null,
+                        null,
+                        false,
+                        false,
+                        false,
+                        null
+                )
+        );
+
+        // When (Quando)
+        when(repository.findAllByIdUserAndStatus(any(UUID.class), any(String.class))).thenReturn(expectedTasks);
+        var result = taskRepository.findAllByIdUserAndStatus(idUser, Status.TODO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTasks.size(), result.size());
+        assertEquals(expectedTasks.getFirst().getId(), result.getFirst().getId());
+        assertEquals(Status.TODO, result.getFirst().getStatus());
+
+        verify(repository, times(1)).findAllByIdUserAndStatus(any(UUID.class), any(String.class));
+    }
+
 }

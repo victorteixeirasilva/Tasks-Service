@@ -188,11 +188,16 @@ public class TaskRepositoryImplementation implements TaskRepository {
     }
 
     @Override
-    public List<Task> findAllByIdUserAndStatus(UUID idUser, String status) {
-        // TODO: Crie o teste que falhe.
+    public List<Task> findAllByIdUserAndStatus(UUID idUser, String status) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByIdUserAndStatus(idUser, status);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdUserAndStatus)", e.getCause());
+        }
         // TODO: Faça o minimo para o teste passar
         // TODO: Refatore o codigo.
-        return List.of();
+        return tasks;
     }
 
     @Override

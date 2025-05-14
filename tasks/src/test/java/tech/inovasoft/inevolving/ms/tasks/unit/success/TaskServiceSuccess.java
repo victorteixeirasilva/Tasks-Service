@@ -155,7 +155,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksLate() throws NotFoundTasksWithStatusLateException {
+    public void getTasksLate() throws NotFoundTasksWithStatusLateException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-14");

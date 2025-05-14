@@ -234,7 +234,7 @@ public class TaskController {
     @GetMapping("/late/{idUser}")
     public CompletableFuture<ResponseEntity> getTasksLate(
             @PathVariable UUID idUser
-    ) throws NotFoundTasksWithStatusLateException {
+    ) throws NotFoundTasksWithStatusLateException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
     }
 

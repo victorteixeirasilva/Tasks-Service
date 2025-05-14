@@ -85,7 +85,7 @@ public class TaskService {
      * @param idUser - id of user | id do usuário
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksLate(UUID idUser) throws NotFoundTasksWithStatusLateException {
+    public List<Task> getTasksLate(UUID idUser) throws NotFoundTasksWithStatusLateException, DataBaseException {
         List<Task> tasks = repository.findAllByIdUserAndStatus(idUser, Status.LATE);
 
         if (tasks.isEmpty()) {
