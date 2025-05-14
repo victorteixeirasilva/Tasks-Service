@@ -6,10 +6,8 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 
@@ -74,12 +72,12 @@ public class TaskService {
      * @param date - date | data
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateRangeException {
+    public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateException {
         List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date);
 
         if (tasks.isEmpty()) {
             // TODO: Falta Teste Da Falha
-            throw new NotFoundTasksInDateRangeException();
+            throw new NotFoundTasksInDateException();
         }
 
         return tasks;
@@ -90,11 +88,15 @@ public class TaskService {
      * @param idUser - id of user | id do usuário
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksLate(UUID idUser) {
-        // TODO: Crie o teste que falhe.
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o codigo.
-        return null;
+    public List<Task> getTasksLate(UUID idUser) throws NotFoundTasksWithStatusLateException {
+        List<Task> tasks = repository.findAllByIdUserAndStatus(idUser, Status.LATE);
+
+        if (tasks.isEmpty()) {
+            // TODO: Falta Teste Da Falha
+            throw new NotFoundTasksWithStatusLateException();
+        }
+
+        return tasks;
     }
 
     /**

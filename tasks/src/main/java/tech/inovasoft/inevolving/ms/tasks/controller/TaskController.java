@@ -10,10 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
@@ -225,7 +222,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) throws NotFoundTasksInDateRangeException {
+    ) throws NotFoundTasksInDateRangeException, NotFoundTasksInDateException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDate(idUser, date)));
     }
 
@@ -237,7 +234,7 @@ public class TaskController {
     @GetMapping("/late/{idUser}")
     public CompletableFuture<ResponseEntity> getTasksLate(
             @PathVariable UUID idUser
-    ) {
+    ) throws NotFoundTasksWithStatusLateException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksLate(idUser)));
     }
 

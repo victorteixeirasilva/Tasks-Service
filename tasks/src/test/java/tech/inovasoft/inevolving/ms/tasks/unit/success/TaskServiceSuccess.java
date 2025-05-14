@@ -10,10 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
@@ -123,7 +120,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksInDate() throws NotFoundTasksInDateRangeException {
+    public void getTasksInDate() throws NotFoundTasksInDateException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-14");
@@ -158,7 +155,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksLate() {
+    public void getTasksLate() throws NotFoundTasksWithStatusLateException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date date = Date.valueOf("2025-05-14");
@@ -182,14 +179,14 @@ public class TaskServiceSuccess {
         }
 
         // When (Quando)
-        when(taskRepository.findAllByIdUserAndStatus(idUser, date)).thenReturn(tasks);
+        when(taskRepository.findAllByIdUserAndStatus(idUser, Status.LATE)).thenReturn(tasks);
         var result = service.getTasksLate(idUser);
 
         // Then (Então)
         assertNotNull(result);
         assertEquals(10, result.size());
 
-        verify(taskRepository, times(1)).findAllByIdUserAndStatus(idUser, date);
+        verify(taskRepository, times(1)).findAllByIdUserAndStatus(idUser, Status.LATE);
     }
 
 }
