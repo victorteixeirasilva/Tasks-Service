@@ -54,7 +54,7 @@ public class TaskService {
      * @param endDate - end date | data de fim
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) throws NotFoundTasksInDateRangeException {
+    public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) throws NotFoundTasksInDateRangeException, DataBaseException {
         List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
 
         if (tasks.isEmpty()) {
@@ -124,7 +124,6 @@ public class TaskService {
         List<Task> tasks = repository.findAllByStatusAndDate(idUser, date, status);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksWithStatusException(status);
         }
 

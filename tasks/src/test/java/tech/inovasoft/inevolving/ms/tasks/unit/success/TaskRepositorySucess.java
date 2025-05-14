@@ -257,4 +257,80 @@ public class TaskRepositorySucess {
         assertEquals(expectedTasks.size(), result.size());
     }
 
+    @Test
+    public void findAllByIdUserAndDateRange() throws DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var startDate = Date.valueOf("2025-05-12");
+        var endDate = Date.valueOf("2025-05-13");
+
+        List<Task> expectedTasks = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            expectedTasks.add(
+                    new Task(
+                            UUID.randomUUID(),
+                            "Name Task",
+                            "Description Task",
+                            Status.TODO,
+                            Date.valueOf("2025-05-12"),
+                            UUID.randomUUID(),
+                            idUser,
+                            null,
+                            null,
+                            false,
+                            false,
+                            false,
+                            null
+                    )
+            );
+        }
+
+        // When (Quando)
+        when(repository.findAllByIdUserAndDateRange(any(UUID.class), any(Date.class), any(Date.class))).thenReturn(expectedTasks);
+        var result = taskRepository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTasks.size(), result.size());
+        assertEquals(expectedTasks.getFirst().getId(), result.getFirst().getId());
+    }
+
+    @Test
+    public void findAllByIdUserAndDate() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date date = Date.valueOf("2025-05-12");
+        List<Task> expectedTasks = new ArrayList<>();
+        expectedTasks.add(
+                new Task(
+                        UUID.randomUUID(),
+                        "Name Task",
+                        "Description Task",
+                        Status.TODO,
+                        Date.valueOf("2025-05-12"),
+                        UUID.randomUUID(),
+                        idUser,
+                        null,
+                        null,
+                        false,
+                        false,
+                        false,
+                        null
+                )
+        );
+
+        // When (Quando)
+        when(repository.findAllByIdUserAndDate(any(UUID.class), any(Date.class))).thenReturn(expectedTasks);
+        var result = taskRepository.findAllByIdUserAndDate(idUser, date);
+
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTasks.size(), result.size());
+        assertEquals(expectedTasks.getFirst().getId(), result.getFirst().getId());
+        assertEquals(date, result.getFirst().getDateTask());
+
+        verify(repository, times(1)).findAllByIdUserAndDate(any(UUID.class), any(Date.class));
+    }
+
 }

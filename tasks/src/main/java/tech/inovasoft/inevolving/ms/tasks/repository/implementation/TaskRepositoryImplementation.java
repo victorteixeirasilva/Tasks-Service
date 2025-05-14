@@ -165,11 +165,14 @@ public class TaskRepositoryImplementation implements TaskRepository {
     }
 
     @Override
-    public List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate) {
-        // TODO: Crie o teste que falhe.
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o codigo.
-        return List.of();
+    public List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdUserAndDateRange)", e.getCause());
+        }
+        return tasks;
     }
 
     @Override
