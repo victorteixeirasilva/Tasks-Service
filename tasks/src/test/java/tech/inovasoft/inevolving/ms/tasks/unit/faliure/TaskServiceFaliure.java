@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -37,7 +38,7 @@ public class TaskServiceFaliure {
     private TaskService service;
 
     @Test
-    public void lockTaskByObjectiveUserWithoutAuthorizationAboutTheTaskException() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public void lockTaskByObjectiveUserWithoutAuthorizationAboutTheTaskException() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();
@@ -74,5 +75,27 @@ public class TaskServiceFaliure {
         assertEquals("User without authorization about the task.", result.getMessage());
 
         verify(taskRepository, times(1)).findAllByIdObjective(idObjective);
+    }
+
+    @Test
+    public void getTasksInDateRangeNotFoundTasksInDateRangeException() throws NotFoundTasksInDateRangeException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date startDate = Date.valueOf("2025-05-01");
+        Date endDate = Date.valueOf("2025-05-31");
+        List<Task> tasks = new ArrayList<>();
+
+
+        // When (Quando)
+        when(taskRepository.findAllByIdUserAndDateRange(idUser, startDate, endDate)).thenReturn(tasks);
+        var result = assertThrows(NotFoundTasksInDateRangeException.class, () -> {
+            service.getTasksInDateRange(idUser, startDate, endDate);
+        });
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals("Tasks not found in date range", result.getMessage());
+
+        verify(taskRepository, times(1)).findAllByIdUserAndDateRange(idUser, startDate, endDate);
     }
 }
