@@ -37,6 +37,7 @@ public class TaskService {
         List<Task> tasks = repository.findAllByIdObjective(idObjective);
         for (Task task : tasks) {
             if (!task.getIdUser().equals(idUser)) {
+                // TODO: Falta Teste Da Falha
                 throw new UserWithoutAuthorizationAboutTheTaskException();
             }
             if (task.getDateTask().after(completionDate)) {
@@ -60,7 +61,7 @@ public class TaskService {
         List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste
+            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksInDateRangeException();
         }
 
@@ -74,7 +75,6 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksInDate(UUID idUser, Date date) {
-        // TODO: Crie o teste que falhe.
         // TODO: Faça o minimo para o teste passar
         // TODO: Refatore o codigo.
         return null;
