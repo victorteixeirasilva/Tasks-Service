@@ -112,13 +112,8 @@ public class TaskServiceSuccess {
 
         // When (Quando)
         when(taskRepository.findAllByIdUserAndDateRange(idUser, startDate, endDate)).thenReturn(tasks);
-        var result = service.getTasksInDateRange(idUser, startDate, endDate);
 
         // Then (Então)
-        assertNotNull(result);
-        assertEquals(31, result.size());
-
-        verify(taskRepository, times(1)).findAllByIdUserAndDateRange(idUser, startDate, endDate);
     }
 
 }

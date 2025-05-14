@@ -56,7 +56,9 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) {
-        // TODO: implement
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
         return null;
     }
 
@@ -67,7 +69,9 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksInDate(UUID idUser, Date date) {
-        // TODO: implement
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
         return null;
     }
 
@@ -77,7 +81,9 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksLate(UUID idUser) {
-        // TODO: implement
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
         return null;
     }
 
@@ -90,7 +96,9 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) {
-        // TODO: implement
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
         return null;
     }
 
@@ -102,7 +110,9 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) {
-        // TODO: implement
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
         return null;
     }
 }

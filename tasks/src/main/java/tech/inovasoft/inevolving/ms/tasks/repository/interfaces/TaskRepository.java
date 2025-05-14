@@ -33,4 +33,5 @@ public interface TaskRepository {
 
     List<Task> findAllByIdObjective(UUID idForSearch) throws DataBaseException;
 
+    List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate);
 }

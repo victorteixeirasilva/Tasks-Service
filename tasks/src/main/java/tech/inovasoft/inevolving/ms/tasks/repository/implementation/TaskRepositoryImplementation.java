@@ -164,4 +164,12 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    @Override
+    public List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate) {
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
+        return List.of();
+    }
+
 }
