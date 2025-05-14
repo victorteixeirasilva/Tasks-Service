@@ -180,4 +180,12 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return List.of();
     }
 
+    @Override
+    public List<Task> findAllByIdUserAndStatus(UUID idUser, Date date) {
+        // TODO: Crie o teste que falhe.
+        // TODO: Faça o minimo para o teste passar
+        // TODO: Refatore o codigo.
+        return List.of();
+    }
+
 }

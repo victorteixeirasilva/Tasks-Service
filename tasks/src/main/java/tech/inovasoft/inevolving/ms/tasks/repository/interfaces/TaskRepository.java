@@ -36,4 +36,6 @@ public interface TaskRepository {
     List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate);
 
     List<Task> findAllByIdUserAndDate(UUID idUser, Date date);
+
+    List<Task> findAllByIdUserAndStatus(UUID idUser, Date date);
 }

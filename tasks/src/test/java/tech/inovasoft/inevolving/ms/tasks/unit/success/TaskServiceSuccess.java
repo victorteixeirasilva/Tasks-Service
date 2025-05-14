@@ -157,4 +157,39 @@ public class TaskServiceSuccess {
         verify(taskRepository, times(1)).findAllByIdUserAndDate(idUser, date);
     }
 
+    @Test
+    public void getTasksLate() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date date = Date.valueOf("2025-05-14");
+        List<Task> tasks = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Task " + i,
+                    "Description " + i,
+                    Status.LATE,
+                    date,
+                    null,
+                    idUser,
+                    null,
+                    null,
+                    false,
+                    false,
+                    false,
+                    null
+            ));
+        }
+
+        // When (Quando)
+        when(taskRepository.findAllByIdUserAndStatus(idUser, date)).thenReturn(tasks);
+        var result = service.getTasksLate(idUser);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(10, result.size());
+
+        verify(taskRepository, times(1)).findAllByIdUserAndStatus(idUser, date);
+    }
+
 }
