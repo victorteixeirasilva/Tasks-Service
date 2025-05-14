@@ -261,7 +261,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksToDoInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) {
+    ) throws NotFoundTasksWithStatusException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksStatusInDate(idUser, date, Status.TODO)));
     }
 
@@ -292,7 +292,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksInProgressInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) {
+    ) throws NotFoundTasksWithStatusException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.IN_PROGRESS)
@@ -327,7 +327,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksDoneInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) {
+    ) throws NotFoundTasksWithStatusException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.DONE)
@@ -362,7 +362,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity> getTasksCanceledInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date
-    ) {
+    ) throws NotFoundTasksWithStatusException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.CANCELLED)
