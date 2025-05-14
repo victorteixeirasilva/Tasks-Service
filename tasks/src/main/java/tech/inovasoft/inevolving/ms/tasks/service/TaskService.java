@@ -126,7 +126,6 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) {
-        // TODO: Crie o teste que falhe.
         // TODO: Faça o minimo para o teste passar
         // TODO: Refatore o codigo.
         return null;
