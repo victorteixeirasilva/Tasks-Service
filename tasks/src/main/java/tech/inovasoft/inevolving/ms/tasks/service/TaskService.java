@@ -107,7 +107,6 @@ public class TaskService {
         List<Task> tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status);
 
         if (tasks.isEmpty()) {
-            // TODO: Falta Teste Da Falha
             throw new NotFoundTasksWithStatusException(status);
         }
 
