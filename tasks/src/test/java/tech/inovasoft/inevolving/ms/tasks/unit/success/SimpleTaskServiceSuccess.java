@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
@@ -15,10 +16,13 @@ import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
+import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,11 +36,14 @@ public class SimpleTaskServiceSuccess {
     @Mock
     private TaskRepository taskRepository;
 
+    @Mock
+    private ObjectivesServiceClient objectivesServiceClient;
+
     @InjectMocks
     private SimpleTaskService simpleTaskService;
 
     @Test
-    public void addTask() throws DataBaseException {
+    public void addTask() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();
@@ -67,6 +74,7 @@ public class SimpleTaskServiceSuccess {
 
         // When (Quando)
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(CompletableFuture.completedFuture(ResponseEntity.ok().build()));
         var result = simpleTaskService.addTask(taskDTO);
 
         // Then (Então)
@@ -83,7 +91,7 @@ public class SimpleTaskServiceSuccess {
     }
 
     @Test
-    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException {
 
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -128,6 +136,7 @@ public class SimpleTaskServiceSuccess {
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(oldTask);
         oldTask.setIdObjective(idObjective);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(oldTask);
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(CompletableFuture.completedFuture(ResponseEntity.ok().build()));
         var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
 
         // Then (Então)

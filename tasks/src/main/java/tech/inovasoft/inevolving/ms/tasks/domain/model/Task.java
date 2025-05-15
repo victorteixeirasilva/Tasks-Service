@@ -2,7 +2,9 @@ package tech.inovasoft.inevolving.ms.tasks.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.sql.Date;
 import java.util.UUID;
@@ -40,7 +42,7 @@ public class Task {
         if (dto.idObjective() != null) {
             this.setIdObjective(dto.idObjective());
         }
-        //TODO: verificar no serviço de objetivos se esse objetivo existe.
+
         this.setIdObjective(dto.idUser());
         this.idUser = dto.idUser();
         this.isCopy = false;
@@ -55,7 +57,6 @@ public class Task {
         if (dto.idObjective() != null) {
             this.setIdObjective(dto.idObjective());
         }
-        //TODO: verificar no serviço de objetivos se esse objetivo existe.
         this.setIdObjective(dto.idUser());
 
         this.idUser = dto.idUser();

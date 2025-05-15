@@ -1,6 +1,7 @@
 package tech.inovasoft.inevolving.ms.tasks.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
@@ -10,20 +11,44 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
+import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 @Service
 public class SimpleTaskService {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private ObjectivesServiceClient objectivesServiceClient;
+
+    /**
+     * @desciprion - Method to validate whether the objective exists, by querying the objectives microservice. | Metodo para validar se o objetivo existe, fazendo a consulta ao micro serviço de objetivos.
+     * @param idObjective - ID of the objective. | ID do objetivo.
+     * @throws NotFoundException - Thrown when the objective is not found. | Lancado quando o objetivo nao eh encontrado.
+     */
+    public void validObjective(UUID idObjective) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        ResponseEntity response = null;
+        try {
+            response = objectivesServiceClient.getObjectiveById(idObjective);
+        } catch (Exception e) {
+            throw new NotFoundException("Objective not found in objectives service");
+        }
+
+        if (response == null || !response.getStatusCode().is2xxSuccessful()){
+            throw new NotFoundException("Objective not found in objectives service");
+        }
+    }
+
     /**
      * @desciprion - Method to add a new task (without repetition). | Metodo para adicionar uma nova tarefa (sem repeticao).
      * @param dto - DTO (Data Transfer Object) to add a new task. | DTO (Data Transfer Object) para adicionar uma nova tarefa.
      * @return - ResponseTaskDTO with the new task. | ResponseTaskDTO com a nova tarefa.
      */
-    public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException {
+    public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        validObjective(dto.idObjective());
         return new ResponseTaskDTO(repository.saveInDataBase(new Task(dto)));
     }
 
@@ -34,10 +59,11 @@ public class SimpleTaskService {
      * @param dto - DTO (Data Transfer Object) to update the task. | DTO (Data Transfer Object) para atualizar a tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.
      */
-    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         Task task = repository.findById(idUser, idTask);
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
+        validObjective(dto.idObjective());
         task.setIdObjective(dto.idObjective());
 
 

@@ -19,6 +19,8 @@ import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 import java.sql.Date;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Tag(name = "Tasks", description = "Gerenciador dos end-points de tarefas")
 @RestController
@@ -40,7 +42,7 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @PostMapping
-    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) throws DataBaseException {
+    public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.addTask(taskDTO)));
     }
 
@@ -70,7 +72,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)));
     }
 
@@ -85,7 +87,7 @@ public class TaskController {
             @PathVariable UUID idTask,
             @PathVariable Date endDate,
             @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         recurringTaskService.updateTasks(idUser, idTask, endDate, updateTaskDTO)

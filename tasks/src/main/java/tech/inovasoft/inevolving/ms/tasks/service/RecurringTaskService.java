@@ -10,6 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
+import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.sql.Date;
 import java.time.DateTimeException;
@@ -17,6 +18,8 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class RecurringTaskService {
@@ -105,7 +108,7 @@ public class RecurringTaskService {
      * @param dto - DTO (Data Transfer Object) of update tasks. | DTO (Data Transfer Object) de atualizacao de tarefas.
      * @return - Return a confirmation message that the process was successful. | Retorna uma mensagem de confirmação que o precesso foi realizado com sucesso.
      */
-    public ResponseUpdateRepeatTaskDTO updateTasks(UUID idUser, UUID idTask, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseUpdateRepeatTaskDTO updateTasks(UUID idUser, UUID idTask, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
         Task task = repository.findById(idUser, idTask);
 
@@ -120,6 +123,7 @@ public class RecurringTaskService {
 
             task.setNameTask(dto.nameTask);
             task.setDescriptionTask(dto.descriptionTask);
+            simpleTaskService.validObjective(dto.idObjective);
             task.setIdObjective(dto.idObjective);
 
             repository.saveInDataBase(task);
