@@ -370,7 +370,7 @@ public class TaskRepositorySucess {
     }
 
     @Test
-    public void findAllByStatusAndDateRange() {
+    public void findAllByStatusAndDateRange() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         Date startDate = Date.valueOf("2025-05-01");

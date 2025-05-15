@@ -173,6 +173,7 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndDateRange)", e.getCause());
         }
         return tasks;
+        // TODO: Refatore o codigo.
     }
 
     @Override
@@ -185,6 +186,7 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndDate)", e.getCause());
         }
         return tasks;
+        // TODO: Refatore o codigo.
     }
 
     @Override
@@ -197,13 +199,19 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndStatus)", e.getCause());
         }
         return tasks;
+        // TODO: Refatore o codigo.
     }
 
     @Override
-    public List<Task> findAllByStatusAndDateRange(UUID idUser, Date startDate, Date endDate, String todo) {
-        // TODO: Faça o minimo para o teste passar
+    public List<Task> findAllByStatusAndDateRange(UUID idUser, Date startDate, Date endDate, String status) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByStatusAndDateRange)", e.getCause());
+        }
         // TODO: Refatore o codigo.
-        return List.of();
+        return tasks;
     }
 
     @Override

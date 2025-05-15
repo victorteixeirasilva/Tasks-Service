@@ -248,7 +248,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) throws NotFoundTasksWithStatusException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO)));
     }
 
@@ -275,7 +275,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) throws NotFoundTasksWithStatusException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.IN_PROGRESS)
@@ -310,7 +310,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) throws NotFoundTasksWithStatusException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.DONE)
@@ -345,7 +345,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) throws NotFoundTasksWithStatusException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.CANCELLED)

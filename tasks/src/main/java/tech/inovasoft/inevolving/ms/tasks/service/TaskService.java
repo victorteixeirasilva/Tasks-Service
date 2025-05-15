@@ -103,7 +103,7 @@ public class TaskService {
      * @param status - status | status
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) throws NotFoundTasksWithStatusException {
+    public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) throws NotFoundTasksWithStatusException, DataBaseException {
         List<Task> tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status);
 
         if (tasks.isEmpty()) {
