@@ -164,6 +164,14 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    /**
+     * @desciprion - Method responsible for finding all tasks of a specific user in a date range. | Metodo responsible for procurar todas as tarefas de um determinado usuário em um intervalo de datas.
+     * @param idUser - ID of the user that will be searched. | ID do usuário que vai ser procurado.
+     * @param startDate - Start date of the date range. | Data inicial do intervalo de datas.
+     * @param endDate - End date of the date range. | Data final do intervalo de datas.
+     * @return - Returns a list of tasks that belong to the user in the date range. | Lista de tarefas que pertencem ao usuário no intervalo de datas.
+     * @throws DataBaseException - Error occurs if there is a problem in the DBMS finding the task in the bank. (Erro acontece caso tenha algum problema no SGBD para encontrar a tarefa no banco.)
+     */
     @Override
     public List<Task> findAllByIdUserAndDateRange(UUID idUser, Date startDate, Date endDate) throws DataBaseException {
         List<Task> tasks;
@@ -173,7 +181,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndDateRange)", e.getCause());
         }
         return tasks;
-        // TODO: Refatore o codigo.
     }
 
     @Override
