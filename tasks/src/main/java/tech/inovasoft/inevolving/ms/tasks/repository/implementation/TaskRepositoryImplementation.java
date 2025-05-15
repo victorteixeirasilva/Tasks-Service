@@ -202,6 +202,13 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    /**
+     * @desciprion - Method responsible for finding all tasks of a specific user in a specific status. | Metodo responsible for procurar todas as tarefas de um determinado usuário em um status especifico.
+     * @param idUser - ID of the user that will be searched. | ID do usuário que vai ser procurado.
+     * @param status - Status of the task that will be searched. | Status da tarefa que vai ser procurada.
+     * @return - Returns a list of tasks that belong to the user in the status. | Lista de tarefas que pertencem ao usuário no status.
+     * @throws DataBaseException - Error occurs if there is a problem in the DBMS finding the task in the bank. (Erro acontece caso tenha algum problema no SGBD para encontrar a tarefa no banco.)
+     */
     @Override
     public List<Task> findAllByIdUserAndStatus(UUID idUser, String status) throws DataBaseException {
         List<Task> tasks;
@@ -212,7 +219,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndStatus)", e.getCause());
         }
         return tasks;
-        // TODO: Refatore o codigo.
     }
 
     /**
