@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -81,7 +82,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException {
+    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -338,7 +339,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException {
+    public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -480,7 +481,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException {
+    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();

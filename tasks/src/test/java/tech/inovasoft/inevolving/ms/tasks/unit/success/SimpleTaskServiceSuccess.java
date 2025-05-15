@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,7 +44,7 @@ public class SimpleTaskServiceSuccess {
     private SimpleTaskService simpleTaskService;
 
     @Test
-    public void addTask() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException {
+    public void addTask() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();
@@ -74,7 +75,7 @@ public class SimpleTaskServiceSuccess {
 
         // When (Quando)
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
-        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(CompletableFuture.completedFuture(ResponseEntity.ok().build()));
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(ResponseEntity.ok().build());
         var result = simpleTaskService.addTask(taskDTO);
 
         // Then (Então)
@@ -91,7 +92,7 @@ public class SimpleTaskServiceSuccess {
     }
 
     @Test
-    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException {
+    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -136,7 +137,7 @@ public class SimpleTaskServiceSuccess {
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(oldTask);
         oldTask.setIdObjective(idObjective);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(oldTask);
-        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(CompletableFuture.completedFuture(ResponseEntity.ok().build()));
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class))).thenReturn(ResponseEntity.ok().build());
         var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
 
         // Then (Então)
