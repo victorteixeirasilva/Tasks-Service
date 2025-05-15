@@ -120,7 +120,7 @@ public class TaskService {
      * @param status - status | status
      * @return - List of tasks | Lista de tarefas
      */
-    public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) throws NotFoundTasksWithStatusException {
+    public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) throws NotFoundTasksWithStatusException, DataBaseException {
         List<Task> tasks = repository.findAllByStatusAndDate(idUser, date, status);
 
         if (tasks.isEmpty()) {

@@ -196,7 +196,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
         try {
             tasks = repository.findAllByIdUserAndDate(idUser, date);
         } catch (Exception e) {
-            // TODO: Crie o teste da falha.
             throw new DataBaseException("(findAllByIdUserAndDate)", e.getCause());
         }
         return tasks;
@@ -215,7 +214,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
         try {
             tasks = repository.findAllByIdUserAndStatus(idUser, status);
         } catch (Exception e) {
-            // TODO: Crie o teste da falha.
             throw new DataBaseException("(findAllByIdUserAndStatus)", e.getCause());
         }
         return tasks;
@@ -242,11 +240,14 @@ public class TaskRepositoryImplementation implements TaskRepository {
     }
 
     @Override
-    public List<Task> findAllByStatusAndDate(UUID idUser, Date date, String todo) {
-        // TODO: Crie o teste que falhe.
-        // TODO: Faça o minimo para o teste passar
-        // TODO: Refatore o codigo.
-        return List.of();
+    public List<Task> findAllByStatusAndDate(UUID idUser, Date date, String status) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByStatusAndDate(idUser, date, status);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByStatusAndDate)", e.getCause());
+        }
+        return tasks;
     }
 
 }
