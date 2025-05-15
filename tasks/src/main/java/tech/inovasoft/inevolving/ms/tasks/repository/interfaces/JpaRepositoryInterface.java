@@ -35,4 +35,7 @@ public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
 
     @Query("") // TODO: Criar Query PLSQl
     List<Task> findAllByIdUserAndStatus(UUID idUser, String status);
+
+    @Query("") // TODO: Criar Query PLSQl
+    List<Task> findAllByStatusAndDateRange(UUID idUser, Date startDate, Date endDate, String status);
 }

@@ -369,4 +369,42 @@ public class TaskRepositorySucess {
         verify(repository, times(1)).findAllByIdUserAndStatus(any(UUID.class), any(String.class));
     }
 
+    @Test
+    public void findAllByStatusAndDateRange() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        Date startDate = Date.valueOf("2025-05-01");
+        Date endDate = Date.valueOf("2025-05-31");
+        List<Task> tasks = new ArrayList<>();
+        LocalDate currentDate = LocalDate.of(2025, 5, 1);
+        for (int i = 1; i <= 31; i++) {
+            tasks.add(new Task(
+                    UUID.randomUUID(),
+                    "Task " + i,
+                    "Description " + i,
+                    Status.TODO,
+                    Date.valueOf(currentDate),
+                    null,
+                    idUser,
+                    null,
+                    null,
+                    false,
+                    false,
+                    false,
+                    null
+            ));
+            currentDate = currentDate.plusDays(1);
+        }
+
+        // When (Quando)
+        when(repository.findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO)).thenReturn(tasks);
+        var result = taskRepository.findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(31, result.size());
+
+        verify(repository, times(1)).findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO);
+
+    }
 }
