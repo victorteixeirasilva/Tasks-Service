@@ -183,6 +183,13 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    /**
+     * @desciprion - Method responsible for finding all tasks of a specific user in a specific date. | Metodo responsible for procurar todas as tarefas de um determinado usuário em uma data especifica.
+     * @param idUser - ID of the user that will be searched. | ID do usuário que vai ser procurado.
+     * @param date - Date that will be searched. | Data que vai ser procurada.
+     * @return - Returns a list of tasks that belong to the user in the date. | Lista de tarefas que pertencem ao usuário na data.
+     * @throws DataBaseException - Error occurs if there is a problem in the DBMS finding the task in the bank. (Erro acontece caso tenha algum problema no SGBD para encontrar a tarefa no banco.)
+     */
     @Override
     public List<Task> findAllByIdUserAndDate(UUID idUser, Date date) throws DataBaseException {
         List<Task> tasks;
@@ -193,7 +200,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
             throw new DataBaseException("(findAllByIdUserAndDate)", e.getCause());
         }
         return tasks;
-        // TODO: Refatore o codigo.
     }
 
     @Override
