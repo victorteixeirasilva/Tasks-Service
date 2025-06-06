@@ -22,6 +22,8 @@ import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -263,7 +265,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksInDateRangeByObjectiveId() {
+    public void getTasksInDateRangeByObjectiveId() throws NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();

@@ -234,7 +234,7 @@ public class TaskController {
             @PathVariable UUID idObjective,
             @PathVariable Date startDate,
             @PathVariable Date endDate
-    ) throws NotFoundTasksInDateRangeException, DataBaseException {
+    ) throws NotFoundTasksInDateRangeException, DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.getTasksInDateRangeByObjectiveId(idUser, idObjective,startDate, endDate)

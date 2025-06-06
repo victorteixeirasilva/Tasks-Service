@@ -11,6 +11,8 @@ import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Service
 public class TaskService {
@@ -127,10 +129,16 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) {
+    public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException {
+        simpleTaskService.validObjective(idObjective, idUser);
 
-        // TODO: GREEN
+        List<Task> tasks = repository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjective, startDate, endDate);
+
+        if (tasks.isEmpty()) {
+            throw new NotFoundTasksWithObjectiveException();
+        }
+
+        return tasks;
         // TODO: BLUE
-        return null;
     }
 }
