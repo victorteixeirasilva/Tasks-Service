@@ -129,6 +129,14 @@ public class TaskService {
         return tasks;
     }
 
+    /**
+     * @desciprion - Get all tasks registered with a specific objective | Pegar todas as tasks cadastradas com um objetivo especifico
+     * @param idUser - User Id | Id do usuário
+     * @param idObjective - Objective Id | Id do objetivo
+     * @param startDate - Start Date | Data Inicial da Consulta
+     * @param endDate - End Date | Data final da consulta
+     * @return - Retorna todas as tasks
+     */
     public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException {
         simpleTaskService.validObjective(idObjective, idUser);
 
@@ -139,6 +147,5 @@ public class TaskService {
         }
 
         return tasks;
-        // TODO: BLUE
     }
 }
