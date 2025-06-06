@@ -137,7 +137,7 @@ public class TaskService {
      * @param endDate - End Date | Data final da consulta
      * @return - Retorna todas as tasks
      */
-    public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException {
+    public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException, DataBaseException {
         simpleTaskService.validObjective(idObjective, idUser);
 
         List<Task> tasks = repository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjective, startDate, endDate);

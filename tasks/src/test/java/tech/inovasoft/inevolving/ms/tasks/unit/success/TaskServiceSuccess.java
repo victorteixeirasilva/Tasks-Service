@@ -265,7 +265,7 @@ public class TaskServiceSuccess {
     }
 
     @Test
-    public void getTasksInDateRangeByObjectiveId() throws NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void getTasksInDateRangeByObjectiveId() throws NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();
