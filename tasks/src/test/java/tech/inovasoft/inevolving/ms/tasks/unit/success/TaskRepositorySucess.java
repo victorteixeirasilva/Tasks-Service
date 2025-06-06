@@ -407,4 +407,45 @@ public class TaskRepositorySucess {
         verify(repository, times(1)).findAllByStatusAndDateRange(idUser, startDate, endDate, Status.TODO);
 
     }
+
+    @Test
+    public void findAllByIdUserAndIdObjectiveAndDateRange() throws DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var idObjectice = UUID.randomUUID();
+        var startDate = Date.valueOf("2025-05-12");
+        var endDate = Date.valueOf("2025-05-13");
+
+        List<Task> expectedTasks = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            expectedTasks.add(
+                    new Task(
+                            UUID.randomUUID(),
+                            "Name Task",
+                            "Description Task",
+                            Status.TODO,
+                            Date.valueOf("2025-05-12"),
+                            UUID.randomUUID(),
+                            idUser,
+                            null,
+                            idObjectice,
+                            false,
+                            false,
+                            false,
+                            null
+                    )
+            );
+        }
+
+        // When (Quando)
+        when(repository.findAllByIdUserAndIdObjectiveAndDateRange(any(UUID.class), any(UUID.class), any(Date.class), any(Date.class))).thenReturn(expectedTasks);
+        var result = taskRepository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjectice, startDate, endDate);
+
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(expectedTasks.size(), result.size());
+        assertEquals(expectedTasks.getFirst().getId(), result.getFirst().getId());
+    }
+
+
 }
