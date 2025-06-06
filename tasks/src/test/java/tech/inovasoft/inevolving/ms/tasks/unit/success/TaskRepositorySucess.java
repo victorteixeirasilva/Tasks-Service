@@ -412,7 +412,7 @@ public class TaskRepositorySucess {
     public void findAllByIdUserAndIdObjectiveAndDateRange() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
-        var idObjectice = UUID.randomUUID();
+        var idObjective = UUID.randomUUID();
         var startDate = Date.valueOf("2025-05-12");
         var endDate = Date.valueOf("2025-05-13");
 
@@ -428,7 +428,7 @@ public class TaskRepositorySucess {
                             UUID.randomUUID(),
                             idUser,
                             null,
-                            idObjectice,
+                            idObjective,
                             false,
                             false,
                             false,
@@ -439,7 +439,7 @@ public class TaskRepositorySucess {
 
         // When (Quando)
         when(repository.findAllByIdUserAndIdObjectiveAndDateRange(any(UUID.class), any(UUID.class), any(Date.class), any(Date.class))).thenReturn(expectedTasks);
-        var result = taskRepository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjectice, startDate, endDate);
+        var result = taskRepository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjective, startDate, endDate);
 
         // Then (Então)
         assertNotNull(result);

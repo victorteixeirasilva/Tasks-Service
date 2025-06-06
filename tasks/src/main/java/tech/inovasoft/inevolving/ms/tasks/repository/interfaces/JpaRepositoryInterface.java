@@ -28,7 +28,11 @@ public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
     Optional<Task> findByIdOriginalTaskOrIdTask(@Param("specificDate") Date specificDate, @Param("id") UUID id);
 
     @Query("SELECT t FROM Task t WHERE t.idUser = :idUser AND t.dateTask BETWEEN :startDate AND :endDate")
-    List<Task> findAllByIdUserAndDateRange(@Param("idUser") UUID idUser,@Param("startDate") Date startDate,@Param("endDate") Date endDate);
+    List<Task> findAllByIdUserAndDateRange(
+            @Param("idUser") UUID idUser,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate
+    );
 
     @Query("SELECT t FROM Task t WHERE t.idUser = :idUser AND t.dateTask = :date")
     List<Task> findAllByIdUserAndDate(@Param("idUser") UUID idUser, @Param("date") Date date);
@@ -42,6 +46,11 @@ public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
     @Query("SELECT t FROM Task t WHERE t.idUser = :idUser AND t.dateTask = :date AND t.status = :status")
     List<Task> findAllByStatusAndDate(@Param("idUser") UUID idUser, @Param("date") Date date, @Param("status") String status);
 
-    // TODO: Desenvolver Query JPQL
-    List<Task> findAllByIdUserAndIdObjectiveAndDateRange(UUID idUser, UUID idObjective, Date startDate, Date endDate);
+    @Query("SELECT t FROM Task t WHERE t.idUser = :idUser AND t.idObjective = :idObjective AND t.dateTask BETWEEN :startDate AND :endDate")
+    List<Task> findAllByIdUserAndIdObjectiveAndDateRange(
+            @Param("idUser") UUID idUser,
+            @Param("idObjective") UUID idObjective,
+            @Param("startDate") Date startDate,
+            @Param("endDate") Date endDate
+    );
 }
