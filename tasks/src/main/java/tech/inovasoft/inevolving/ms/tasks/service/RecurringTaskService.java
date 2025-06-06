@@ -123,7 +123,7 @@ public class RecurringTaskService {
 
             task.setNameTask(dto.nameTask);
             task.setDescriptionTask(dto.descriptionTask);
-            simpleTaskService.validObjective(dto.idObjective);
+            simpleTaskService.validObjective(dto.idObjective, idUser);
             task.setIdObjective(dto.idObjective);
 
             repository.saveInDataBase(task);

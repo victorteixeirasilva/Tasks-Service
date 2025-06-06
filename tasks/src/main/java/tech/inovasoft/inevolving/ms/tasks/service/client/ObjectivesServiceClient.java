@@ -13,8 +13,7 @@ import java.util.concurrent.CompletableFuture;
 @FeignClient(name = "objectives-service", url = "http://localhost:8080/ms/objectives")
 public interface ObjectivesServiceClient {
 
-
-    @GetMapping("/{idObjective}")
-    public ResponseEntity getObjectiveById(@PathVariable UUID idObjective);
+    @GetMapping("/{idObjective}/{idUser}")
+    ResponseEntity getObjectiveById(@PathVariable UUID idObjective, @PathVariable UUID idUser);
 
 }

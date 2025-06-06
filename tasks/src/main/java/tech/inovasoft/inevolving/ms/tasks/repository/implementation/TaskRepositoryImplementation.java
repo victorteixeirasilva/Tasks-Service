@@ -250,4 +250,12 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    @Override
+    public List<Task> findAllByIdUserAndIdObjectiveAndDateRange(UUID idUser, UUID idObjective, Date startDate, Date endDate) {
+        // TODO: RED
+        // TODO: GREEN
+        // TODO: BLUE
+        return List.of();
+    }
+
 }

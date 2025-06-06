@@ -2,10 +2,7 @@ package tech.inovasoft.inevolving.ms.tasks.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
@@ -128,5 +125,11 @@ public class TaskService {
         }
 
         return tasks;
+    }
+
+    public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) {
+        // TODO: GREEN
+        // TODO: BLUE
+        return null;
     }
 }

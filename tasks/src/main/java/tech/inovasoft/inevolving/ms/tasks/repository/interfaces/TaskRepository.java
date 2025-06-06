@@ -42,4 +42,6 @@ public interface TaskRepository {
     List<Task> findAllByStatusAndDateRange(UUID idUser, Date startDate, Date endDate, String todo) throws DataBaseException;
 
     List<Task> findAllByStatusAndDate(UUID idUser, Date date, String todo) throws DataBaseException;
+
+    List<Task> findAllByIdUserAndIdObjectiveAndDateRange(UUID idUser, UUID idObjective, Date startDate, Date endDate);
 }

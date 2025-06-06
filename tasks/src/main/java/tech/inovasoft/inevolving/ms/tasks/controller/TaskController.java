@@ -43,7 +43,9 @@ public class TaskController {
     @Async("asyncExecutor")
     @PostMapping
     public CompletableFuture<ResponseEntity> addTask(@RequestBody RequestTaskDTO taskDTO) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.addTask(taskDTO)));
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        simpleTaskService.addTask(taskDTO)));
     }
 
     @Operation(
@@ -59,7 +61,9 @@ public class TaskController {
             @PathVariable Date endDate,
             @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(recurringTaskService.addTasks(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)));
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        recurringTaskService.addTasks(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)));
     }
 
     @Operation(
@@ -73,7 +77,9 @@ public class TaskController {
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)));
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)));
     }
 
     @Operation(
@@ -198,7 +204,9 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective
     ) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.lockTaskByObjective(idUser, idObjective, completionDate)));
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.lockTaskByObjective(idUser, idObjective, completionDate)));
     }
 
     @Operation(
@@ -213,6 +221,25 @@ public class TaskController {
             @PathVariable Date endDate
     ) throws NotFoundTasksInDateRangeException, DataBaseException {
         return CompletableFuture.completedFuture(ResponseEntity.ok(service.getTasksInDateRange(idUser, startDate, endDate)));
+    }
+
+    @Operation(
+            summary = "Ver todas as tarefas de um objetivo especifico em um intervalo de datas",
+            description = "Retorna uma lista de todas as tarefas do usuário dentro do intervalo de datas fornecido."
+    )
+    @Async("asyncExecutor")
+    @GetMapping("/{idUser}/{idObjective}/{startDate}/{endDate}")
+    public CompletableFuture<ResponseEntity> getTasksInDateRangeByObjectiveId(
+            @PathVariable UUID idUser,
+            @PathVariable UUID idObjective,
+            @PathVariable Date startDate,
+            @PathVariable Date endDate
+    ) throws NotFoundTasksInDateRangeException, DataBaseException {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getTasksInDateRangeByObjectiveId(idUser, idObjective,startDate, endDate)
+                )
+        );
     }
 
     @Operation(

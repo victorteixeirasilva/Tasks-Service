@@ -29,10 +29,10 @@ public class SimpleTaskService {
      * @param idObjective - ID of the objective. | ID do objetivo.
      * @throws NotFoundException - Thrown when the objective is not found. | Lancado quando o objetivo nao eh encontrado.
      */
-    public void validObjective(UUID idObjective) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void validObjective(UUID idObjective, UUID idUser) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         ResponseEntity response = null;
         try {
-            response = objectivesServiceClient.getObjectiveById(idObjective);
+            response = objectivesServiceClient.getObjectiveById(idObjective, idUser);
         } catch (Exception e) {
             throw new NotFoundException("Objective not found in objectives service");
         }
@@ -48,7 +48,7 @@ public class SimpleTaskService {
      * @return - ResponseTaskDTO with the new task. | ResponseTaskDTO com a nova tarefa.
      */
     public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
-        validObjective(dto.idObjective());
+        validObjective(dto.idObjective(), dto.idUser());
         return new ResponseTaskDTO(repository.saveInDataBase(new Task(dto)));
     }
 
@@ -63,7 +63,7 @@ public class SimpleTaskService {
         Task task = repository.findById(idUser, idTask);
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
-        validObjective(dto.idObjective());
+        validObjective(dto.idObjective(), idUser);
         task.setIdObjective(dto.idObjective());
 
 
