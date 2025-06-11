@@ -81,7 +81,6 @@ public class TaskControllerTest {
                 .body("dateTask", equalTo(LocalDate.now().toString())).and()
                 .body("idObjective", equalTo(idObjective.toString())).and()
                 .body("idUser", equalTo(idUser.toString()));
-        //TODO: Desenvolver teste do End-Point
     }
 
     @Test
