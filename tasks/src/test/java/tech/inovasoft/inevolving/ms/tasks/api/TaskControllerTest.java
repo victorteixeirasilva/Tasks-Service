@@ -1,11 +1,24 @@
 package tech.inovasoft.inevolving.ms.tasks.api;
 
 import com.github.javafaker.Faker;
+import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import tech.inovasoft.inevolving.ms.tasks.api.dto.RequestCreateObjectiveDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -15,9 +28,59 @@ public class TaskControllerTest {
     private int port;
 
     public static Faker faker = new Faker();
+    private static final UUID idUser = UUID.randomUUID();
+
+    private UUID addObjective(UUID idUser) {
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        ValidatableResponse response = requestSpecification
+                .body(new RequestCreateObjectiveDTO(
+                        "Name Objective",
+                        "Description Objective",
+                        idUser
+                ))
+                .when()
+                .post("http://localhost:8080/ms/objectives")
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("id", notNullValue());
+
+        return UUID.fromString(response.extract().body().jsonPath().get("id"));
+    }
 
     @Test
     public void addTask_ok() {
+        UUID idObjective = addObjective(idUser);
+
+        RequestTaskDTO taskDTO = new RequestTaskDTO(
+                "Name Task",
+                "Description Task",
+                LocalDate.now(),
+                idObjective,
+                idUser
+        );
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks";
+
+        ValidatableResponse response = requestSpecification
+                .body(taskDTO)
+                .when()
+                .post(url)
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("id", notNullValue()).and()
+                .body("nameTask", equalTo(taskDTO.nameTask())).and()
+                .body("descriptionTask", equalTo(taskDTO.descriptionTask())).and()
+                .body("status", equalTo(Status.TODO)).and()
+                .body("dateTask", equalTo(LocalDate.now().toString())).and()
+                .body("idObjective", equalTo(idObjective.toString())).and()
+                .body("idUser", equalTo(idUser.toString()));
         //TODO: Desenvolver teste do End-Point
     }
 
