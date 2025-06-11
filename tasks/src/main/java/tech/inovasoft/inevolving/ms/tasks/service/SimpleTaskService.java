@@ -101,11 +101,13 @@ public class SimpleTaskService {
         return repository.deleteTask(task);
     }
 
+    /**
+     * @desciprion - Method to update the status of a task. | Metodo para atualizar o status de uma tarefa.
+     */
     public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
         Task task = repository.findById(dto.idUser(), dto.idTask());
         task.setStatus(Status.CANCELLED);
         task.setCancellationReason(dto.cancellationReason());
         return new ResponseTaskDTO(repository.saveInDataBase(task));
-        // TODO: BLUE
     }
 }
