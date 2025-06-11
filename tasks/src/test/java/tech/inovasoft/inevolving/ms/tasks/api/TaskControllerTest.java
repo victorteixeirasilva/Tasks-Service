@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,6 +55,13 @@ public class TaskControllerTest {
     public void addTask_ok() {
         UUID idObjective = addObjective(idUser);
 
+        UUID idTask = addTask(idObjective, idUser);
+
+        Assertions.assertNotNull(idTask);
+
+    }
+
+    private UUID addTask(UUID idObjective, UUID idUser) {
         RequestTaskDTO taskDTO = new RequestTaskDTO(
                 "Name Task",
                 "Description Task",
@@ -81,6 +89,8 @@ public class TaskControllerTest {
                 .body("dateTask", equalTo(LocalDate.now().toString())).and()
                 .body("idObjective", equalTo(idObjective.toString())).and()
                 .body("idUser", equalTo(idUser.toString()));
+
+        return UUID.fromString(response.extract().body().jsonPath().get("id"));
     }
 
     @Test

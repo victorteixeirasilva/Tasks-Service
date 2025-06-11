@@ -166,7 +166,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/canceled/{idUser}/{idTask}")
+    @PatchMapping("/status/canceled")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
             @RequestBody RequestCanceledDTO dto
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
