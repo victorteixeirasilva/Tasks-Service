@@ -10,6 +10,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
@@ -100,9 +101,11 @@ public class SimpleTaskService {
         return repository.deleteTask(task);
     }
 
-    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) {
-        // TODO: GREEN
+    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+        Task task = repository.findById(dto.idUser(), dto.idTask());
+        task.setStatus(Status.CANCELLED);
+        task.setCancellationReason(dto.cancellationReason());
+        return new ResponseTaskDTO(repository.saveInDataBase(task));
         // TODO: BLUE
-        return null;
     }
 }
