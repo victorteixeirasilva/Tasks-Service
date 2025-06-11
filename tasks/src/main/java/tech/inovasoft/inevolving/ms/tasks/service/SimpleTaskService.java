@@ -3,6 +3,7 @@ package tech.inovasoft.inevolving.ms.tasks.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestCanceledDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
@@ -99,4 +100,9 @@ public class SimpleTaskService {
         return repository.deleteTask(task);
     }
 
+    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) {
+        // TODO: GREEN
+        // TODO: BLUE
+        return null;
+    }
 }

@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
@@ -171,12 +168,10 @@ public class TaskController {
     @Async("asyncExecutor")
     @PatchMapping("/status/canceled/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
-            @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @RequestBody RequestCanceledDTO dto
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
-        //TODO: Correção necessária, User precisa informar o motivo pelo qual está cancelando.
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatus(idUser, idTask, Status.CANCELLED)
+                simpleTaskService.updateTaskStatusCancelled(dto)
         ));
     }
 
@@ -222,7 +217,6 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective
     ) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
-        // TODO: Para fazer isso ser funcional, preciso desenvolver a verificação em todos os métodos que editam uma tarefa, para só editar tarefas disponíveis
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.lockTaskByObjective(idUser, idObjective, completionDate)
         ));

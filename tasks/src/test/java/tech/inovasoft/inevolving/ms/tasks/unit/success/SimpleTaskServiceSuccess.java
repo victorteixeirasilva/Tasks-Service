@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestCanceledDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
@@ -42,6 +43,50 @@ public class SimpleTaskServiceSuccess {
 
     @InjectMocks
     private SimpleTaskService simpleTaskService;
+
+    @Test
+    public void updateTaskStatusCancelled() throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+        // Given (Dado)
+        var idTask = UUID.randomUUID();
+        var idUser = UUID.randomUUID();
+        var task = new Task(
+                idTask,
+                "Name Task",
+                "Description Task",
+                Status.TODO,
+                Date.valueOf("2025-05-12"),
+                null,
+                idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null
+        );
+        var request = new RequestCanceledDTO(idUser, idTask, "Cancellation Reason");
+
+        task.setStatus(Status.CANCELLED);
+        task.setCancellationReason(request.cancellationReason());
+
+        // When (Quando)
+        when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);
+        when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(task);
+        ResponseTaskDTO result = simpleTaskService.updateTaskStatusCancelled(request);
+        // Then (Então)
+        assertNotNull(result);
+        assertEquals(Status.CANCELLED, result.status());
+        assertEquals(task.getNameTask(), result.nameTask());
+        assertEquals(task.getDescriptionTask(), result.descriptionTask());
+        assertEquals(task.getId(), result.id());
+        assertEquals(task.getDateTask(), result.dateTask());
+        assertEquals(task.getIdObjective(), result.idObjective());
+        assertEquals(task.getIdUser(), result.idUser());
+        assertEquals(task.getCancellationReason(), result.cancellationReason());
+
+        verify(taskRepository, times(1)).findById(idUser, idTask);
+        verify(taskRepository, times(1)).saveInDataBase(any());
+    }
 
     @Test
     public void addTask() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {

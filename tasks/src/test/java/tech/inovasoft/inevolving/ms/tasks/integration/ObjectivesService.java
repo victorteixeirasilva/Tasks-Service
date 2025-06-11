@@ -30,7 +30,7 @@ public class ObjectivesService {
 
         // Faz a requisição GET e armazena a resposta
         ValidatableResponse response = requestSpecification.when()
-                .get("http://localhost:8080/ms/objectives/" + idObjective + "/" + idUser)//TODO: Mudar para o endereço do container e esconder ele em variaveis de ambiente
+                .get("http://localhost:8080/ms/objectives/" + idObjective + "/" + idUser)
                 .then();
 
         // Valida a resposta
@@ -53,7 +53,7 @@ public class ObjectivesService {
         ValidatableResponse response = requestSpecification
                 .body(new RequestNewObjectiveDTO(nameObjective, descriptionObjective, idUser))
                 .when()
-                .post("http://localhost:8080/ms/objectives") //TODO: Mudar para o endereço do container e esconder ele em variaveis de ambiente
+                .post("http://localhost:8080/ms/objectives")
                 .then();
 
 
