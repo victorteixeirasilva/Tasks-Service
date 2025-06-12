@@ -293,7 +293,22 @@ public class TaskControllerTest {
 
     @Test
     public void deleteTask_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/"+idUser+"/"+idTask;
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .delete(url)
+                .then();
+
+        response.assertThat().statusCode(200);
     }
 
     @Test
