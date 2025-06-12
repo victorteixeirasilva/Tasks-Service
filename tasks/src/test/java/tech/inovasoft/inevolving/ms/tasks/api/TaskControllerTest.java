@@ -13,8 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tech.inovasoft.inevolving.ms.tasks.api.dto.RequestCreateObjectiveDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
@@ -366,11 +368,14 @@ public class TaskControllerTest {
         UUID idUser = UUID.randomUUID();
 
         UUID idObjective = addObjective(idUser);
+        UUID idObjective2 = addObjective(idUser);
 
         addTask(idObjective, idUser);
         addTask(idObjective, idUser);
         addTask(idObjective, idUser);
-
+        addTask(idObjective2, idUser);
+        addTask(idObjective2, idUser);
+        addTask(idObjective2, idUser);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON);
@@ -383,11 +388,41 @@ public class TaskControllerTest {
                 .then();
 
         response.assertThat().statusCode(200);
+
+        List<Task> taskList = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(6, taskList.size());
     }
 
     @Test
     public void getTasksInDateRangeByObjectiveId_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idUser = UUID.randomUUID();
+
+        UUID idObjective = addObjective(idUser);
+        UUID idObjective2 = addObjective(idUser);
+
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        addTask(idObjective2, idUser);
+        addTask(idObjective2, idUser);
+        addTask(idObjective2, idUser);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/"+idUser+"/"+idObjective+"/"+LocalDate.now()+"/"+LocalDate.now().plusDays(30);
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .get(url)
+                .then();
+
+        response.assertThat().statusCode(200);
+
+        List<Task> taskList = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(3, taskList.size());
     }
 
     @Test
