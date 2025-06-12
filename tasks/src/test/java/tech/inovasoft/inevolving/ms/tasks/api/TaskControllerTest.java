@@ -740,14 +740,4 @@ public class TaskControllerTest {
         Assertions.assertEquals(3, taskList.size());
     }
 
-    @Test
-    public void getTasksCanceledInDateRange_ok() {
-        //TODO: Desenvolver teste do End-Point
-    }
-
-    @Test
-    public void getTasksCanceledInDate_ok() {
-        //TODO: Desenvolver teste do End-Point
-    }
-
 }
