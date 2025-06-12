@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tech.inovasoft.inevolving.ms.tasks.api.dto.RequestCreateObjectiveDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 
 import java.time.LocalDate;
@@ -116,7 +117,32 @@ public class TaskControllerTest {
 
     @Test
     public void updateTask_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+        var request = new RequestUpdateTaskDTO(
+                "Update Name Task",
+                "Update Description Task",
+                idObjective
+        );
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/"+idUser+"/"+idTask;
+
+        ValidatableResponse response = requestSpecification
+                .body(request)
+                .when()
+                .put(url)
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("id", equalTo(idTask.toString())).and()
+                .body("nameTask", equalTo(request.nameTask())).and()
+                .body("descriptionTask", equalTo(request.descriptionTask()));
+
     }
 
     @Test
