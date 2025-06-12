@@ -606,7 +606,36 @@ public class TaskControllerTest {
 
     @Test
     public void getTasksToDoInDate_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idUser = UUID.randomUUID();
+
+        UUID idObjective = addObjective(idUser);
+        UUID idObjective2 = addObjective(idUser);
+
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        UUID id1 = addTask(idObjective2, idUser);
+        UUID id2 = addTask(idObjective2, idUser);
+        UUID id3 = addTask(idObjective2, idUser);
+        updateStatus(idUser, id1, Status.LATE);
+        updateStatus(idUser, id2, Status.LATE);
+        updateStatus(idUser, id3, Status.LATE);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/status/todo/"+idUser+"/"+LocalDate.now();
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .get(url)
+                .then();
+
+        response.assertThat().statusCode(200);
+
+        List<Task> taskList = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(3, taskList.size());
     }
 
     @Test
