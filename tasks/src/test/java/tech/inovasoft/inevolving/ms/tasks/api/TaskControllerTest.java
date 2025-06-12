@@ -11,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tech.inovasoft.inevolving.ms.tasks.api.dto.RequestCreateObjectiveDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 
 import java.time.LocalDate;
@@ -268,7 +265,30 @@ public class TaskControllerTest {
 
     @Test
     public void updateTaskStatusCanceled_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+        var request = new RequestCanceledDTO(
+                idUser,
+                idTask,
+                "Cancellation Reason"
+        );
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/status/canceled";
+
+        ValidatableResponse response = requestSpecification
+                .body(request)
+                .when()
+                .patch(url)
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("status", equalTo(Status.CANCELLED)).and()
+                .body("cancellationReason", equalTo(request.cancellationReason()));
     }
 
     @Test
