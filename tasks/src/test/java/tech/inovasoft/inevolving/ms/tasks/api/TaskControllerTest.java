@@ -456,9 +456,118 @@ public class TaskControllerTest {
         Assertions.assertEquals(6, taskList.size());
     }
 
+    private void updateStatus(UUID idUser, UUID idTask, String status) {
+        UUID idObjective = addObjective(idUser);
+        String url = "";
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        ValidatableResponse response;
+
+        switch (status) {
+            case Status.TODO:
+                url = "http://localhost:"+port+"/ms/tasks/status/todo/"+idUser+"/"+idTask;
+
+                response = requestSpecification
+                        .when()
+                        .patch(url)
+                        .then();
+
+                response.assertThat().statusCode(200).and()
+                        .body("status", equalTo(Status.TODO));
+                break;
+            case Status.IN_PROGRESS:
+                url = "http://localhost:"+port+"/ms/tasks/status/progress/"+idUser+"/"+idTask;
+
+                response = requestSpecification
+                        .when()
+                        .patch(url)
+                        .then();
+
+                response.assertThat().statusCode(200).and()
+                        .body("status", equalTo(Status.IN_PROGRESS));
+                break;
+            case Status.LATE:
+                url = "http://localhost:"+port+"/ms/tasks/status/late/"+idUser+"/"+idTask;
+
+                response = requestSpecification
+                        .when()
+                        .patch(url)
+                        .then();
+
+                response.assertThat().statusCode(200).and()
+                        .body("status", equalTo(Status.LATE));
+                break;
+            case Status.CANCELLED:
+                var request = new RequestCanceledDTO(
+                        idUser,
+                        idTask,
+                        "Cancellation Reason"
+                );
+
+
+
+                 url = "http://localhost:"+port+"/ms/tasks/status/canceled";
+
+                 response = requestSpecification
+                        .body(request)
+                        .when()
+                        .patch(url)
+                        .then();
+
+                response.assertThat().statusCode(200).and()
+                        .body("status", equalTo(Status.CANCELLED)).and()
+                        .body("cancellationReason", equalTo(request.cancellationReason()));
+                break;
+            case Status.DONE:
+                url = "http://localhost:"+port+"/ms/tasks/status/done/"+idUser+"/"+idTask;
+
+                response = requestSpecification
+                        .when()
+                        .patch(url)
+                        .then();
+
+                response.assertThat().statusCode(200).and()
+                        .body("status", equalTo(Status.DONE));
+                break;
+        }
+
+
+    }
+
     @Test
     public void getTasksLate_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idUser = UUID.randomUUID();
+
+        UUID idObjective = addObjective(idUser);
+        UUID idObjective2 = addObjective(idUser);
+
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        addTask(idObjective, idUser);
+        UUID id1 = addTask(idObjective2, idUser);
+        UUID id2 = addTask(idObjective2, idUser);
+        UUID id3 = addTask(idObjective2, idUser);
+        updateStatus(idUser, id1, Status.LATE);
+        updateStatus(idUser, id2, Status.LATE);
+        updateStatus(idUser, id3, Status.LATE);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/late/"+idUser;
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .get(url)
+                .then();
+
+        response.assertThat().statusCode(200);
+
+        List<Task> taskList = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(3, taskList.size());
     }
 
     @Test
