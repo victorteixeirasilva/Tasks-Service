@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tech.inovasoft.inevolving.ms.tasks.api.dto.RequestCreateObjectiveDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 
@@ -147,7 +148,38 @@ public class TaskControllerTest {
 
     @Test
     public void updateTasksAndTheirFutureRepetitions_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String urlRepeatTask = "http://localhost:"+port+"/ms/tasks/repeat/"+idUser+"/"+idTask+"/"+LocalDate.now()+"/"+LocalDate.now().plusDays(30);
+
+        ValidatableResponse responseRepeatTask = requestSpecification
+                .body(new DaysOfTheWeekDTO(true,true,true,true,true,true,true))
+                .when()
+                .post(urlRepeatTask)
+                .then();
+
+        responseRepeatTask.assertThat().statusCode(200);
+
+        var request = new RequestUpdateRepeatTaskDTO();
+        request.idObjective = idObjective;
+        request.nameTask = "Update Name Task";
+        request.descriptionTask = "Update Description Task";
+        request.daysOfTheWeekDTO = new DaysOfTheWeekDTO(true,false,true,false,false,false,false);
+
+        String urlUpdateRepeatTask = "http://localhost:"+port+"/ms/tasks/repeat/"+idUser+"/"+idTask+"/"+LocalDate.now().plusDays(30);
+
+        ValidatableResponse response = requestSpecification
+                .body(request)
+                .when()
+                .put(urlUpdateRepeatTask)
+                .then();
+
+        response.assertThat().statusCode(200);
     }
 
     @Test
