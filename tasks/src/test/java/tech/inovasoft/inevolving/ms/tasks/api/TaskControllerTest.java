@@ -343,7 +343,22 @@ public class TaskControllerTest {
 
     @Test
     public void lockTaskByObjective_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/lock/"+LocalDate.now()+"/"+idUser+"/"+idObjective;
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .delete(url)
+                .then();
+
+        response.assertThat().statusCode(200);
     }
 
     @Test
