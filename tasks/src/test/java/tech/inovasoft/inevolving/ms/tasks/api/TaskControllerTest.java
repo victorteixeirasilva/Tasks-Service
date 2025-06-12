@@ -247,7 +247,23 @@ public class TaskControllerTest {
 
     @Test
     public void updateTaskStatusLate_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String url = "http://localhost:"+port+"/ms/tasks/status/late/"+idUser+"/"+idTask;
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .patch(url)
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("status", equalTo(Status.LATE));
     }
 
     @Test
