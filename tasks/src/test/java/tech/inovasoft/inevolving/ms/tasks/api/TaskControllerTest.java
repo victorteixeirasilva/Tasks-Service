@@ -313,7 +313,32 @@ public class TaskControllerTest {
 
     @Test
     public void deleteTasksAndTheirFutureRepetitions_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idObjective = addObjective(idUser);
+
+        UUID idTask = addTask(idObjective, idUser);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        String urlRepeatTask = "http://localhost:"+port+"/ms/tasks/repeat/"+idUser+"/"+idTask+"/"+LocalDate.now()+"/"+LocalDate.now().plusDays(30);
+
+        ValidatableResponse responseRepeatTask = requestSpecification
+                .body(new DaysOfTheWeekDTO(true,true,true,true,true,true,true))
+                .when()
+                .post(urlRepeatTask)
+                .then();
+
+        responseRepeatTask.assertThat().statusCode(200);
+
+        String url = "http://localhost:"+port+"/ms/tasks/repeat/"+idUser+"/"+idTask+"/"+LocalDate.now();
+
+        ValidatableResponse response = requestSpecification
+                .when()
+                .delete(url)
+                .then();
+
+        response.assertThat().statusCode(200).and()
+                .body("numberOfDeletedTasks", equalTo(31));
     }
 
     @Test
