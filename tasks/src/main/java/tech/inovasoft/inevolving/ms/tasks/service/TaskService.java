@@ -148,4 +148,16 @@ public class TaskService {
 
         return tasks;
     }
+
+    public List<Task> getTasksByObjectiveId(UUID idUser, UUID idObjective) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException, DataBaseException {
+        simpleTaskService.validObjective(idObjective, idUser);
+
+        List<Task> tasks = repository.findAllByIdUserAndIdObjective(idUser, idObjective);
+
+        if (tasks.isEmpty()) {
+            throw new NotFoundTasksWithObjectiveException();
+        }
+
+        return tasks;
+    }
 }

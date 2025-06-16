@@ -270,4 +270,15 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    @Override
+    public List<Task> findAllByIdUserAndIdObjective(UUID idUser, UUID idObjective) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByIdUserAndIdObjective(idUser, idObjective);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdUserAndIdObjective)");
+        }
+        return tasks;
+    }
+
 }

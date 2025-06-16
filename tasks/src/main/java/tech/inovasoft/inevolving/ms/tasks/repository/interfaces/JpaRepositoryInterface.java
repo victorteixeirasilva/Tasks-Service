@@ -53,4 +53,10 @@ public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate
     );
+
+    @Query("SELECT t FROM Task t WHERE t.idUser = :idUser AND t.idObjective = :idObjective")
+    List<Task> findAllByIdUserAndIdObjective(
+            @Param("idUser") UUID idUser,
+            @Param("idObjective") UUID idObjective
+    );
 }

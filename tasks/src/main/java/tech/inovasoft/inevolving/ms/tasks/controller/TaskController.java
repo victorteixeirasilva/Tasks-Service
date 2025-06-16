@@ -255,6 +255,17 @@ public class TaskController {
         ));
     }
 
+    @Async("asyncExecutor")
+    @GetMapping("/{idUser}/{idObjective}")
+    public CompletableFuture<ResponseEntity<List<Task>>> getTasksByObjectiveId(
+            @PathVariable UUID idUser,
+            @PathVariable UUID idObjective
+    ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        return CompletableFuture.completedFuture(ResponseEntity.ok(
+                service.getTasksByObjectiveId(idUser, idObjective)
+        ));
+    }
+
     @Operation(
             summary = "View all tasks from a date | Ver todas as tarefas de uma data",
             description = "Returns a list of all the user's tasks for the given date. | Retorna uma lista de todas as tarefas do usuário para a data informada."
