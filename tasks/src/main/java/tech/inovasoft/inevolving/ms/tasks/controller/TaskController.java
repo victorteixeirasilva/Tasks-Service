@@ -106,7 +106,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/todo/{idUser}/{idTask}")
+    @PutMapping("/status/todo/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusToDo(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
@@ -121,7 +121,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/progress/{idUser}/{idTask}")
+    @PutMapping("/status/progress/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusInProgress(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
@@ -136,7 +136,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/done/{idUser}/{idTask}")
+    @PutMapping("/status/done/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusDone(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
@@ -151,7 +151,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/late/{idUser}/{idTask}")
+    @PutMapping("/status/late/{idUser}/{idTask}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusLate(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask
@@ -166,7 +166,7 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PatchMapping("/status/canceled")
+    @PutMapping("/status/canceled")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
             @RequestBody RequestCanceledDTO dto
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
