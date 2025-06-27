@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-@FeignClient(name = "objectives-service", url = "http://localhost:8088/ms/objectives")
+@FeignClient(name = "objectives-service", url = "${inevolving.uri.ms.objectives}")
 public interface ObjectivesServiceClient {
 
     @GetMapping("/{idObjective}/{idUser}")
