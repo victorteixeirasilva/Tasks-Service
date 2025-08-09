@@ -39,7 +39,7 @@ public class Task {
         this.descriptionTask = dto.descriptionTask();
         this.status = Status.TODO;
         this.dateTask = Date.valueOf(dto.dateTask());
-        this.setIdObjective(dto.idObjective());
+        this.idObjective = dto.idObjective();
         this.idUser = dto.idUser();
         this.isCopy = false;
     }
@@ -50,10 +50,7 @@ public class Task {
         this.status = Status.TODO;
         this.dateTask = Date.valueOf(dto.dateTask());
 
-        if (dto.idObjective() != null) {
-            this.setIdObjective(dto.idObjective());
-        }
-        this.setIdObjective(dto.idUser());
+        this.idObjective = dto.idObjective();
 
         this.idUser = dto.idUser();
         this.idOriginalTask = idOriginalTask;
