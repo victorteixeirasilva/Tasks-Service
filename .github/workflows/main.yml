@@ -13,6 +13,16 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
+      - name: Instalar Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Dar permissão ao mvnw
+        working-directory: tasks
+        run: chmod +x mvnw
+
       - name: Build com Maven
         working-directory: tasks
         run: ./mvnw clean package
@@ -29,19 +39,20 @@ jobs:
 
       - name: Executar comandos na VPS
         run: |
+          TARGET_DIR="/home/root/Back-End/Tasks-Service"
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
             set -e
-            TARGET_DIR=${{ secrets.VPS_TARGET_DIR }}
-
-            rm -rf "$TARGET_DIR"
+      
+            rm -rf "$TARGET_DIR/tasks"
             mkdir -p "$TARGET_DIR"
             tar -xvf /tmp/task.tar -C "$TARGET_DIR"
             rm /tmp/task.tar
-
+      
             cd "$TARGET_DIR/tasks"
             docker-compose down --volumes --remove-orphans
             docker-compose up --build -d
-
+      
             echo "Containers ativos:"
             docker ps
           EOF
+
