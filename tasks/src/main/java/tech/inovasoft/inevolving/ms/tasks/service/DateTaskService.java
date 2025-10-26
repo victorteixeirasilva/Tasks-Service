@@ -22,7 +22,7 @@ public class DateTaskService {
     @Autowired
     private TaskRepository repository;
 
-    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         Task task = repository.findById(dto.idTask(), dto.idUser());
 
         task.setDateTask(Date.valueOf(dto.dateTask()));
