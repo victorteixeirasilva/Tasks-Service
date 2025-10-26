@@ -1,0 +1,47 @@
+name: Deploy Java Backend via SSH with Password
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Build com Maven
+        working-directory: tasks
+        run: ./mvnw clean package
+
+      - name: Compactar pasta task
+        run: tar -cvf task.tar tasks/
+
+      - name: Instalar sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Enviar .tar para VPS
+        run: |
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" scp -o StrictHostKeyChecking=no task.tar ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/tmp/task.tar
+
+      - name: Executar comandos na VPS
+        run: |
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
+            set -e
+            TARGET_DIR=${{ secrets.VPS_TARGET_DIR }}
+
+            rm -rf "$TARGET_DIR"
+            mkdir -p "$TARGET_DIR"
+            tar -xvf /tmp/task.tar -C "$TARGET_DIR"
+            rm /tmp/task.tar
+
+            cd "$TARGET_DIR/tasks"
+            docker-compose down --volumes --remove-orphans
+            docker-compose up --build -d
+
+            echo "Containers ativos:"
+            docker ps
+          EOF
