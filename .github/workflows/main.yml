@@ -41,7 +41,8 @@ jobs:
         run: |
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
             set -e
-            TARGET_DIR=${{ secrets.VPS_TARGET_DIR }}
+            
+            TARGET_DIR="/home/root/Back-End/Tasks-Service"
 
             rm -rf "$TARGET_DIR"
             mkdir -p "$TARGET_DIR"
