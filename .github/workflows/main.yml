@@ -13,6 +13,10 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
+      - name: Dar permissão ao mvnw
+        working-directory: tasks
+        run: chmod +x mvnw
+
       - name: Build com Maven
         working-directory: tasks
         run: ./mvnw clean package
