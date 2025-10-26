@@ -39,20 +39,20 @@ jobs:
 
       - name: Executar comandos na VPS
         run: |
+          TARGET_DIR="/home/root/Back-End/Tasks-Service"
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << EOF
             set -e
-            
-            TARGET_DIR="/home/root/Back-End/Tasks-Service"
-
-            rm -rf "$TARGET_DIR"
+      
+            rm -rf "$TARGET_DIR/tasks"
             mkdir -p "$TARGET_DIR"
             tar -xvf /tmp/task.tar -C "$TARGET_DIR"
             rm /tmp/task.tar
-
+      
             cd "$TARGET_DIR/tasks"
             docker-compose down --volumes --remove-orphans
             docker-compose up --build -d
-
+      
             echo "Containers ativos:"
             docker ps
           EOF
+
