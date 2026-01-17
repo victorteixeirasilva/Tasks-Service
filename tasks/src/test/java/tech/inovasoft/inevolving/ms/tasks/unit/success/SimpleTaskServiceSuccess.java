@@ -120,7 +120,7 @@ public class SimpleTaskServiceSuccess {
 
         // When (Quando)
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
-        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class))).thenReturn(ResponseEntity.ok().build());
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class), any(String.class))).thenReturn(ResponseEntity.ok().build());
         var result = simpleTaskService.addTask(taskDTO);
 
         // Then (Então)
@@ -182,7 +182,7 @@ public class SimpleTaskServiceSuccess {
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(oldTask);
         oldTask.setIdObjective(idObjective);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(oldTask);
-        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class))).thenReturn(ResponseEntity.ok().build());
+        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class), any(String.class))).thenReturn(ResponseEntity.ok().build());
         var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
 
         // Then (Então)

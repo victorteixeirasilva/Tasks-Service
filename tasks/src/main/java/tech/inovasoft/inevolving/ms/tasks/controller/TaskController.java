@@ -3,6 +3,7 @@ package tech.inovasoft.inevolving.ms.tasks.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,8 @@ import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
+import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
+import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
 
 import java.sql.Date;
 import java.util.List;
@@ -36,15 +39,36 @@ public class TaskController {
     @Autowired
     private RecurringTaskService recurringTaskService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @Operation(
             summary = "Add a new task | Adicionar uma nova tarefa",
             description = "Returns the registered task. | Retorna a tarefa cadastrada."
     )
     @Async("asyncExecutor")
-    @PostMapping
+    @PostMapping("/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> addTask(
-            @RequestBody RequestTaskDTO taskDTO
+            @RequestBody RequestTaskDTO taskDTO,
+            @PathVariable String token
     ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         simpleTaskService.addTask(taskDTO)
         ));
@@ -55,14 +79,32 @@ public class TaskController {
             description = "Returns the number of times the task was repeated | Retorna a quantidade de vezes que a tarefa foi repetida"
     )
     @Async("asyncExecutor")
-    @PostMapping("/repeat/{idUser}/{idTask}/{startDate}/{endDate}")
+    @PostMapping("/repeat/{idUser}/{idTask}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<ResponseRepeatTaskDTO>> repeatTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
-            @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO
+            @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         recurringTaskService.addTasks(idUser, idTask, daysOfTheWeekDTO, startDate, endDate)
         ));
@@ -73,12 +115,30 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/{idUser}/{idTask}")
+    @PutMapping("/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @RequestBody RequestUpdateTaskDTO updateTaskDTO
+            @RequestBody RequestUpdateTaskDTO updateTaskDTO,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)
         ));
@@ -89,13 +149,31 @@ public class TaskController {
             description = "Returns updated tasks. | Retorna as tarefas atualizadas."
     )
     @Async("asyncExecutor")
-    @PutMapping("/repeat/{idUser}/{idTask}/{endDate}")
+    @PutMapping("/repeat/{idUser}/{idTask}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<ResponseUpdateRepeatTaskDTO>> updateTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable Date endDate,
-            @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO
+            @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         recurringTaskService.updateTasks(idUser, idTask, endDate, updateTaskDTO)
         ));
@@ -106,11 +184,29 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/status/todo/{idUser}/{idTask}")
+    @PutMapping("/status/todo/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusToDo(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.updateTaskStatus(idUser, idTask, Status.TODO)
         ));
@@ -121,11 +217,29 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/status/progress/{idUser}/{idTask}")
+    @PutMapping("/status/progress/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusInProgress(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)
         ));
@@ -136,11 +250,29 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/status/done/{idUser}/{idTask}")
+    @PutMapping("/status/done/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusDone(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.updateTaskStatus(idUser, idTask, Status.DONE)
         ));
@@ -151,11 +283,29 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/status/late/{idUser}/{idTask}")
+    @PutMapping("/status/late/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusLate(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.updateTaskStatus(idUser, idTask, Status.LATE)
         ));
@@ -166,10 +316,28 @@ public class TaskController {
             description = "Returns the updated task. | Retorna a tarefa atualizada."
     )
     @Async("asyncExecutor")
-    @PutMapping("/status/canceled")
+    @PutMapping("/status/canceled/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
-            @RequestBody RequestCanceledDTO dto
+            @RequestBody RequestCanceledDTO dto,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.updateTaskStatusCancelled(dto)
         ));
@@ -180,11 +348,29 @@ public class TaskController {
             description = "Returns confirmation that the task has been removed. | Retorna confirmação que a tarefa foi removida."
     )
     @Async("asyncExecutor")
-    @DeleteMapping("/{idUser}/{idTask}")
+    @DeleteMapping("/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<ResponseMessageDTO>> deleteTask(
             @PathVariable UUID idUser,
-            @PathVariable UUID idTask
+            @PathVariable UUID idTask,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 simpleTaskService.deleteTask(idUser, idTask)
         ));
@@ -195,12 +381,30 @@ public class TaskController {
             description = "Returns confirmation that tasks have been removed, and the number of tasks removed. | Retorna confirmação que as tarefas foram removidas, e a quantidade de tarefas removidas."
     )
     @Async("asyncExecutor")
-    @DeleteMapping("/repeat/{idUser}/{idTask}/{date}")
+    @DeleteMapping("/repeat/{idUser}/{idTask}/{date}/{token}")
     public CompletableFuture<ResponseEntity<ResponseDeleteTasksDTO>> deleteTasksAndTheirFutureRepetitions(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 recurringTaskService.deleteTasks(idUser, idTask, date)
         ));
@@ -211,12 +415,30 @@ public class TaskController {
             description = "Returns confirmation that tasks were blocked, the number of tasks removed, and the number of tasks blocked. | Retorna confirmação que as tarefas foram bloqueadas, e a quantidade de tarefas removidas, e a quantidade de tarefas bloqueadas."
     )
     @Async("asyncExecutor")
-    @DeleteMapping("/lock/{completionDate}/{idUser}/{idObjective}")
+    @DeleteMapping("/lock/{completionDate}/{idUser}/{idObjective}/{token}")
     public CompletableFuture<ResponseEntity<ResponseMessageDTO>> lockTaskByObjective(
             @PathVariable Date completionDate,
             @PathVariable UUID idUser,
-            @PathVariable UUID idObjective
+            @PathVariable UUID idObjective,
+            @PathVariable String token
     ) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.lockTaskByObjective(idUser, idObjective, completionDate)
         ));
@@ -227,12 +449,30 @@ public class TaskController {
             description = "Returns a list of all user tasks within the given date range. | Retorna uma lista de todas as tarefas do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/{idUser}/{startDate}/{endDate}")
+    @GetMapping("/{idUser}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws NotFoundTasksInDateRangeException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksInDateRange(idUser, startDate, endDate)
         ));
@@ -243,24 +483,60 @@ public class TaskController {
             description = "Returns a list of all user tasks within the given date range. | Retorna uma lista de todas as tarefas do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/{idUser}/{idObjective}/{startDate}/{endDate}")
+    @GetMapping("/{idUser}/{idObjective}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDateRangeByObjectiveId(
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksInDateRangeByObjectiveId(idUser, idObjective,startDate, endDate)
         ));
     }
 
     @Async("asyncExecutor")
-    @GetMapping("/objective/{idUser}/{idObjective}")
+    @GetMapping("/objective/{idUser}/{idObjective}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksByObjectiveId(
             @PathVariable UUID idUser,
-            @PathVariable UUID idObjective
+            @PathVariable UUID idObjective,
+            @PathVariable String token
     ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksByObjectiveId(idUser, idObjective)
         ));
@@ -271,11 +547,29 @@ public class TaskController {
             description = "Returns a list of all the user's tasks for the given date. | Retorna uma lista de todas as tarefas do usuário para a data informada."
     )
     @Async("asyncExecutor")
-    @GetMapping("/{idUser}/{date}")
+    @GetMapping("/{idUser}/{date}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDate(
             @PathVariable UUID idUser,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws NotFoundTasksInDateException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksInDate(idUser, date)
         ));
@@ -286,10 +580,28 @@ public class TaskController {
             description = "Returns a list of all the user's overdue tasks. | Retorna uma lista de todas as tarefas atrasadas do usuário."
     )
     @Async("asyncExecutor")
-    @GetMapping("/late/{idUser}")
+    @GetMapping("/late/{idUser}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksLate(
-            @PathVariable UUID idUser
+            @PathVariable UUID idUser,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusLateException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksLate(idUser)
         ));
@@ -300,12 +612,30 @@ public class TaskController {
             description = "Returns a list of all user TODO tasks within the given date range. | Retorna uma lista de todas as tarefas TODO do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/todo/{idUser}/{startDate}/{endDate}")
+    @GetMapping("/status/todo/{idUser}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksToDoInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO)
         ));
@@ -316,11 +646,29 @@ public class TaskController {
             description = "Returns a list of all the user's TODO tasks for the given date. | Retorna uma lista de todas as tarefas TODO do usuário para a data informada."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/todo/{idUser}/{date}")
+    @GetMapping("/status/todo/{idUser}/{date}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksToDoInDate(
             @PathVariable UUID idUser,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getTasksStatusInDate(idUser, date, Status.TODO)
         ));
@@ -331,12 +679,30 @@ public class TaskController {
             description = "Returns a list of all IN PROGRESS tasks for the user within the given date range. | Retorna uma lista de todas as tarefas IN PROGRESS do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/progress/{idUser}/{startDate}/{endDate}")
+    @GetMapping("/status/progress/{idUser}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksInProgressInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.IN_PROGRESS)
         ));
@@ -347,11 +713,29 @@ public class TaskController {
             description = "Returns a list of all the user's IN PROGRESS tasks for the given date. | Retorna uma lista de todas as tarefas IN PROGRESS do usuário para a data informada."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/progress/{idUser}/{date}")
+    @GetMapping("/status/progress/{idUser}/{date}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksInProgressInDate(
             @PathVariable UUID idUser,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.IN_PROGRESS)
         ));
@@ -362,12 +746,30 @@ public class TaskController {
             description = "Returns a list of all DONE tasks for the user within the given date range. | Retorna uma lista de todas as tarefas DONE do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/done/{idUser}/{startDate}/{endDate}")
+    @GetMapping("/status/done/{idUser}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksDoneInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.DONE)
         ));
@@ -378,11 +780,29 @@ public class TaskController {
             description = "Returns a list of all DONE tasks for the user for the given date. | Retorna uma lista de todas as tarefas DONE do usuário para a data informada."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/done/{idUser}/{date}")
+    @GetMapping("/status/done/{idUser}/{date}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksDoneInDate(
             @PathVariable UUID idUser,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.DONE)
         ));
@@ -393,12 +813,30 @@ public class TaskController {
             description = "Returns a list of all CANCELED tasks for the user within the given date range. | Retorna uma lista de todas as tarefas CANCELED do usuário dentro do intervalo de datas fornecido."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/canceled/{idUser}/{startDate}/{endDate}")
+    @GetMapping("/status/canceled/{idUser}/{startDate}/{endDate}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksCanceledInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
-            @PathVariable Date endDate
+            @PathVariable Date endDate,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.CANCELLED)
         ));
@@ -409,11 +847,29 @@ public class TaskController {
             description = "Returns a list of all CANCELED tasks for the user for the given date. | Retorna uma lista de todas as tarefas CANCELED do usuário para a data informada."
     )
     @Async("asyncExecutor")
-    @GetMapping("/status/canceled/{idUser}/{date}")
+    @GetMapping("/status/canceled/{idUser}/{date}/{token}")
     public CompletableFuture<ResponseEntity<List<Task>>> getTasksCanceledInDate(
             @PathVariable UUID idUser,
-            @PathVariable Date date
+            @PathVariable Date date,
+            @PathVariable String token
     ) throws NotFoundTasksWithStatusException, DataBaseException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                         service.getTasksStatusInDate(idUser, date, Status.CANCELLED)
         ));

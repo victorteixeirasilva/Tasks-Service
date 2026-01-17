@@ -1,5 +1,6 @@
 package tech.inovasoft.inevolving.ms.tasks.service;
 
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,14 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizat
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
+import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.MicroServices;
+import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenCache;
 import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.util.*;
 import java.util.concurrent.*;
+
+import static tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.MicroServices.OBJECTIVES_SERVICE;
 
 @Service
 public class SimpleTaskService {
@@ -26,6 +31,18 @@ public class SimpleTaskService {
     @Autowired
     private ObjectivesServiceClient objectivesServiceClient;
 
+    @Autowired
+    private TokenCache tokenCache;
+
+    private String cachedToken;
+
+    private String getValidToken() {
+        if (cachedToken == null) {
+            cachedToken = tokenCache.getToken(OBJECTIVES_SERVICE);
+        }
+        return cachedToken;
+    }
+
     /**
      * @desciprion - Method to validate whether the objective exists, by querying the objectives microservice. | Metodo para validar se o objetivo existe, fazendo a consulta ao micro serviço de objetivos.
      * @param idObjective - ID of the objective. | ID do objetivo.
@@ -34,7 +51,10 @@ public class SimpleTaskService {
     public void validObjective(UUID idObjective, UUID idUser) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         ResponseEntity response = null;
         try {
-            response = objectivesServiceClient.getObjectiveById(idObjective, idUser);
+            response = objectivesServiceClient.getObjectiveById(idObjective, idUser, getValidToken());
+        } catch (FeignException.Unauthorized e) {
+          cachedToken = null;
+          validObjective(idObjective, idUser);
         } catch (Exception e) {
             throw new NotFoundException("Objective not found in objectives service");
         }
