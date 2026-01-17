@@ -70,7 +70,7 @@ public class SimpleTaskService {
      * @return - ResponseTaskDTO with the new task. | ResponseTaskDTO com a nova tarefa.
      */
     public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
-        validObjective(dto.idObjective(), dto.idUser());
+        //validObjective(dto.idObjective(), dto.idUser());
         return new ResponseTaskDTO(repository.saveInDataBase(new Task(dto)));
     }
 
