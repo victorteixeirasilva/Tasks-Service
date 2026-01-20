@@ -192,7 +192,7 @@ public class RecurringTaskService {
         List<Task> tasks = repository.findAllIsCopyTask(idForSearch);
         if (!tasks.isEmpty()) {
             for (Task oldTask : tasks) {
-                if (oldTask.getDateTask().after(date)){
+                if (oldTask.getDateTask().after(task.getDateTask())){
                     simpleTaskService.deleteTask(idUser, oldTask.getId());
                     numberDeleteRepetitions++;
                 }
