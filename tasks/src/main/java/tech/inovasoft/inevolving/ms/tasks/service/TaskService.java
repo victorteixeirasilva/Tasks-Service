@@ -37,12 +37,15 @@ public class TaskService {
                 throw new UserWithoutAuthorizationAboutTheTaskException();
             }
             if (task.getDateTask().after(completionDate)) {
-                simpleTaskService.deleteTask(task.getId(), idUser);
+                simpleTaskService.deleteTask(idUser,task.getId());
             } else {
                 task.setBlockedByObjective(true);
                 repository.saveInDataBase(task);
             }
         }
+        List<Task> updateTasks = repository.findAllByIdObjective(idObjective);
+
+
         return new ResponseMessageDTO("Tasks locked!");
     }
 
