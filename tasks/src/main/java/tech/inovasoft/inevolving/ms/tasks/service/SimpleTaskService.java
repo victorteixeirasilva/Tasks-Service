@@ -86,7 +86,7 @@ public class SimpleTaskService {
         Task task = repository.findById(idUser, idTask);
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
-        validObjective(dto.idObjective(), idUser);
+//        validObjective(dto.idObjective(), idUser);
         task.setIdObjective(dto.idObjective());
 
 

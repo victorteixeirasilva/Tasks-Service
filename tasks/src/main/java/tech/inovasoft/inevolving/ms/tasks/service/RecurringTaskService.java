@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.DaysOfTheWeekDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateRepeatTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
@@ -132,13 +133,27 @@ public class RecurringTaskService {
 
         List<Task> allTasks = repository.findAllIsCopyTask(idForSearch, task.getDateTask());
 
+        ResponseTaskDTO updatedTask = simpleTaskService.updateTask(idUser, idTask, new RequestUpdateTaskDTO(
+                    dto.nameTask,
+                    dto.descriptionTask,
+                    dto.idObjective
+                )
+        );
+
         for (Task t : allTasks) {
             if (task.getDateTask().before(t.getDateTask())) {
                 simpleTaskService.deleteTask(idUser, t.getId());
             }
         }
 
-        ResponseRepeatTaskDTO result = addTasks(idUser, idTask, dto.daysOfTheWeekDTO, task.getDateTask(), endDate);
+        List<Task> allTasksBeforeCleaner = repository.findAllIsCopyTask(idForSearch, task.getDateTask());
+
+
+        Task newTask = repository.findById(idUser, idTask);
+
+        ResponseRepeatTaskDTO result = addTasks(idUser, newTask.getId(), dto.daysOfTheWeekDTO, task.getDateTask(), endDate);
+
+        List<Task> allTasksBeforeNewAdd = repository.findAllIsCopyTask(idForSearch, task.getDateTask());
 
         return new ResponseUpdateRepeatTaskDTO("Successfully update repeated tasks");
 
