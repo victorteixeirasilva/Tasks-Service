@@ -875,5 +875,33 @@ public class TaskController {
         ));
     }
 
+    @Async("asyncExecutor")
+    @GetMapping("/{idUser}/{idTask}/{token}")
+    public CompletableFuture<ResponseEntity<Task>> getTask(
+            @PathVariable UUID idUser,
+            @PathVariable UUID idTask,
+            @PathVariable String token
+    ) throws NotFoundTasksWithStatusException, DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
+        return CompletableFuture.completedFuture(ResponseEntity.ok(
+                service.getTask(idUser, idTask)
+        ));
+    }
 
 }

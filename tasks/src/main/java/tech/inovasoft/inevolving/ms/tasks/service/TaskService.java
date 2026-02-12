@@ -163,4 +163,8 @@ public class TaskService {
 
         return tasks;
     }
+
+    public Task getTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+        return repository.findById(idUser, idTask);
+    }
 }
