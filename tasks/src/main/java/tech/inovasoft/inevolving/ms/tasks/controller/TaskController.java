@@ -876,7 +876,7 @@ public class TaskController {
     }
 
     @Async("asyncExecutor")
-    @GetMapping("/{idUser}/{idTask}/{token}")
+    @GetMapping("/task/{idUser}/{idTask}/{token}")
     public CompletableFuture<ResponseEntity<Task>> getTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
