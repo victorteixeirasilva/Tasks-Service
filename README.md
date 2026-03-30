@@ -133,8 +133,8 @@ Sinta-se livre para usar, adaptar e evoluir com os devidos creditos.
 ## Contato
 Quer conversar sobre arquitetura, produto ou oportunidades?
 
-- **LinkedIn:** [Seu Nome](https://www.linkedin.com/in/victor-teixeira-354a131a3/)
-- **GitHub:** [seu-usuario](https://github.com/victorteixeirasilva)
+- **LinkedIn:** [https://www.linkedin.com/in/victor-teixeira-354a131a3/](https://www.linkedin.com/in/victor-teixeira-354a131a3/)
+- **GitHub:** [https://github.com/victorteixeirasilva](https://github.com/victorteixeirasilva)
 - **E-mail:** victor.teixeira@inovasoft.tech
 
 ---
