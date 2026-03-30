@@ -133,9 +133,9 @@ Sinta-se livre para usar, adaptar e evoluir com os devidos creditos.
 ## Contato
 Quer conversar sobre arquitetura, produto ou oportunidades?
 
-- **LinkedIn:** [Seu Nome](https://www.linkedin.com/in/seu-perfil)
-- **GitHub:** [seu-usuario](https://github.com/seu-usuario)
-- **E-mail:** seu.email@exemplo.com
+- **LinkedIn:** [Seu Nome](https://www.linkedin.com/in/victor-teixeira-354a131a3/)
+- **GitHub:** [seu-usuario](https://github.com/victorteixeirasilva)
+- **E-mail:** victor.teixeira@inovasoft.tech
 
 ---
 **Projeto ideal para portifolio tecnico-comercial:** demonstra dominio em backend corporativo, arquitetura de microsservicos, integracoes seguras e entrega orientada a resultado de negocio.
