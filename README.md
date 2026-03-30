@@ -4,6 +4,7 @@
 
 ## Slogan
 **"Menos atrito operacional. Mais entregas concluidas no prazo."**
+<img width="1536" height="1024" alt="Generatedimage_1774911403346" src="https://github.com/user-attachments/assets/11740170-698b-4829-8f35-d70e35d143a1" />
 
 ## Introducao e Visao Geral
 Em ambientes digitais orientados a metas, tarefas mal estruturadas geram retrabalho, atrasos e queda de produtividade. O `Tasks-Service` nasce para resolver exatamente esse gargalo: centralizar, organizar e automatizar o ciclo de vida das tarefas com inteligencia de negocio e integrações entre microsservicos.
