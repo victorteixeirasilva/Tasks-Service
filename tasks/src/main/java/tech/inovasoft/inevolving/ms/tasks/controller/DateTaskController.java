@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestPostponeTasksForDayDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateDateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponsePostponeTasksForDayDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
@@ -65,5 +67,36 @@ public class DateTaskController {
         ));
     }
 
+    @Operation(
+            summary = "Postpone tasks for a reference day | Adiar tarefas de um dia",
+            description = "TODO→LATE and +1 day; IN_PROGRESS +1 day only. | TODO→LATE e +1 dia; IN_PROGRESS só +1 dia."
+    )
+    @Async("asyncExecutor")
+    @PostMapping("/postpone-day/{token}")
+    public CompletableFuture<ResponseEntity<ResponsePostponeTasksForDayDTO>> postponeTasksForDay(
+            @RequestBody RequestPostponeTasksForDayDTO body,
+            @PathVariable String token
+    ) throws DataBaseException, ExecutionException, InterruptedException, TimeoutException {
+        TokenValidateResponse tokenValidateResponse = null;
+
+        try {
+            tokenValidateResponse = tokenService.validateToken(token);
+            if (tokenValidateResponse == null) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        } catch (Exception e) {
+            if (e.getMessage().equals("Invalid token")) {
+                return CompletableFuture.completedFuture(ResponseEntity.status(
+                        HttpStatus.UNAUTHORIZED
+                ).build());
+            }
+        }
+
+        return CompletableFuture.completedFuture(ResponseEntity.ok(
+                dateTaskService.postponeTasksForReferenceDay(body)
+        ));
+    }
 
 }
