@@ -11,6 +11,7 @@ import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -57,7 +58,10 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksInDateRange(UUID idUser, Date startDate, Date endDate) throws NotFoundTasksInDateRangeException, DataBaseException {
-        List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate);
+        List<Task> tasks = repository.findAllByIdUserAndDateRange(idUser, startDate, endDate)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksInDateRangeException();
@@ -73,7 +77,10 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksInDate(UUID idUser, Date date) throws NotFoundTasksInDateException, DataBaseException {
-        List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date);
+        List<Task> tasks = repository.findAllByIdUserAndDate(idUser, date)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksInDateException();
@@ -88,7 +95,10 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksLate(UUID idUser) throws NotFoundTasksWithStatusLateException, DataBaseException {
-        List<Task> tasks = repository.findAllByIdUserAndStatus(idUser, Status.LATE);
+        List<Task> tasks = repository.findAllByIdUserAndStatus(idUser, Status.LATE)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksWithStatusLateException();
@@ -106,7 +116,10 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksStatusInDateRange(UUID idUser, Date startDate, Date endDate, String status) throws NotFoundTasksWithStatusException, DataBaseException {
-        List<Task> tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status);
+        List<Task> tasks = repository.findAllByStatusAndDateRange(idUser, startDate, endDate, status)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksWithStatusException(status);
@@ -123,7 +136,10 @@ public class TaskService {
      * @return - List of tasks | Lista de tarefas
      */
     public List<Task> getTasksStatusInDate(UUID idUser, Date date, String status) throws NotFoundTasksWithStatusException, DataBaseException {
-        List<Task> tasks = repository.findAllByStatusAndDate(idUser, date, status);
+        List<Task> tasks = repository.findAllByStatusAndDate(idUser, date, status)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksWithStatusException(status);
@@ -143,7 +159,10 @@ public class TaskService {
     public List<Task> getTasksInDateRangeByObjectiveId(UUID idUser, UUID idObjective, Date startDate, Date endDate) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException, DataBaseException {
         simpleTaskService.validObjective(idObjective, idUser);
 
-        List<Task> tasks = repository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjective, startDate, endDate);
+        List<Task> tasks = repository.findAllByIdUserAndIdObjectiveAndDateRange(idUser, idObjective, startDate, endDate)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksWithObjectiveException();
@@ -155,7 +174,10 @@ public class TaskService {
     public List<Task> getTasksByObjectiveId(UUID idUser, UUID idObjective) throws NotFoundException, ExecutionException, InterruptedException, TimeoutException, NotFoundTasksWithObjectiveException, DataBaseException {
 //        simpleTaskService.validObjective(idObjective, idUser);
 
-        List<Task> tasks = repository.findAllByIdUserAndIdObjective(idUser, idObjective);
+        List<Task> tasks = repository.findAllByIdUserAndIdObjective(idUser, idObjective)
+                .stream()
+                .filter(task -> task.getIdParentTask() == null)
+                .collect(Collectors.toList());
 
         if (tasks.isEmpty()) {
             throw new NotFoundTasksWithObjectiveException();
