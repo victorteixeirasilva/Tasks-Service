@@ -87,15 +87,25 @@ public class SimpleTaskService {
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
 //        validObjective(dto.idObjective(), idUser);
+        UUID oldObjective = task.getIdObjective();
         task.setIdObjective(dto.idObjective());
-
 
         if (task.getIsCopy()) {
             task.setIsCopy(false);
             task.setIdOriginalTask(null);
         }
 
-        return new ResponseTaskDTO(repository.saveInDataBase(task));
+        Task savedTask = repository.saveInDataBase(task);
+
+        if (!Objects.equals(oldObjective, dto.idObjective()) && Boolean.TRUE.equals(task.getHasSubtasks())) {
+            List<Task> subtasks = repository.findAllByIdParentTask(idTask);
+            for (Task subtask : subtasks) {
+                subtask.setIdObjective(dto.idObjective());
+                repository.saveInDataBase(subtask);
+            }
+        }
+
+        return new ResponseTaskDTO(savedTask);
     }
 
     /**
@@ -119,6 +129,14 @@ public class SimpleTaskService {
      */
     public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
         Task task = repository.findById(idUser, idTask);
+
+        if (Boolean.TRUE.equals(task.getHasSubtasks())) {
+            List<Task> subtasks = repository.findAllByIdParentTask(idTask);
+            for (Task subtask : subtasks) {
+                repository.deleteTask(subtask);
+            }
+        }
+
         return repository.deleteTask(task);
     }
 

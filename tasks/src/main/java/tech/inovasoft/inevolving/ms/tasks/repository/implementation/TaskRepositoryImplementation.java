@@ -281,4 +281,15 @@ public class TaskRepositoryImplementation implements TaskRepository {
         return tasks;
     }
 
+    @Override
+    public List<Task> findAllByIdParentTask(UUID idParentTask) throws DataBaseException {
+        List<Task> tasks;
+        try {
+            tasks = repository.findAllByIdParentTask(idParentTask);
+        } catch (Exception e) {
+            throw new DataBaseException("(findAllByIdParentTask)", e.getCause());
+        }
+        return tasks;
+    }
+
 }

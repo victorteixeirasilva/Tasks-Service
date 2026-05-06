@@ -59,4 +59,7 @@ public interface JpaRepositoryInterface extends JpaRepository<Task, UUID> {
             @Param("idUser") UUID idUser,
             @Param("idObjective") UUID idObjective
     );
+
+    @Query("SELECT t FROM Task t WHERE t.idParentTask = :idParentTask")
+    List<Task> findAllByIdParentTask(@Param("idParentTask") UUID idParentTask);
 }
