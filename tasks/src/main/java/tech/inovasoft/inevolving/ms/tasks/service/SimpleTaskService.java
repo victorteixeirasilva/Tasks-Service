@@ -10,7 +10,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDT
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -82,7 +81,7 @@ public class SimpleTaskService {
      * @param dto - DTO (Data Transfer Object) to update the task. | DTO (Data Transfer Object) para atualizar a tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.
      */
-    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         Task task = repository.findById(idUser, idTask);
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
@@ -115,7 +114,7 @@ public class SimpleTaskService {
      * @param status - Status of the task. | Status da tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.
      */
-    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String status) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String status) throws DataBaseException, NotFoundException {
         Task task = repository.findById(idUser, idTask);
         task.setStatus(status);
         return new ResponseTaskDTO(repository.saveInDataBase(task));
@@ -127,7 +126,7 @@ public class SimpleTaskService {
      * @param idTask - ID of the task. | ID da tarefa.
      * @return - ResponseMessageDTO with the message of success. | ResponseMessageDTO com a mensagem de sucesso.
      */
-    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseMessageDTO deleteTask(UUID idUser, UUID idTask) throws DataBaseException, NotFoundException {
         Task task = repository.findById(idUser, idTask);
 
         if (Boolean.TRUE.equals(task.getHasSubtasks())) {
@@ -143,7 +142,7 @@ public class SimpleTaskService {
     /**
      * @desciprion - Method to update the status of a task. | Metodo para atualizar o status de uma tarefa.
      */
-    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) throws DataBaseException, NotFoundException {
         Task task = repository.findById(dto.idUser(), dto.idTask());
         task.setStatus(Status.CANCELLED);
         task.setCancellationReason(dto.cancellationReason());

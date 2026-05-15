@@ -87,7 +87,7 @@ public class TaskController {
             @PathVariable Date endDate,
             @RequestBody DaysOfTheWeekDTO daysOfTheWeekDTO,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -121,7 +121,7 @@ public class TaskController {
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -156,7 +156,7 @@ public class TaskController {
             @PathVariable Date endDate,
             @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -189,7 +189,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -222,7 +222,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -255,7 +255,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -288,7 +288,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -320,7 +320,7 @@ public class TaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
             @RequestBody RequestCanceledDTO dto,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -353,7 +353,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -387,7 +387,7 @@ public class TaskController {
             @PathVariable UUID idTask,
             @PathVariable Date date,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -421,7 +421,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+    ) throws NotFoundException, DataBaseException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -881,7 +881,7 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {

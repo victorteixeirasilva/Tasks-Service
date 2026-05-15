@@ -6,7 +6,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 
 import java.sql.Date;
@@ -21,11 +20,11 @@ public interface TaskRepository {
 
     Task saveInDataBase(Task task) throws DataBaseException;
 
-    Task findById(UUID idUser, UUID idTask) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException;
+    Task findById(UUID idUser, UUID idTask) throws DataBaseException, NotFoundException;
 
-    boolean addNewTaskCopy(Task task, LocalDate currentDate) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException;
+    boolean addNewTaskCopy(Task task, LocalDate currentDate) throws DataBaseException, NotFoundException;
 
-    ResponseMessageDTO deleteTask(Task task) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException;
+    ResponseMessageDTO deleteTask(Task task) throws DataBaseException, NotFoundException;
 
     List<Task> findAllIsCopyTask(UUID idForSearch, Date date) throws DataBaseException;
 

@@ -37,46 +37,6 @@ public class TaskServiceFaliure {
     private TaskService service;
 
     @Test
-    public void lockTaskByObjectiveUserWithoutAuthorizationAboutTheTaskException() throws DataBaseException {
-        // Given (Dado)
-        var idUser = UUID.randomUUID();
-        var idObjective = UUID.randomUUID();
-
-        List<Task> tasks = new ArrayList<>();
-        LocalDate currentDate = LocalDate.of(2025, 5, 13);
-        for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "Task " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    idObjective,
-                    UUID.randomUUID(),
-                    null,
-                    null,
-                    false,
-                    false,
-                    false,
-                    null
-            ));
-            currentDate = currentDate.plusDays(1);
-        }
-
-        // When (Quando)
-        when(taskRepository.findAllByIdObjective(idObjective)).thenReturn(tasks);
-        var result =  assertThrows(UserWithoutAuthorizationAboutTheTaskException.class, () -> {
-            service.lockTaskByObjective(idUser, idObjective, Date.valueOf("2025-05-17"));
-        });
-
-        // Then (Então)
-        assertNotNull(result);
-        assertEquals("User without authorization about the task.", result.getMessage());
-
-        verify(taskRepository, times(1)).findAllByIdObjective(idObjective);
-    }
-
-    @Test
     public void getTasksInDateRangeNotFoundTasksInDateRangeException() throws DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();

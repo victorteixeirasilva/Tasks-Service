@@ -3,7 +3,13 @@ package tech.inovasoft.inevolving.ms.tasks.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksInDateRangeException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksWithObjectiveException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksWithStatusException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundTasksWithStatusLateException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -31,12 +37,9 @@ public class TaskService {
      * @param completionDate - goal completion date | data de conclusão do objetivo
      * @return - Block confirmation | Confirmacao de bloqueio
      */
-    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective, Date completionDate) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public ResponseMessageDTO lockTaskByObjective(UUID idUser, UUID idObjective, Date completionDate) throws DataBaseException, NotFoundException {
         List<Task> tasks = repository.findAllByIdObjective(idObjective);
         for (Task task : tasks) {
-            if (!task.getIdUser().equals(idUser)) {
-                throw new UserWithoutAuthorizationAboutTheTaskException();
-            }
             if (task.getDateTask().after(completionDate)) {
                 simpleTaskService.deleteTask(idUser,task.getId());
             } else {
@@ -186,7 +189,7 @@ public class TaskService {
         return tasks;
     }
 
-    public Task getTask(UUID idUser, UUID idTask) throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+    public Task getTask(UUID idUser, UUID idTask) throws NotFoundException, DataBaseException {
         return repository.findById(idUser, idTask);
     }
 }

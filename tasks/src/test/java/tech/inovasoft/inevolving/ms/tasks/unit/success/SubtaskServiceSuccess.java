@@ -12,7 +12,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -56,7 +55,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void createSubtask_success()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -107,7 +106,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void createSubtask_updatesParentHasSubtasksToTrue()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -149,7 +148,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void createSubtask_parentAlreadyHasSubtasks_remainsTrue()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -191,7 +190,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void createSubtask_inheritsObjectiveFromParent()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -234,7 +233,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void updateTask_cascadesObjectiveToAllSubtasks()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException,
+            throws DataBaseException, NotFoundException,
             ExecutionException, InterruptedException, TimeoutException {
         // Given
         var idUser = UUID.randomUUID();
@@ -282,7 +281,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void updateTask_updatesOnlyDirectSubtasks()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException,
+            throws DataBaseException, NotFoundException,
             ExecutionException, InterruptedException, TimeoutException {
         // Given
         var idUser = UUID.randomUUID();
@@ -325,7 +324,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void updateTask_noSubtasks_noError()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException,
+            throws DataBaseException, NotFoundException,
             ExecutionException, InterruptedException, TimeoutException {
         // Given
         var idUser = UUID.randomUUID();
@@ -360,7 +359,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void getSubtasks_returnsAllSubtasks()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -406,7 +405,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void getSubtasks_returnsEmptyListWhenNoSubtasks()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -434,7 +433,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void getSubtasks_returnsFullSubtaskData()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -481,7 +480,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void promoteToParent_success()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -528,7 +527,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void promoteToParent_maintainsObjective()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -573,7 +572,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void promoteToParent_updatesOldParentHasSubtasksToFalse()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -619,7 +618,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void promoteToParent_isIdempotent()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -650,7 +649,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void deleteSubtask_success()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -691,7 +690,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void deleteSubtask_keepsParentHasSubtasksTrueWhenOthersExist()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -736,7 +735,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void deleteSubtask_setsParentHasSubtasksFalse_whenLastSubtaskRemoved()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -778,7 +777,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void deleteParentTask_deletesAllSubtasksFirst()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -822,7 +821,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void deleteParentTask_noSubtasks_deletesNormally()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -854,7 +853,7 @@ public class SubtaskServiceSuccess {
      */
     @Test
     public void createSubtask_objectiveMatchesParent()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();

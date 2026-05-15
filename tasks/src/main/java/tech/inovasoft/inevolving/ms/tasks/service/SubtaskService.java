@@ -7,7 +7,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -28,7 +27,7 @@ public class SubtaskService {
      *               tarefa pai e definindo hasSubtasks=true na tarefa pai.
      */
     public ResponseSubtaskDTO createSubtask(RequestSubtaskDTO dto)
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
 
         if (dto.idParentTask() == null) {
             throw new NotFoundException("idParentTask is required to create a subtask");
@@ -63,7 +62,7 @@ public class SubtaskService {
      *               | Retorna todas as subtarefas de uma tarefa pai. Retorna lista vazia se não houver.
      */
     public List<Task> getSubtasks(UUID idUser, UUID idParentTask)
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
 
         repository.findById(idUser, idParentTask);
         return repository.findAllByIdParentTask(idParentTask);
@@ -76,7 +75,7 @@ public class SubtaskService {
      *               Atualiza o hasSubtasks da tarefa pai anterior se necessário.
      */
     public ResponseSubtaskDTO promoteToParent(UUID idUser, UUID idTask)
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
 
         Task task = repository.findById(idUser, idTask);
 
@@ -98,7 +97,7 @@ public class SubtaskService {
      *               | Deleta uma subtarefa e atualiza o hasSubtasks da tarefa pai caso seja a última.
      */
     public ResponseMessageDTO deleteSubtask(UUID idUser, UUID idTask)
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
 
         Task subtask = repository.findById(idUser, idTask);
         UUID parentId = subtask.getIdParentTask();
@@ -117,7 +116,7 @@ public class SubtaskService {
      *               | Verifica se a tarefa pai ainda possui subtarefas; se não, define hasSubtasks=false.
      */
     private void updateParentHasSubtasks(UUID idUser, UUID parentId)
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
 
         List<Task> remainingSubtasks = repository.findAllByIdParentTask(parentId);
         if (remainingSubtasks.isEmpty()) {

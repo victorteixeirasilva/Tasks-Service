@@ -12,7 +12,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDT
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -45,7 +44,7 @@ public class SimpleTaskServiceSuccess {
     private SimpleTaskService simpleTaskService;
 
     @Test
-    public void updateTaskStatusCancelled() throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+    public void updateTaskStatusCancelled() throws NotFoundException, DataBaseException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -137,7 +136,7 @@ public class SimpleTaskServiceSuccess {
     }
 
     @Test
-    public void updateTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void updateTask() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -200,7 +199,7 @@ public class SimpleTaskServiceSuccess {
     }
 
     @Test
-    public void updateTaskStatus() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void updateTaskStatus() throws DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -241,7 +240,7 @@ public class SimpleTaskServiceSuccess {
     }
 
     @Test
-    public void deleteTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void deleteTask() throws DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();

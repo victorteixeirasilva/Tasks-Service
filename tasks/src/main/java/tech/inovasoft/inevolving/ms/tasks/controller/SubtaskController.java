@@ -12,7 +12,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.service.SubtaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
@@ -42,7 +41,7 @@ public class SubtaskController {
     public CompletableFuture<ResponseEntity<ResponseSubtaskDTO>> createSubtask(
             @RequestBody RequestSubtaskDTO dto,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -75,7 +74,7 @@ public class SubtaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idParentTask,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -108,7 +107,7 @@ public class SubtaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -141,7 +140,7 @@ public class SubtaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+    ) throws DataBaseException, NotFoundException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {

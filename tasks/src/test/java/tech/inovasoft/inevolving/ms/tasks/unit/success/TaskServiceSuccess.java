@@ -42,7 +42,7 @@ public class TaskServiceSuccess {
 
 
     @Test
-    public void lockTaskByObjective() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public void lockTaskByObjective() throws DataBaseException, NotFoundException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
         var idObjective = UUID.randomUUID();

@@ -14,7 +14,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponsePostponeTa
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.service.DateTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
@@ -44,7 +43,7 @@ public class DateTaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTask(
             @RequestBody RequestUpdateDateTaskDTO updateDateTaskDTO,
             @PathVariable String token
-    ) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {

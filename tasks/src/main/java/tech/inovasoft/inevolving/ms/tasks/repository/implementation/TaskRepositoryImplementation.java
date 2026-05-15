@@ -6,7 +6,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -45,10 +44,9 @@ public class TaskRepositoryImplementation implements TaskRepository {
      * @param idTask - ID of the task being searched. (ID da tarefa sendo procurada.)
      * @return - Returns the task found in the database. (Tarefa encontrada no banco de dados.)
      * @throws DataBaseException - Error occurs if there is a problem in the DBMS finding the task in the bank. (Erro acontece caso tenha algum problema no SGBD para encontrar a tarefa no banco.)
-     * @throws UserWithoutAuthorizationAboutTheTaskException - Error occurs if the user does not have authorization to access the task. (Erro acontece caso o usuário não tenha autorização para acessar a tarefa.)
      * @throws NotFoundException - Error occurs if the task is not found in the database. (Erro acontece caso a tarefa nao seja encontrada no banco de dados.)
      */
-    public Task findById(UUID idUser, UUID idTask) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public Task findById(UUID idUser, UUID idTask) throws DataBaseException, NotFoundException {
         Optional<Task> taskOptional;
         try {
             taskOptional = repository.findById(idTask);
@@ -58,10 +56,6 @@ public class TaskRepositoryImplementation implements TaskRepository {
 
         if (taskOptional.isEmpty()) {
             throw new NotFoundException("(findById) Task not found");
-        }
-
-        if (!taskOptional.get().getIdUser().equals(idUser)) {
-            throw new UserWithoutAuthorizationAboutTheTaskException();
         }
 
         return taskOptional.get();
@@ -74,7 +68,7 @@ public class TaskRepositoryImplementation implements TaskRepository {
      * @return - Returns true if the task was successfully saved in the database. (Retorna true se a tarefa foi salva com sucesso no banco de dados.)
      * @throws DataBaseException - Error occurs if there is a problem saving the task in the bank. (Erro acontece caso tenha algum problema para salvar a tarefa no banco.)
      */
-    public boolean addNewTaskCopy(Task task, LocalDate currentDate) throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    public boolean addNewTaskCopy(Task task, LocalDate currentDate) throws DataBaseException, NotFoundException {
         Date sqlDate = Date.valueOf(currentDate);
         Optional<Task> taskOptional = repository.findByIdOriginalTaskOrIdTask(sqlDate, task.getId());
 

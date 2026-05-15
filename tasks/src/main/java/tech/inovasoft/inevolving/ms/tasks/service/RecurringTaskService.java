@@ -8,7 +8,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDT
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
@@ -39,7 +38,7 @@ public class RecurringTaskService {
      * @param endDate - end date. | data de fim.
      * @return - number of repetitions. | quantidade de repeticoes.
      */
-    public ResponseRepeatTaskDTO addTasks(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO, Date startDate, Date endDate) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseRepeatTaskDTO addTasks(UUID idUser, UUID idTask, DaysOfTheWeekDTO daysOfTheWeekDTO, Date startDate, Date endDate) throws DataBaseException, NotFoundException {
         validDateRange(startDate, endDate);
 
         int numberRepetitions = 1;
@@ -109,7 +108,7 @@ public class RecurringTaskService {
      * @param dto - DTO (Data Transfer Object) of update tasks. | DTO (Data Transfer Object) de atualizacao de tarefas.
      * @return - Return a confirmation message that the process was successful. | Retorna uma mensagem de confirmação que o precesso foi realizado com sucesso.
      */
-    public ResponseUpdateRepeatTaskDTO updateTasks(UUID idUser, UUID idTask, Date endDate, RequestUpdateRepeatTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseUpdateRepeatTaskDTO updateTasks(UUID idUser, UUID idTask, Date endDate, RequestUpdateRepeatTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
 
         Task task = repository.findById(idUser, idTask);
 
@@ -177,7 +176,7 @@ public class RecurringTaskService {
      * @param date - start date. | A partir da data.
      * @return - Return a confirmation message that the process was successful. | Retorna uma mensagem de confirmação que o precesso foi realizado com sucesso.
      */
-    public ResponseDeleteTasksDTO deleteTasks(UUID idUser, UUID idTask, Date date) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseDeleteTasksDTO deleteTasks(UUID idUser, UUID idTask, Date date) throws DataBaseException, NotFoundException {
         int numberDeleteRepetitions = 0;
         Task task = repository.findById(idUser, idTask);
         UUID idForSearch = idTask;

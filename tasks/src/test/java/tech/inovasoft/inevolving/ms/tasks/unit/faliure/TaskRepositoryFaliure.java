@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.implementation.TaskRepositoryImplementation;
@@ -33,7 +32,7 @@ public class TaskRepositoryFaliure {
     private TaskRepositoryImplementation taskRepository;
 
     @Test
-    public void findByIdDataBaseException() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void findByIdDataBaseException() throws DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -68,7 +67,7 @@ public class TaskRepositoryFaliure {
     }
 
     @Test
-    public void findByIdNotFoundException() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void findByIdNotFoundException() throws DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -98,41 +97,6 @@ public class TaskRepositoryFaliure {
         // Then (Então)
         assertNotNull(result);
         assertEquals("(findById) Task not found", result.getMessage());
-
-        verify(repository, times(1)).findById(idTask);
-    }
-
-    @Test
-    public void findByIdUserWithoutAuthorizationAboutTheTaskException() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
-        // Given (Dado)
-        UUID idUser = UUID.randomUUID();
-        UUID idTask = UUID.randomUUID();
-
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                UUID.randomUUID(),
-                null,
-                null,
-                false,
-                false,
-                false,
-                null
-        );
-
-        // When (Quando)
-        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
-        Exception result = assertThrows(UserWithoutAuthorizationAboutTheTaskException.class, () -> {
-            taskRepository.findById(idUser, idTask);
-        });
-
-        // Then (Então)
-        assertNotNull(result);
-        assertEquals("User without authorization about the task.", result.getMessage());
 
         verify(repository, times(1)).findById(idTask);
     }

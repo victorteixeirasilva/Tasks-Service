@@ -24,18 +24,6 @@ public class RestExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(UserWithoutAuthorizationAboutTheTaskException.class)
-    public ResponseEntity<ExceptionResponse> handleUserWithoutAuthorizationAboutTheTaskException(UserWithoutAuthorizationAboutTheTaskException exception) {
-        log.error("ERROR: {} - {}", exception.getClass().getSimpleName(), exception.getMessage());
-
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body(new ExceptionResponse(
-                        exception.getClass().getSimpleName(),
-                        exception.getMessage()
-                ));
-    }
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException exception) {
         log.error("ERROR: {} - {}", exception.getClass().getSimpleName(), exception.getMessage());

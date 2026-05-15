@@ -12,7 +12,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDT
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
@@ -47,7 +46,7 @@ public class RecurringTaskServiceSuccess {
     private RecurringTaskService recurringTaskService;
 
     @Test
-    public void repeatTask() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void repeatTask() throws DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -82,7 +81,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void updateTasksAndTheirFutureRepetitions() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -222,7 +221,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void deleteTasksAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void deleteTasksAndTheirFutureRepetitions() throws DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -272,7 +271,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void deleteTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void deleteTasksCopyAndTheirFutureRepetitions() throws DataBaseException, NotFoundException {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
@@ -339,7 +338,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitions() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void updateTasksCopyAndTheirFutureRepetitions() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -481,7 +480,7 @@ public class RecurringTaskServiceSuccess {
     }
 
     @Test
-    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public void updateTasksCopyAndTheirFutureRepetitionsAndAddNewTasks() throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();

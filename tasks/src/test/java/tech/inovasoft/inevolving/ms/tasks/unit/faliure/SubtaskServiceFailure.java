@@ -9,7 +9,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -38,7 +37,7 @@ public class SubtaskServiceFailure {
      * 1.3 - Deve retornar erro quando idParentTask é null
      */
     @Test
-    public void createSubtask_failsWhenIdParentTaskIsNull() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException {
+    public void createSubtask_failsWhenIdParentTaskIsNull() throws DataBaseException {
         // Given
         var dto = new RequestSubtaskDTO(
                 "Subtask", "Desc",
@@ -56,7 +55,7 @@ public class SubtaskServiceFailure {
      * 1.3b - Mensagem de erro deve ser clara quando idParentTask é null
      */
     @Test
-    public void createSubtask_errorMessageClearWhenNoParent() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException {
+    public void createSubtask_errorMessageClearWhenNoParent() throws DataBaseException {
         // Given
         var dto = new RequestSubtaskDTO(
                 "Subtask", "Desc",
@@ -75,7 +74,7 @@ public class SubtaskServiceFailure {
      * 1.3c - Nenhuma subtarefa deve ser persistida quando falta idParentTask
      */
     @Test
-    public void createSubtask_noSubtaskPersistedWhenNoParent() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException {
+    public void createSubtask_noSubtaskPersistedWhenNoParent() throws DataBaseException {
         // Given
         var dto = new RequestSubtaskDTO(
                 "Subtask", "Desc",
@@ -96,7 +95,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void createSubtask_failsWhenParentTaskNotFound()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -121,7 +120,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void getSubtasks_failsWhenParentTaskNotFound()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();
@@ -133,75 +132,6 @@ public class SubtaskServiceFailure {
         assertThrows(NotFoundException.class, () -> subtaskService.getSubtasks(idUser, idParentTask));
     }
 
-    // ==================== 4.4 / 6.5 - Deve respeitar permissões de acesso ====================
-
-    /**
-     * 4.4 - getSubtasks deve falhar se o usuário não tem autorização sobre a tarefa pai
-     */
-    @Test
-    public void getSubtasks_failsWhenUserNotAuthorized()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
-        // Given
-        var idUser = UUID.randomUUID();
-        var idParentTask = UUID.randomUUID();
-
-        when(taskRepository.findById(idUser, idParentTask))
-                .thenThrow(new UserWithoutAuthorizationAboutTheTaskException());
-
-        // When / Then
-        assertThrows(UserWithoutAuthorizationAboutTheTaskException.class,
-                () -> subtaskService.getSubtasks(idUser, idParentTask));
-
-        verify(taskRepository, never()).findAllByIdParentTask(any(UUID.class));
-    }
-
-    /**
-     * 6.5 - deleteSubtask deve falhar se o usuário não tem autorização
-     */
-    @Test
-    public void deleteSubtask_failsWhenUserNotAuthorized()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
-        // Given
-        var idUser = UUID.randomUUID();
-        var idTask = UUID.randomUUID();
-
-        when(taskRepository.findById(idUser, idTask))
-                .thenThrow(new UserWithoutAuthorizationAboutTheTaskException());
-
-        // When / Then
-        assertThrows(UserWithoutAuthorizationAboutTheTaskException.class,
-                () -> subtaskService.deleteSubtask(idUser, idTask));
-
-        verify(taskRepository, never()).deleteTask(any(Task.class));
-    }
-
-    /**
-     * 1.3 / criação - falha se usuário não tem autorização sobre a tarefa pai
-     */
-    @Test
-    public void createSubtask_failsWhenUserNotAuthorizedOnParent()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
-        // Given
-        var idUser = UUID.randomUUID();
-        var idParentTask = UUID.randomUUID();
-
-        var dto = new RequestSubtaskDTO(
-                "Subtask", "Desc",
-                LocalDate.of(2025, 5, 12),
-                idParentTask,
-                idUser
-        );
-
-        when(taskRepository.findById(idUser, idParentTask))
-                .thenThrow(new UserWithoutAuthorizationAboutTheTaskException());
-
-        // When / Then
-        assertThrows(UserWithoutAuthorizationAboutTheTaskException.class,
-                () -> subtaskService.createSubtask(dto));
-
-        verify(taskRepository, never()).saveInDataBase(any(Task.class));
-    }
-
     // ==================== 5.1 - promoteToParent deve falhar quando tarefa não existe ====================
 
     /**
@@ -209,7 +139,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void promoteToParent_failsWhenTaskNotFound()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -230,7 +160,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void deleteSubtask_failsWhenSubtaskNotFound()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -249,7 +179,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void deleteSubtask_noParentModifiedWhenSubtaskNotFound()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idTask = UUID.randomUUID();
@@ -271,7 +201,7 @@ public class SubtaskServiceFailure {
      */
     @Test
     public void createSubtask_subtaskHasParentTaskId()
-            throws DataBaseException, NotFoundException, UserWithoutAuthorizationAboutTheTaskException {
+            throws DataBaseException, NotFoundException {
         // Given
         var idUser = UUID.randomUUID();
         var idParentTask = UUID.randomUUID();

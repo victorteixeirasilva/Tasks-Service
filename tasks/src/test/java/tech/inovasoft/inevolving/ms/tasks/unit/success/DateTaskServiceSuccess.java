@@ -10,7 +10,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateDateTa
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -36,7 +35,7 @@ class DateTaskServiceSuccess {
 
     @Test
     void updateDateTask_setsNewDateAndReturnsResponse()
-            throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+            throws DataBaseException, NotFoundException {
         UUID idTask = UUID.randomUUID();
         UUID idUser = UUID.randomUUID();
         LocalDate newLocalDate = LocalDate.of(2026, 4, 15);

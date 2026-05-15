@@ -8,7 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateDateTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -32,7 +31,7 @@ class DateTaskServiceFaliure {
     private DateTaskService dateTaskService;
 
     @Test
-    void updateDateTask_propagatesNotFoundExceptionFromFindById() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    void updateDateTask_propagatesNotFoundExceptionFromFindById() throws DataBaseException, NotFoundException {
         UUID idTask = UUID.randomUUID();
         UUID idUser = UUID.randomUUID();
         RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(LocalDate.of(2026, 4, 15), idTask, idUser);
@@ -46,23 +45,8 @@ class DateTaskServiceFaliure {
     }
 
     @Test
-    void updateDateTask_propagatesUserWithoutAuthorizationFromFindById()
-            throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
-        UUID idTask = UUID.randomUUID();
-        UUID idUser = UUID.randomUUID();
-        RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(LocalDate.of(2026, 4, 15), idTask, idUser);
-
-        when(taskRepository.findById(idTask, idUser)).thenThrow(new UserWithoutAuthorizationAboutTheTaskException());
-
-        assertThrows(UserWithoutAuthorizationAboutTheTaskException.class, () -> dateTaskService.updateDateTask(dto));
-
-        verify(taskRepository, times(1)).findById(idTask, idUser);
-        verify(taskRepository, never()).saveInDataBase(any());
-    }
-
-    @Test
     void updateDateTask_propagatesDataBaseExceptionFromFindById()
-            throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+            throws DataBaseException, NotFoundException {
         UUID idTask = UUID.randomUUID();
         UUID idUser = UUID.randomUUID();
         RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(LocalDate.of(2026, 4, 15), idTask, idUser);
@@ -76,7 +60,7 @@ class DateTaskServiceFaliure {
     }
 
     @Test
-    void updateDateTask_propagatesDataBaseExceptionFromSave() throws DataBaseException, UserWithoutAuthorizationAboutTheTaskException, NotFoundException {
+    void updateDateTask_propagatesDataBaseExceptionFromSave() throws DataBaseException, NotFoundException {
         UUID idTask = UUID.randomUUID();
         UUID idUser = UUID.randomUUID();
         RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(LocalDate.of(2026, 4, 15), idTask, idUser);

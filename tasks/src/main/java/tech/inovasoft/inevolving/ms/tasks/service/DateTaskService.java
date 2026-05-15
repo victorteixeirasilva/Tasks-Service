@@ -9,7 +9,6 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponsePostponeTa
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
@@ -27,7 +26,7 @@ public class DateTaskService {
     @Autowired
     private TaskRepository repository;
 
-    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto) throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto) throws DataBaseException, NotFoundException {
         Task task = repository.findById(dto.idTask(), dto.idUser());
 
         task.setDateTask(Date.valueOf(dto.dateTask()));

@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.exception.UserWithoutAuthorizationAboutTheTaskException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.repository.implementation.TaskRepositoryImplementation;
@@ -35,7 +34,7 @@ public class TaskRepositorySucess {
     private TaskRepositoryImplementation taskRepository;
 
     @Test
-    public void findById() throws UserWithoutAuthorizationAboutTheTaskException, DataBaseException, NotFoundException {
+    public void findById() throws DataBaseException, NotFoundException {
         // Given (Dado)
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
@@ -108,7 +107,7 @@ public class TaskRepositorySucess {
     }
 
     @Test
-    public void addNewTaskCopy() throws UserWithoutAuthorizationAboutTheTaskException, NotFoundException, DataBaseException {
+    public void addNewTaskCopy() throws NotFoundException, DataBaseException {
         // Given (Dado)
         LocalDate currentDate = LocalDate.now();
         Task existingTask = new Task();
