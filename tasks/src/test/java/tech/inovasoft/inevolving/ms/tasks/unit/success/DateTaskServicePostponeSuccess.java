@@ -129,6 +129,36 @@ class DateTaskServicePostponeSuccess {
     }
 
     @Test
+    void subtasksWithTodoStatus_areNotMarkedLateOrSaved() throws DataBaseException {
+        UUID idUser = UUID.randomUUID();
+        UUID idParentTask = UUID.randomUUID();
+        LocalDate ref = LocalDate.of(2026, 5, 2);
+        Date refSql = Date.valueOf(ref);
+
+        Task parentTodo = minimalTodo(UUID.randomUUID(), idUser, refSql);
+        Task subtaskTodo = minimalTodo(UUID.randomUUID(), idUser, refSql);
+        subtaskTodo.setIdParentTask(idParentTask);
+
+        when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO))
+                .thenReturn(List.of(parentTodo, subtaskTodo));
+        when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.IN_PROGRESS))
+                .thenReturn(Collections.emptyList());
+        when(taskRepository.saveInDataBase(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ResponsePostponeTasksForDayDTO out = dateTaskService.postponeTasksForReferenceDay(
+                new RequestPostponeTasksForDayDTO(idUser, ref));
+
+        assertEquals(1, out.todosMarkedLateAndMoved());
+        assertEquals(1, out.totalTasksUpdated());
+        assertEquals(Status.LATE, parentTodo.getStatus());
+        assertEquals(Date.valueOf(ref.plusDays(1)), parentTodo.getDateTask());
+        assertEquals(Status.TODO, subtaskTodo.getStatus());
+        assertEquals(refSql, subtaskTodo.getDateTask());
+        verify(taskRepository, times(1)).saveInDataBase(parentTodo);
+        verify(taskRepository, never()).saveInDataBase(subtaskTodo);
+    }
+
+    @Test
     void mixedTodoAndInProgress_processesBothGroups() throws DataBaseException {
         UUID idUser = UUID.randomUUID();
         LocalDate ref = LocalDate.of(2026, 7, 20);

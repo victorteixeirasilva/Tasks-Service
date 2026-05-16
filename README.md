@@ -46,13 +46,24 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 - Retorna informacoes prontas para alimentar dashboards ou camadas de BI.
 - **Valor agregado:** permite diagnostico rapido de gargalos e priorizacao de execucao.
 
-### 5) Seguranca e autorizacao entre microsservicos
-- Validacao de token integrada ao fluxo de operacoes sensiveis.
-- Restricao de acesso para garantir que cada usuario manipule apenas seus dados.
-- Integracao com servico de autenticacao dedicado.
-- **Valor agregado:** reforca conformidade e protege o dominio de negocio.
+### 5) Subtarefas vinculadas a tarefas pai
+- CRUD dedicado em `/ms/tasks/subtask` (criar, listar por pai, promover, excluir).
+- Heranca de objetivo da tarefa pai e flag `hasSubtasks` na pai.
+- Listagens historicas de tarefas retornam apenas tarefas raiz; subtarefas sao consultadas pelo endpoint proprio.
+- **Valor agregado:** decompoe entregas complexas sem poluir visoes de calendario e status.
 
-### 6) Operacao assíncrona e observabilidade
+### 6) Adiamento em lote por dia de referencia
+- `POST /ms/tasks/date/postpone-day/{token}`: tarefas `TODO` (pai) viram `LATE` e avancam um dia; `IN_PROGRESS` apenas avancam a data.
+- Subtarefas em `TODO` nao entram no fluxo automatico de atraso.
+- **Valor agregado:** suporta rotinas diarias (ex.: virada de dia) com resposta numerica de quantas tarefas foram afetadas.
+
+### 7) Seguranca e autorizacao entre microsservicos
+- Validacao de token de maquina no path via Auth-For-MService em operacoes sensiveis.
+- A checagem de que o `idUser` do path e dono da tarefa e responsabilidade do **Gateway/BFF** (removida no repositorio a partir de maio/2026).
+- Integracao com servico de autenticacao dedicado.
+- **Valor agregado:** flexibiliza chamadas entre microsservicos mantendo token obrigatorio na borda.
+
+### 8) Operacao assíncrona e observabilidade
 - Endpoints com processamento assíncrono via `CompletableFuture`.
 - Instrumentacao com `Spring Boot Actuator`.
 - Swagger/OpenAPI para descoberta e teste de contrato.
@@ -104,9 +115,19 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 ![Swagger do Tasks-Service2](./docs/images/swagger-overview-2.png)
 
 ### 4) Endpoints e monitoramento
-- API: `http://localhost:8085`
-- Swagger UI (ajuste conforme configuracao de rota): `http://localhost:8085/swagger-ui/index.html`
+
+**Base:** `http://localhost:8085`
+
+| Grupo | Prefixo | Exemplos |
+|-------|---------|----------|
+| Tarefas | `/ms/tasks` | CRUD, status, listagens por data/objetivo (somente tarefas pai) |
+| Datas | `/ms/tasks/date` | `PUT /{token}`, `POST /postpone-day/{token}` |
+| Subtarefas | `/ms/tasks/subtask` | `POST /{token}`, `GET /{idUser}/{idParentTask}/{token}` |
+
+- Swagger UI: `http://localhost:8085/swagger-ui/index.html`
 - Actuator: `http://localhost:8085/actuator`
+- Documentacao tecnica para integradores: [docs/tecnico-integracao-alteracoes-recentes.md](./docs/tecnico-integracao-alteracoes-recentes.md)
+- Historico de mudancas: [CHANGELOG.md](./CHANGELOG.md)
 
 ### 5) Parar ambiente
 ```bash
