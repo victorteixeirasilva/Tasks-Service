@@ -54,10 +54,12 @@ public class DateTaskService {
         List<Task> todoOnDay = repository.findAllByStatusAndDate(idUser, referenceSql, Status.TODO);
         int lateMoved = 0; // contador só para resposta (observabilidade)
         for (Task task : todoOnDay) { // uma persistência por linha afetada
-            task.setStatus(Status.LATE); // não iniciada vira atrasada, conforme regra de negócio
-            task.setDateTask(nextSql); // empurra compromisso para o próximo dia
-            repository.saveInDataBase(task); // método já existente no repositório
-            lateMoved++; // incrementa após save bem-sucedido (testes simulam exceção antes se necessário)
+            if (task.getIdParentTask() == null) {
+                task.setStatus(Status.LATE); // não iniciada vira atrasada, conforme regra de negócio
+                task.setDateTask(nextSql); // empurra compromisso para o próximo dia
+                repository.saveInDataBase(task); // método já existente no repositório
+                lateMoved++; // incrementa após save bem-sucedido (testes simulam exceção antes se necessário)
+            }
         }
 
         List<Task> inProgressOnDay = repository.findAllByStatusAndDate(idUser, referenceSql, Status.IN_PROGRESS);
