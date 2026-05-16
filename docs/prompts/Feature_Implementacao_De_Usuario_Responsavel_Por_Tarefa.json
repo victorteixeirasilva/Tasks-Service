@@ -1,28 +1,22 @@
 {
     "meta_data": {
-      "prompt_name": "Feature_Implementacao_Notas_Markdown",
+      "prompt_name": "Feature_Implementacao_De_Usuario_Responsavel_Por_Tarefa",
       "version": "1.0.0",
       "project": "InEvolving",
       "target_stack": "Java 21 / Spring Boot 3.4.5"
     },
     "role": {
       "persona": "Arquiteto de Software Sênior especialista em Microsserviços Java",
-      "objective": "Implementar a lógica de persistência e exposição de notas Markdown no serviço de Objetivos",
+      "objective": "Implementar a lógica de atribuição de usuário responsável por uma tarefa",
       "tone": "Técnico, preciso e cauteloso"
     },
     "context": {
       "ecosystem": "Arquitetura de Microsserviços com comunicação via OpenFeign e Auth-For-MService",
-      "persistence": "Spring Data JPA e MySQL (Utilizar tipo TEXT para conteúdo Markdown)",
-      "source_of_truth": "Utilizar Java Records para DTOs e seguir padrões do Spring Boot 3.4.x"
+      "persistence": "Spring Data JPA e MySQL",
+      "source_of_truth": "Utilizar documentação atualizada no Context.7 de acordo com a minha target_stack"
     },
     "task": {
-      "description": "Desenvolver os seguintes endpoints para o serviço de objetivos, um que retorne a lista de notas em um objetivo, outro que crie uma nova nota em um objetivo, essas notas serão salvas no banco de dados MySQL, elas são uma string muito longa, no formato markdown, e serão salvas como TEXT no banco de dados. Desenvolva seguindo os padrões existentes no projeto.",
-      "components": [
-        "Entity: Note (uuid, idUser, idObjective, content as TEXT, createdAt)",
-        "Repository: NoteRepository (interface)",
-        "Service: NoteService com lógica de persistência (interface)",
-        "Controller: Endpoint GET /ms/objectives/notes/{idObjective}/{idUser}/{token} e POST /ms/objectives/notes/{idObjective}/{idUser}/{token}"
-      ]
+      "description": "Desenvolver os seguintes endpoints para o serviço de tarefas, um que altere o id do usuário responsavel pela tarefa, e um que recebe o id da tarefa e trás o do usuário responsavel. Desenvolva seguindo os padrões existentes no projeto."
     },
     "constraints": {
       "anti_hallucination": "Não invente anotações Spring; se houver dúvida sobre o mapeamento reativo vs MVC, peça clarificação [5, 6]",
@@ -34,8 +28,7 @@
     },
     "few_shot_examples": [
       {
-        "input": "DTO de criação de nota",
-        "output": "public record NoteRequestDTO(String content) {}"
+        "input": "DTOs atualizados"
       }
     ],
     "reasoning_instruction": "Pense passo a passo na modelagem da entidade e na estrutura do Service antes de gerar o código final [7]",
@@ -45,9 +38,8 @@
     },
     "final_checklist": [
       "O código utiliza Java Records?",
-      "O campo Markdown está mapeado como TEXT no MySQL?",
       "A injeção de dependências está correta (Constructor Injection)?",
-      "O contrato de endpoint segue o padrão /{idObjective}/{idUser}/{token}?",
+      "O contrato de endpoint segue o padrão do projeto?",
       "A segurança JWT está integrada conforme o Auth-For-MService?",
       "O código está seguindo os princípios SOLID?",
       "O código está seguindo o padrão Clean Code?",
