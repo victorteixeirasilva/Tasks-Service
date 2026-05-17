@@ -78,6 +78,7 @@ class DateTaskServiceFaliure {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 

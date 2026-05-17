@@ -65,7 +65,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent Task", "Parent Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO(
@@ -78,7 +78,7 @@ public class SubtaskServiceSuccess {
                 UUID.randomUUID(), dto.nameTask(), dto.descriptionTask(),
                 Status.TODO, Date.valueOf(dto.dateTask()),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -116,7 +116,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent Task", "Parent Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO(
@@ -129,7 +129,7 @@ public class SubtaskServiceSuccess {
                 UUID.randomUUID(), dto.nameTask(), dto.descriptionTask(),
                 Status.TODO, Date.valueOf(dto.dateTask()),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -158,7 +158,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent Task", "Parent Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO(
@@ -171,7 +171,7 @@ public class SubtaskServiceSuccess {
                 UUID.randomUUID(), dto.nameTask(), dto.descriptionTask(),
                 Status.TODO, Date.valueOf(dto.dateTask()),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -200,7 +200,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO(
@@ -213,7 +213,7 @@ public class SubtaskServiceSuccess {
                 UUID.randomUUID(), dto.nameTask(), dto.descriptionTask(),
                 Status.TODO, Date.valueOf(dto.dateTask()),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -245,20 +245,20 @@ public class SubtaskServiceSuccess {
                 idTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var subtask1 = new Task(
                 UUID.randomUUID(), "Sub1", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                idTask, null, false, false, false, null
+                idTask, null, false, false, false, null, null
         );
         var subtask2 = new Task(
                 UUID.randomUUID(), "Sub2", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                idTask, null, false, false, false, null
+                idTask, null, false, false, false, null, null
         );
 
         var updateDTO = new RequestUpdateTaskDTO("Parent Updated", "Desc", idNewObjective);
@@ -294,14 +294,14 @@ public class SubtaskServiceSuccess {
                 idTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var directSubtask = new Task(
                 UUID.randomUUID(), "DirectSub", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                idTask, null, false, false, false, null
+                idTask, null, false, false, false, null, null
         );
 
         var updateDTO = new RequestUpdateTaskDTO("Parent Updated", "Desc", idNewObjective);
@@ -336,7 +336,7 @@ public class SubtaskServiceSuccess {
                 idTask, "Task", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idOldObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var updateDTO = new RequestUpdateTaskDTO("Task Updated", "Desc", idNewObjective);
@@ -369,20 +369,20 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var sub1 = new Task(
                 UUID.randomUUID(), "Sub1", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
         var sub2 = new Task(
                 UUID.randomUUID(), "Sub2", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -414,7 +414,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 UUID.randomUUID(), idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -444,14 +444,14 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var subtask = new Task(
                 subtaskId, "Sub Name", "Sub Desc",
                 Status.IN_PROGRESS, Date.valueOf("2025-06-01"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
@@ -491,21 +491,21 @@ public class SubtaskServiceSuccess {
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var promotedTask = new Task(
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -538,21 +538,21 @@ public class SubtaskServiceSuccess {
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var promotedTask = new Task(
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -583,21 +583,21 @@ public class SubtaskServiceSuccess {
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var promotedTask = new Task(
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -628,7 +628,7 @@ public class SubtaskServiceSuccess {
                 idTask, "Task", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(task);
@@ -660,14 +660,14 @@ public class SubtaskServiceSuccess {
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -701,21 +701,21 @@ public class SubtaskServiceSuccess {
                 idTask, "Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var anotherSubtask = new Task(
                 UUID.randomUUID(), "Another Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -746,14 +746,14 @@ public class SubtaskServiceSuccess {
                 idTask, "Last Subtask", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         var parentTask = new Task(
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(subtask);
@@ -787,20 +787,20 @@ public class SubtaskServiceSuccess {
                 idTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, true, false, false, null
+                null, null, true, false, false, null, null
         );
 
         var sub1 = new Task(
                 UUID.randomUUID(), "Sub1", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idTask, null, false, false, false, null
+                idTask, null, false, false, false, null, null
         );
         var sub2 = new Task(
                 UUID.randomUUID(), "Sub2", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idTask, null, false, false, false, null
+                idTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(parentTask);
@@ -830,7 +830,7 @@ public class SubtaskServiceSuccess {
                 idTask, "Task", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 UUID.randomUUID(), idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(task);
@@ -863,7 +863,7 @@ public class SubtaskServiceSuccess {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO("Sub", "Desc", LocalDate.of(2025, 5, 12), idParentTask, idUser);
@@ -872,7 +872,7 @@ public class SubtaskServiceSuccess {
                 UUID.randomUUID(), "Sub", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);

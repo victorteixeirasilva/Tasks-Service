@@ -50,6 +50,7 @@ public class TaskRepositoryFaliure {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -85,6 +86,7 @@ public class TaskRepositoryFaliure {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -190,6 +192,7 @@ public class TaskRepositoryFaliure {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -225,6 +228,7 @@ public class TaskRepositoryFaliure {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 

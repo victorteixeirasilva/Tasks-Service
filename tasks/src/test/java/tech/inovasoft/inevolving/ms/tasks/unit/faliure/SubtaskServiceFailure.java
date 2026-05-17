@@ -211,7 +211,7 @@ public class SubtaskServiceFailure {
                 idParentTask, "Parent", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                null, null, false, false, false, null
+                null, null, false, false, false, null, null
         );
 
         var dto = new RequestSubtaskDTO("Sub", "Desc", LocalDate.of(2025, 5, 12), idParentTask, idUser);
@@ -220,7 +220,7 @@ public class SubtaskServiceFailure {
                 UUID.randomUUID(), "Sub", "Desc",
                 Status.TODO, Date.valueOf("2025-05-12"),
                 idObjective, idUser,
-                idParentTask, null, false, false, false, null
+                idParentTask, null, false, false, false, null, null
         );
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);

@@ -61,6 +61,7 @@ public class SimpleTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
         var request = new RequestCanceledDTO(idUser, idTask, "Cancellation Reason");
@@ -114,6 +115,7 @@ public class SimpleTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -173,6 +175,7 @@ public class SimpleTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -216,6 +219,7 @@ public class SimpleTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -257,6 +261,7 @@ public class SimpleTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 

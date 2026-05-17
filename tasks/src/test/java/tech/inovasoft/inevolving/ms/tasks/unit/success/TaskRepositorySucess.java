@@ -52,6 +52,7 @@ public class TaskRepositorySucess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -172,6 +173,7 @@ public class TaskRepositorySucess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -206,6 +208,7 @@ public class TaskRepositorySucess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -242,6 +245,7 @@ public class TaskRepositorySucess {
                             false,
                             false,
                             false,
+                            null,
                             null
                     )
             );
@@ -279,6 +283,7 @@ public class TaskRepositorySucess {
                             false,
                             false,
                             false,
+                            null,
                             null
                     )
             );
@@ -314,6 +319,7 @@ public class TaskRepositorySucess {
                         false,
                         false,
                         false,
+                        null,
                         null
                 )
         );
@@ -351,6 +357,7 @@ public class TaskRepositorySucess {
                         false,
                         false,
                         false,
+                        null,
                         null
                 )
         );
@@ -390,6 +397,7 @@ public class TaskRepositorySucess {
                     false,
                     false,
                     false,
+                    null,
                     null
             ));
             currentDate = currentDate.plusDays(1);
@@ -431,6 +439,7 @@ public class TaskRepositorySucess {
                             false,
                             false,
                             false,
+                            null,
                             null
                     )
             );

@@ -33,6 +33,7 @@ public class Task {
     private Boolean blockedByObjective;
     private Boolean isCopy;
     private String cancellationReason;
+    private UUID idResponsibleUser;
 
     public Task(RequestTaskDTO dto) {
         this.nameTask = dto.nameTask();

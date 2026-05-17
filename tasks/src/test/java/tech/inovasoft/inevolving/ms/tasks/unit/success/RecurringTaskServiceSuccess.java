@@ -66,6 +66,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -102,6 +103,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -126,6 +128,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Update",
@@ -139,6 +142,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Update",
@@ -152,6 +156,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Delete",
@@ -165,6 +170,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Delete",
@@ -178,6 +184,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Delete",
@@ -191,6 +198,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Delete",
@@ -204,6 +212,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
 
 
@@ -238,6 +247,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
         List<Task> tasks = new ArrayList<>();
@@ -255,6 +265,7 @@ public class RecurringTaskServiceSuccess {
                     false,
                     false,
                     true,
+                    null,
                     null
             ));
         }
@@ -288,6 +299,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
         var taskCopy = new Task(
@@ -303,6 +315,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 true,
+                null,
                 null
         );
         List<Task> tasks = new ArrayList<>();
@@ -321,6 +334,7 @@ public class RecurringTaskServiceSuccess {
                     false,
                     false,
                     true,
+                    null,
                     null
             ));
         }
@@ -360,6 +374,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -375,6 +390,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 true,
+                null,
                 null);
 
         RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
@@ -399,6 +415,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Deleted date < startDate",
@@ -412,6 +429,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Deleted date < startDate",
@@ -425,6 +443,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Task Update",
@@ -438,6 +457,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Task Update",
@@ -451,6 +471,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
         tasks.add(new Task(UUID.randomUUID(),
                 "Name Task Update",
@@ -464,6 +485,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null));
 
 
@@ -502,6 +524,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -517,6 +540,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 true,
+                null,
                 null);
 
         RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
@@ -540,6 +564,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task1);
         Task task2 = new Task(UUID.randomUUID(),
@@ -554,6 +579,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task2);
         Task task3 = new Task(UUID.randomUUID(),
@@ -568,6 +594,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task3);
         Task task4 = new Task(UUID.randomUUID(),
@@ -582,6 +609,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task4);
         Task task5 = new Task(UUID.randomUUID(),
@@ -596,6 +624,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task5);
         Task task6 = new Task(UUID.randomUUID(),
@@ -610,6 +639,7 @@ public class RecurringTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null);
         tasks.add(task6);
 

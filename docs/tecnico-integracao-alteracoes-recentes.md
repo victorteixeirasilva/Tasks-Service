@@ -12,6 +12,7 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 | Área | Mudança | Impacto no consumidor |
 |------|---------|------------------------|
+| Usuário responsável | Nova API `/ms/tasks/responsible` | Atribuir/consultar `idResponsibleUser` sem mudar `ResponseTaskDTO` nem listagens legadas |
 | Subtarefas | Nova API `/ms/tasks/subtask` | Usar endpoints dedicados; não esperar subtarefas nas listagens antigas |
 | Listagens | Filtro `idParentTask == null` | Listas por data/status/objetivo retornam só tarefas pai |
 | Adiamento diário | Novo `POST .../postpone-day/{token}` | Integrar job/noturno ou ação do usuário para virar `LATE` e mover datas |
@@ -20,7 +21,96 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 ---
 
-## 1. Subtarefas
+## 1. Usuário responsável por tarefa
+
+Feature **independente** do CRUD e das listagens em `/ms/tasks`. Não altera `RequestTaskDTO`, `ResponseTaskDTO` nem criação de tarefa.
+
+### Modelo
+
+| Campo | Tipo | Significado |
+|-------|------|-------------|
+| `idUser` | UUID | Dono da tarefa (escopo histórico das queries por usuário) |
+| `idResponsibleUser` | UUID, nullable | Usuário responsável pela execução; `null` = não atribuído |
+
+Coluna MySQL: `id_responsible_user` (`CHAR(36) NULL`). Sem Flyway no repositório — aplicar DDL no ambiente ou confiar em `ddl-auto` em dev:
+
+```sql
+ALTER TABLE tasks ADD COLUMN id_responsible_user CHAR(36) NULL;
+```
+
+Não há validação Feign de existência do usuário responsável neste serviço.
+
+### Endpoints
+
+Prefixo: `/ms/tasks/responsible`  
+Tag Swagger: **Responsible User Task**  
+Processamento: `@Async` → `CompletableFuture<ResponseEntity<...>>`
+
+#### `PUT /{token}` — Atribuir ou desatribuir responsável
+
+**Body (`RequestUpdateResponsibleUserDTO`):**
+
+```json
+{
+  "idTask": "uuid",
+  "idUser": "uuid",
+  "idResponsibleUser": "uuid"
+}
+```
+
+| Campo | Obrigatório | Observação |
+|-------|-------------|------------|
+| idTask | sim | Tarefa alvo |
+| idUser | sim | Repassado a `findById` (não validado como dono no repositório) |
+| idResponsibleUser | não | `null` remove a atribuição |
+
+**Respostas:**
+
+| HTTP | Corpo | Condição |
+|------|-------|----------|
+| 200 | `ResponseResponsibleUserDTO` | Sucesso |
+| 401 | vazio | Token inválido ou ausente |
+| 404 | `ExceptionResponse` | Tarefa não encontrada (`NotFoundException`) |
+| 500 | `ExceptionResponse` | Erro de persistência (`DataBaseException`) |
+
+**`ResponseResponsibleUserDTO`:**
+
+```json
+{
+  "idTask": "uuid",
+  "idResponsibleUser": "uuid"
+}
+```
+
+`idResponsibleUser` pode ser `null` na resposta.
+
+#### `GET /{idUser}/{idTask}/{token}` — Consultar responsável
+
+**Respostas:**
+
+| HTTP | Corpo | Condição |
+|------|-------|----------|
+| 200 | `ResponseResponsibleUserDTO` | Sucesso (`idResponsibleUser` pode ser `null`) |
+| 401 | vazio | Token inválido |
+| 404 | `ExceptionResponse` | Tarefa inexistente |
+| 500 | `ExceptionResponse` | Erro ao buscar |
+
+### O que **não** muda para o consumidor
+
+- Criar/atualizar tarefa (`POST`/`PUT` em `/ms/tasks`) não preenche nem retorna `idResponsibleUser`.
+- Listagens por data, status e objetivo continuam iguais.
+- Cópias recorrentes e subtarefas não herdam `idResponsibleUser` automaticamente (comportamento atual do código).
+
+### Integração BFF / frontend
+
+1. Após criar ou abrir uma tarefa, chamar `GET .../responsible/...` se precisar exibir o responsável.
+2. Ao delegar, chamar `PUT .../responsible/{token}` com o UUID do usuário escolhido.
+3. Para remover delegação, `PUT` com `"idResponsibleUser": null`.
+4. Garantir no Gateway que o `idUser` do path/body respeita a política de ownership do produto.
+
+---
+
+## 2. Subtarefas
 
 ### Modelo
 
@@ -109,7 +199,7 @@ Remove `idParentTask` da subtarefa. Atualiza `hasSubtasks` da pai anterior se er
 
 ---
 
-## 2. Listagens legadas (somente tarefas pai)
+## 3. Listagens legadas (somente tarefas pai)
 
 Os métodos abaixo em `TaskService` aplicam `.filter(task -> task.getIdParentTask() == null)`:
 
@@ -136,7 +226,7 @@ Os métodos abaixo em `TaskService` aplicam `.filter(task -> task.getIdParentTas
 
 ---
 
-## 3. Adiar tarefas de um dia (`postpone-day`)
+## 4. Adiar tarefas de um dia (`postpone-day`)
 
 ### `POST /ms/tasks/date/postpone-day/{token}`
 
@@ -193,7 +283,7 @@ Para o usuário `idUser` e o dia `referenceDay`:
 
 ---
 
-## 4. Autorização por dono da tarefa
+## 5. Autorização por dono da tarefa
 
 **Antes:** `findById(idUser, idTask)` lançava `UserWithoutAuthorizationAboutTheTaskException` → HTTP **403** quando `task.idUser != idUser`.
 
@@ -211,7 +301,22 @@ Para o usuário `idUser` e o dia `referenceDay`:
 
 ---
 
-## 5. DTOs — referência rápida
+## 6. DTOs — referência rápida
+
+### `RequestUpdateResponsibleUserDTO`
+
+| Campo | Tipo | Obrigatório |
+|-------|------|-------------|
+| idTask | UUID | sim |
+| idUser | UUID | sim |
+| idResponsibleUser | UUID | não (`null` desatribui) |
+
+### `ResponseResponsibleUserDTO`
+
+| Campo | Tipo |
+|-------|------|
+| idTask | UUID |
+| idResponsibleUser | UUID ou `null` |
 
 ### `RequestSubtaskDTO`
 
@@ -242,10 +347,10 @@ Para o usuário `idUser` e o dia `referenceDay`:
 
 ---
 
-## 6. Swagger
+## 7. Swagger
 
 Contratos interativos: `http://localhost:8085/swagger-ui/index.html`  
-Tags: **Subtasks**, **Date Task**, **Tasks**.
+Tags: **Responsible User Task**, **Subtasks**, **Date Task**, **Tasks**.
 
 ---
 
@@ -258,3 +363,4 @@ Tags: **Subtasks**, **Date Task**, **Tasks**.
 | 2026-05-06 | `44c4656` | Filtro de subtarefas nas listagens legadas |
 | 2026-05-15 | `747c529` | Remoção da validação dono×tarefa em `findById` |
 | 2026-05-16 | `ee8ca4f` | Subtarefas excluídas do fluxo automático `TODO` → `LATE` no adiamento |
+| 2026-05-17 | — | API `/ms/tasks/responsible`, campo `idResponsibleUser` e testes unitários do serviço |

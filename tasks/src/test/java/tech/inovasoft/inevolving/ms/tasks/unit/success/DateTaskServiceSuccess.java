@@ -54,6 +54,7 @@ class DateTaskServiceSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 

@@ -63,7 +63,13 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 - Integracao com servico de autenticacao dedicado.
 - **Valor agregado:** flexibiliza chamadas entre microsservicos mantendo token obrigatorio na borda.
 
-### 8) Operacao assíncrona e observabilidade
+### 8) Usuario responsavel por tarefa
+- API dedicada em `/ms/tasks/responsible`, independente do CRUD legado de tarefas.
+- `PUT /{token}` atribui ou remove (`null`) o usuario responsavel; `GET /{idUser}/{idTask}/{token}` consulta o responsavel atual.
+- Campo `idResponsibleUser` na entidade (distinto de `idUser`, que permanece o dono da tarefa).
+- **Valor agregado:** permite delegacao sem alterar contratos existentes de criacao ou listagem.
+
+### 9) Operacao assíncrona e observabilidade
 - Endpoints com processamento assíncrono via `CompletableFuture`.
 - Instrumentacao com `Spring Boot Actuator`.
 - Swagger/OpenAPI para descoberta e teste de contrato.
@@ -123,6 +129,7 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 | Tarefas | `/ms/tasks` | CRUD, status, listagens por data/objetivo (somente tarefas pai) |
 | Datas | `/ms/tasks/date` | `PUT /{token}`, `POST /postpone-day/{token}` |
 | Subtarefas | `/ms/tasks/subtask` | `POST /{token}`, `GET /{idUser}/{idParentTask}/{token}` |
+| Responsavel | `/ms/tasks/responsible` | `PUT /{token}`, `GET /{idUser}/{idTask}/{token}` |
 
 - Swagger UI: `http://localhost:8085/swagger-ui/index.html`
 - Actuator: `http://localhost:8085/actuator`

@@ -110,6 +110,7 @@ class DateTaskServicePostponeSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -178,6 +179,7 @@ class DateTaskServicePostponeSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
 
@@ -210,6 +212,7 @@ class DateTaskServicePostponeSuccess {
                 false,
                 false,
                 false,
+                null,
                 null
         );
     }
