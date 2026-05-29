@@ -42,6 +42,7 @@ public class Task {
         this.dateTask = Date.valueOf(dto.dateTask());
         this.idObjective = dto.idObjective();
         this.idUser = dto.idUser();
+        this.idResponsibleUser = dto.idUser();
         this.isCopy = false;
     }
 
@@ -54,6 +55,7 @@ public class Task {
         this.idObjective = dto.idObjective();
 
         this.idUser = dto.idUser();
+        this.idResponsibleUser = dto.idUser();
         this.idOriginalTask = idOriginalTask;
         this.isCopy = true;
     }

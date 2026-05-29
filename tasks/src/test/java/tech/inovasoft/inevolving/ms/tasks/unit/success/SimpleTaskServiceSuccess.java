@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import org.mockito.ArgumentCaptor;
 
 @ExtendWith(MockitoExtension.class)
 public class SimpleTaskServiceSuccess {
@@ -134,7 +135,9 @@ public class SimpleTaskServiceSuccess {
         assertEquals(expectedTask.getIdObjective(), result.idObjective());
         assertEquals(expectedTask.getIdUser(), result.idUser());
 
-        verify(taskRepository, times(1)).saveInDataBase(any());
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository, times(1)).saveInDataBase(captor.capture());
+        assertEquals(idUser, captor.getValue().getIdResponsibleUser());
     }
 
     @Test

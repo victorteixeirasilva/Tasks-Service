@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import org.mockito.ArgumentCaptor;
 
 @ExtendWith(MockitoExtension.class)
 public class TaskRepositorySucess {
@@ -128,6 +129,8 @@ public class TaskRepositorySucess {
         newTask.setIdUser(existingTask.getIdUser());
 
         // When (Quando)
+        when(repository.findByIdOriginalTaskOrIdTask(any(Date.class), any(UUID.class)))
+                .thenReturn(Optional.empty());
         when(repository.save(any(Task.class))).thenReturn(existingTask);
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(existingTask));
 
@@ -135,7 +138,9 @@ public class TaskRepositorySucess {
         var result = taskRepository.addNewTaskCopy(newTask, currentDate);
 
         assertTrue(result);
-        verify(repository, times(1)).save(any(Task.class));
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+        verify(repository, times(1)).save(captor.capture());
+        assertEquals(existingTask.getIdUser(), captor.getValue().getIdResponsibleUser());
     }
 
     @Test

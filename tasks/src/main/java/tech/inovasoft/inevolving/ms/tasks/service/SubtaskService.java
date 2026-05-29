@@ -42,6 +42,7 @@ public class SubtaskService {
         subtask.setDateTask(Date.valueOf(dto.dateTask()));
         subtask.setIdObjective(parentTask.getIdObjective());
         subtask.setIdUser(dto.idUser());
+        subtask.setIdResponsibleUser(dto.idUser());
         subtask.setIdParentTask(dto.idParentTask());
         subtask.setHasSubtasks(false);
         subtask.setIsCopy(false);

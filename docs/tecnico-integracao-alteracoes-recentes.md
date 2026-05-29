@@ -12,7 +12,7 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 | Área | Mudança | Impacto no consumidor |
 |------|---------|------------------------|
-| Usuário responsável | Nova API `/ms/tasks/responsible` | Atribuir/consultar `idResponsibleUser` sem mudar `ResponseTaskDTO` nem listagens legadas |
+| Usuário responsável | Nova API `/ms/tasks/responsible`; criação preenche `idResponsibleUser = idUser` | Atribuir/consultar via `/responsible`; respostas legadas de criação ainda não expõem o campo |
 | Subtarefas | Nova API `/ms/tasks/subtask` | Usar endpoints dedicados; não esperar subtarefas nas listagens antigas |
 | Listagens | Filtro `idParentTask == null` | Listas por data/status/objetivo retornam só tarefas pai |
 | Adiamento diário | Novo `POST .../postpone-day/{token}` | Integrar job/noturno ou ação do usuário para virar `LATE` e mover datas |
@@ -23,14 +23,14 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 ## 1. Usuário responsável por tarefa
 
-Feature **independente** do CRUD e das listagens em `/ms/tasks`. Não altera `RequestTaskDTO`, `ResponseTaskDTO` nem criação de tarefa.
+Feature **independente** do CRUD e das listagens em `/ms/tasks` quanto a contratos HTTP. A criação de tarefa, subtarefa e cópia recorrente **persiste** `idResponsibleUser = idUser`, mas **não retorna** esse campo em `ResponseTaskDTO` / `ResponseSubtaskDTO`.
 
 ### Modelo
 
 | Campo | Tipo | Significado |
 |-------|------|-------------|
 | `idUser` | UUID | Dono da tarefa (escopo histórico das queries por usuário) |
-| `idResponsibleUser` | UUID, nullable | Usuário responsável pela execução; `null` = não atribuído |
+| `idResponsibleUser` | UUID, nullable | Usuário responsável pela execução; na **criação** recebe o mesmo valor de `idUser`; `null` = não atribuído (após desatribuição ou registros legados) |
 
 Coluna MySQL: `id_responsible_user` (`CHAR(36) NULL`). Sem Flyway no repositório — aplicar DDL no ambiente ou confiar em `ddl-auto` em dev:
 
@@ -97,14 +97,21 @@ Processamento: `@Async` → `CompletableFuture<ResponseEntity<...>>`
 
 ### O que **não** muda para o consumidor
 
-- Criar/atualizar tarefa (`POST`/`PUT` em `/ms/tasks`) não preenche nem retorna `idResponsibleUser`.
-- Listagens por data, status e objetivo continuam iguais.
-- Cópias recorrentes e subtarefas não herdam `idResponsibleUser` automaticamente (comportamento atual do código).
+- Respostas de criar/atualizar tarefa (`POST`/`PUT` em `/ms/tasks`) e criar subtarefa **não expõem** `idResponsibleUser` no JSON (`ResponseTaskDTO` / `ResponseSubtaskDTO` inalterados).
+- Listagens por data, status e objetivo continuam iguais (sem campo responsável).
+- Atualizar tarefa (`PUT`) **não altera** o responsável já persistido.
+
+### O que **muda** na persistência (desde 2026-05-29)
+
+- Criar tarefa (`POST /ms/tasks`), subtarefa (`POST /ms/tasks/subtask`) e cópia recorrente passam a gravar `id_responsible_user = idUser` no banco.
+- Registros criados antes dessa data podem manter `id_responsible_user` nulo.
+
+Detalhes: [tecnico-idResponsibleUser-criacao-default.md](./tecnico-idResponsibleUser-criacao-default.md)
 
 ### Integração BFF / frontend
 
-1. Após criar ou abrir uma tarefa, chamar `GET .../responsible/...` se precisar exibir o responsável.
-2. Ao delegar, chamar `PUT .../responsible/{token}` com o UUID do usuário escolhido.
+1. Após criar tarefa, `GET .../responsible/...` retorna `idResponsibleUser` igual ao `idUser` da criação (sem `PUT` extra no caso padrão).
+2. Ao delegar a outro usuário, chamar `PUT .../responsible/{token}` com o UUID escolhido.
 3. Para remover delegação, `PUT` com `"idResponsibleUser": null`.
 4. Garantir no Gateway que o `idUser` do path/body respeita a política de ownership do produto.
 
@@ -364,3 +371,4 @@ Tags: **Responsible User Task**, **Subtasks**, **Date Task**, **Tasks**.
 | 2026-05-15 | `747c529` | Remoção da validação dono×tarefa em `findById` |
 | 2026-05-16 | `ee8ca4f` | Subtarefas excluídas do fluxo automático `TODO` → `LATE` no adiamento |
 | 2026-05-17 | — | API `/ms/tasks/responsible`, campo `idResponsibleUser` e testes unitários do serviço |
+| 2026-05-29 | — | `idResponsibleUser` preenchido automaticamente na criação (tarefa, subtarefa, cópia recorrente) |

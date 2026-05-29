@@ -32,6 +32,7 @@ import java.util.concurrent.TimeoutException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.mockito.ArgumentCaptor;
 
 @ExtendWith(MockitoExtension.class)
 public class SubtaskServiceSuccess {
@@ -98,7 +99,10 @@ public class SubtaskServiceSuccess {
         assertEquals(idParentTask, result.idParentTask());
 
         verify(taskRepository, times(1)).findById(idUser, idParentTask);
-        verify(taskRepository, atLeast(1)).saveInDataBase(any(Task.class));
+
+        ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
+        verify(taskRepository, atLeast(1)).saveInDataBase(captor.capture());
+        assertEquals(idUser, captor.getAllValues().get(0).getIdResponsibleUser());
     }
 
     /**

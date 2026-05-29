@@ -67,7 +67,8 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 - API dedicada em `/ms/tasks/responsible`, independente do CRUD legado de tarefas.
 - `PUT /{token}` atribui ou remove (`null`) o usuario responsavel; `GET /{idUser}/{idTask}/{token}` consulta o responsavel atual.
 - Campo `idResponsibleUser` na entidade (distinto de `idUser`, que permanece o dono da tarefa).
-- **Valor agregado:** permite delegacao sem alterar contratos existentes de criacao ou listagem.
+- Na **criacao** de tarefa, subtarefa ou copia recorrente, o servico persiste `idResponsibleUser = idUser` (responsavel padrao = dono). A resposta de `POST /ms/tasks` ainda nao inclui esse campo — use `GET .../responsible/...` para exibir na UI.
+- **Valor agregado:** permite delegacao sem alterar contratos legados de criacao ou listagem; elimina chamada extra de atribuicao no fluxo padrao.
 
 ### 9) Operacao assíncrona e observabilidade
 - Endpoints com processamento assíncrono via `CompletableFuture`.
@@ -134,6 +135,8 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 - Swagger UI: `http://localhost:8085/swagger-ui/index.html`
 - Actuator: `http://localhost:8085/actuator`
 - Documentacao tecnica para integradores: [docs/tecnico-integracao-alteracoes-recentes.md](./docs/tecnico-integracao-alteracoes-recentes.md)
+- Responsavel padrao na criacao: [docs/tecnico-idResponsibleUser-criacao-default.md](./docs/tecnico-idResponsibleUser-criacao-default.md)
+- Notas de seguranca (responsavel na criacao): [docs/seguranca-notas-idResponsibleUser-criacao.md](./docs/seguranca-notas-idResponsibleUser-criacao.md)
 - Historico de mudancas: [CHANGELOG.md](./CHANGELOG.md)
 
 ### 5) Parar ambiente
