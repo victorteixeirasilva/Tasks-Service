@@ -76,6 +76,13 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 - Swagger/OpenAPI para descoberta e teste de contrato.
 - **Valor agregado:** melhora responsividade e facilita operacao em producao.
 
+### 10) Timestamps de ciclo de vida com fuso do usuario
+- Quatro campos de momento: `createdAt`, `inProgressAt`, `completedAt`, `cancelledAt` (UTC no banco; resposta em `OffsetDateTime` no fuso do cliente).
+- Header HTTP recomendado `X-User-Timezone` (IANA, ex.: `America/Sao_Paulo`) em mutações e consultas de tarefa/subtarefa.
+- GETs retornam `TaskViewDTO` (inclui timestamps convertidos); mutações retornam os mesmos campos em `ResponseTaskDTO` / `ResponseSubtaskDTO`.
+- Retransicao de status atualiza o ultimo momento daquele estado; `postpone-day` e status `LATE` nao alteram os timestamps de ciclo.
+- **Valor agregado:** rastreabilidade temporal precisa para dashboards, SLA e auditoria operacional sem expor UTC cru ao usuario final.
+
 ## Tecnologias Utilizadas
 ### Linguagens e plataforma
 - **Java 21**
@@ -132,9 +139,13 @@ A solucao foi desenvolvida como um microservico robusto em Java com Spring Boot,
 | Subtarefas | `/ms/tasks/subtask` | `POST /{token}`, `GET /{idUser}/{idParentTask}/{token}` |
 | Responsavel | `/ms/tasks/responsible` | `PUT /{token}`, `GET /{idUser}/{idTask}/{token}` |
 
+**Fuso horario:** mutações e GETs de tarefa/subtarefa aceitam o header `X-User-Timezone` (IANA). Endpoints de exclusao, adiamento em lote (`postpone-day`) e responsavel nao usam esse header.
+
 - Swagger UI: `http://localhost:8085/swagger-ui/index.html`
 - Actuator: `http://localhost:8085/actuator`
 - Documentacao tecnica para integradores: [docs/tecnico-integracao-alteracoes-recentes.md](./docs/tecnico-integracao-alteracoes-recentes.md)
+- Timestamps e fuso horario: [docs/tecnico-timestamps-fuso-horario.md](./docs/tecnico-timestamps-fuso-horario.md)
+- Notas de seguranca (timestamps): [docs/seguranca-notas-timestamps-fuso-horario.md](./docs/seguranca-notas-timestamps-fuso-horario.md)
 - Responsavel padrao na criacao: [docs/tecnico-idResponsibleUser-criacao-default.md](./docs/tecnico-idResponsibleUser-criacao-default.md)
 - Notas de seguranca (responsavel na criacao): [docs/seguranca-notas-idResponsibleUser-criacao.md](./docs/seguranca-notas-idResponsibleUser-criacao.md)
 - Historico de mudancas: [CHANGELOG.md](./CHANGELOG.md)

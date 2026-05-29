@@ -13,11 +13,14 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestUpdateTaskDT
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponsePostponeTasksForDayDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.InvalidTimezoneException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.UserTimezoneResolver;
 import tech.inovasoft.inevolving.ms.tasks.service.DateTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
 
+import java.time.ZoneId;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -42,8 +45,9 @@ public class DateTaskController {
     @PutMapping("/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTask(
             @RequestBody RequestUpdateDateTaskDTO updateDateTaskDTO,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -61,8 +65,9 @@ public class DateTaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                dateTaskService.updateDateTask(updateDateTaskDTO)
+                dateTaskService.updateDateTask(updateDateTaskDTO, userZone)
         ));
     }
 

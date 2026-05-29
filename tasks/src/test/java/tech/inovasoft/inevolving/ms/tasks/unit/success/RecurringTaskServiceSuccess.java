@@ -22,6 +22,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,22 +54,7 @@ public class RecurringTaskServiceSuccess {
         Date startDate = Date.valueOf("2025-05-12");
         Date endDate = Date.valueOf("2025-05-18");
         DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);
@@ -90,22 +76,7 @@ public class RecurringTaskServiceSuccess {
         Date startDate = Date.valueOf("2025-05-12");
         Date endDate = Date.valueOf("2025-05-18");
         DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
-        var task = new Task(
-                idTask,
-                "Name Task Original Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                idObjective,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task Original Update", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), idObjective, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
                 "nameTask",
@@ -116,111 +87,20 @@ public class RecurringTaskServiceSuccess {
 
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-14"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-16"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-17"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Delete",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-19"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Delete",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-21"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Delete",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-23"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Delete",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-24"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-14"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-16"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-17"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Delete", "Description Task", Status.TODO, Date.valueOf("2025-05-19"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Delete", "Description Task", Status.TODO, Date.valueOf("2025-05-21"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Delete", "Description Task", Status.TODO, Date.valueOf("2025-05-23"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Delete", "Description Task", Status.TODO, Date.valueOf("2025-05-24"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
 
 
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);
         when(taskRepository.findAllIsCopyTask(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(simpleTaskService.deleteTask(any(UUID.class), any(UUID.class))).thenReturn(new ResponseMessageDTO("Successfully delete tasks"));
-        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idTask, endDate, requestUpdateRepeatTaskDTO, ZoneId.of("America/Sao_Paulo"));
 
         // Then (Então)
         assertNotNull(result);
@@ -234,40 +114,10 @@ public class RecurringTaskServiceSuccess {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 5; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "Name Task",
-                    "Description Task",
-                    Status.TODO,
-                    Date.valueOf("2025-05-13"),
-                    null,
-                    idUser,
-                    null,
-                    idTask,
-                    false,
-                    false,
-                    true,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-13"), null, idUser, null, idTask, false, false, true, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -286,57 +136,12 @@ public class RecurringTaskServiceSuccess {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-13"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
-        var taskCopy = new Task(
-                UUID.randomUUID(),
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-13"),
-                null,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                true,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-13"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
+        var taskCopy = new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-13"), null, idUser, null, idTask, false, false, true, null, null, null, null, null, null);
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
         for (int i = 1; i <= 5; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "Name Task",
-                    "Description Task",
-                    Status.TODO,
-                    Date.valueOf("2025-05-14"),
-                    null,
-                    idUser,
-                    null,
-                    idTask,
-                    false,
-                    false,
-                    true,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-14"), null, idUser, null, idTask, false, false, true, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -361,37 +166,9 @@ public class RecurringTaskServiceSuccess {
         Date startDate = Date.valueOf("2025-05-12");
         Date endDate = Date.valueOf("2025-05-24");
         DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, false, true, false, true, true, false);
-        var task = new Task(
-                UUID.randomUUID(),
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                idObjective,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), idObjective, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
-        Task taskCopy = new Task(idCopyTask,
-                "Name TaskCopy Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-19"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                true,
-                null,
-                null);
+        Task taskCopy = new Task(idCopyTask, "Name TaskCopy Update", "Description Task", Status.TODO, Date.valueOf("2025-05-19"), idObjective, idUser, null, idTask, false, false, true, null, null, null, null, null, null);
 
         RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
                 "nameTask",
@@ -403,97 +180,19 @@ public class RecurringTaskServiceSuccess {
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
 //        tasks.add(taskCopy);
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-14"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-16"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-17"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-21"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-23"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
-        tasks.add(new Task(UUID.randomUUID(),
-                "Name Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-24"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-14"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-16"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-17"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-21"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-23"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
+        tasks.add(new Task(UUID.randomUUID(), "Name Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-24"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null));
 
 
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(taskCopy);
         when(taskRepository.findAllIsCopyTask(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(taskCopy);
-        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO, ZoneId.of("America/Sao_Paulo"));
 
         // Then (Então)
         assertNotNull(result);
@@ -511,37 +210,9 @@ public class RecurringTaskServiceSuccess {
         Date startDate = Date.valueOf("2025-05-19");
         Date endDate = Date.valueOf("2025-05-30");
         DaysOfTheWeekDTO daysOfTheWeekDTO = new DaysOfTheWeekDTO(true, true, true, true, true, true, true);
-        var task = new Task(
-                UUID.randomUUID(),
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                idObjective,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), idObjective, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
-        Task taskCopy = new Task(idCopyTask,
-                "Name TaskCopy Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-19"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                true,
-                null,
-                null);
+        Task taskCopy = new Task(idCopyTask, "Name TaskCopy Update", "Description Task", Status.TODO, Date.valueOf("2025-05-19"), idObjective, idUser, null, idTask, false, false, true, null, null, null, null, null, null);
 
         RequestUpdateRepeatTaskDTO requestUpdateRepeatTaskDTO = new RequestUpdateRepeatTaskDTO(
                 "nameTask",
@@ -552,95 +223,17 @@ public class RecurringTaskServiceSuccess {
 
         List<Task> tasks = new ArrayList<>();
         tasks.add(task);
-        Task task1 = new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-14"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task1 = new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-14"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task1);
-        Task task2 = new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-16"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task2 = new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-16"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task2);
-        Task task3 = new Task(UUID.randomUUID(),
-                "Name Task Deleted date < startDate",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-17"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task3 = new Task(UUID.randomUUID(), "Name Task Deleted date < startDate", "Description Task", Status.TODO, Date.valueOf("2025-05-17"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task3);
-        Task task4 = new Task(UUID.randomUUID(),
-                "Name Task Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-21"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task4 = new Task(UUID.randomUUID(), "Name Task Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-21"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task4);
-        Task task5 = new Task(UUID.randomUUID(),
-                "Name Task Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-23"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task5 = new Task(UUID.randomUUID(), "Name Task Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-23"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task5);
-        Task task6 = new Task(UUID.randomUUID(),
-                "Name Task Update",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-24"),
-                idObjective,
-                idUser,
-                null,
-                idTask,
-                false,
-                false,
-                false,
-                null,
-                null);
+        Task task6 = new Task(UUID.randomUUID(), "Name Task Update", "Description Task", Status.TODO, Date.valueOf("2025-05-24"), idObjective, idUser, null, idTask, false, false, false, null, null, null, null, null, null);
         tasks.add(task6);
 
 
@@ -649,7 +242,7 @@ public class RecurringTaskServiceSuccess {
         when(taskRepository.findAllIsCopyTask(any(UUID.class), any(Date.class))).thenReturn(tasks);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(taskCopy);
 
-        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO);
+        ResponseUpdateRepeatTaskDTO result = recurringTaskService.updateTasks(idUser, idCopyTask, endDate, requestUpdateRepeatTaskDTO, ZoneId.of("America/Sao_Paulo"));
 
         // Then (Então)
         assertNotNull(result);

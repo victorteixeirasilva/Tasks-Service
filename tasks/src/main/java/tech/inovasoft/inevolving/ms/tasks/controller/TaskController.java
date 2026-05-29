@@ -11,7 +11,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
-import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.UserTimezoneResolver;
 import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
@@ -19,6 +19,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.Token
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
 
 import java.sql.Date;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -50,8 +51,9 @@ public class TaskController {
     @PostMapping("/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> addTask(
             @RequestBody RequestTaskDTO taskDTO,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -69,8 +71,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        simpleTaskService.addTask(taskDTO)
+                        simpleTaskService.addTask(taskDTO, userZone)
         ));
     }
 
@@ -120,8 +123,9 @@ public class TaskController {
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
             @RequestBody RequestUpdateTaskDTO updateTaskDTO,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -139,8 +143,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        simpleTaskService.updateTask(idUser, idTask, updateTaskDTO)
+                        simpleTaskService.updateTask(idUser, idTask, updateTaskDTO, userZone)
         ));
     }
 
@@ -155,8 +160,9 @@ public class TaskController {
             @PathVariable UUID idTask,
             @PathVariable Date endDate,
             @RequestBody RequestUpdateRepeatTaskDTO updateTaskDTO,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -174,8 +180,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        recurringTaskService.updateTasks(idUser, idTask, endDate, updateTaskDTO)
+                        recurringTaskService.updateTasks(idUser, idTask, endDate, updateTaskDTO, userZone)
         ));
     }
 
@@ -188,8 +195,9 @@ public class TaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusToDo(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -207,8 +215,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatus(idUser, idTask, Status.TODO)
+                simpleTaskService.updateTaskStatus(idUser, idTask, Status.TODO, userZone)
         ));
     }
 
@@ -221,8 +230,9 @@ public class TaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusInProgress(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -240,8 +250,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS)
+                simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS, userZone)
         ));
     }
 
@@ -254,8 +265,9 @@ public class TaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusDone(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -273,8 +285,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatus(idUser, idTask, Status.DONE)
+                simpleTaskService.updateTaskStatus(idUser, idTask, Status.DONE, userZone)
         ));
     }
 
@@ -287,8 +300,9 @@ public class TaskController {
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusLate(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -306,8 +320,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatus(idUser, idTask, Status.LATE)
+                simpleTaskService.updateTaskStatus(idUser, idTask, Status.LATE, userZone)
         ));
     }
 
@@ -319,8 +334,9 @@ public class TaskController {
     @PutMapping("/status/canceled/{token}")
     public CompletableFuture<ResponseEntity<ResponseTaskDTO>> updateTaskStatusCanceled(
             @RequestBody RequestCanceledDTO dto,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -338,8 +354,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                simpleTaskService.updateTaskStatusCancelled(dto)
+                simpleTaskService.updateTaskStatusCancelled(dto, userZone)
         ));
     }
 
@@ -450,12 +467,13 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/{idUser}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDateRange(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksInDateRangeException, DataBaseException {
+    ) throws NotFoundTasksInDateRangeException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -473,8 +491,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksInDateRange(idUser, startDate, endDate)
+                TaskViewDTO.fromList(service.getTasksInDateRange(idUser, startDate, endDate), userZone)
         ));
     }
 
@@ -484,13 +503,14 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/{idUser}/{idObjective}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDateRangeByObjectiveId(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksInDateRangeByObjectiveId(
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -508,18 +528,20 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksInDateRangeByObjectiveId(idUser, idObjective,startDate, endDate)
+                        TaskViewDTO.fromList(service.getTasksInDateRangeByObjectiveId(idUser, idObjective,startDate, endDate), userZone)
         ));
     }
 
     @Async("asyncExecutor")
     @GetMapping("/objective/{idUser}/{idObjective}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksByObjectiveId(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksByObjectiveId(
             @PathVariable UUID idUser,
             @PathVariable UUID idObjective,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    ) throws DataBaseException, NotFoundTasksWithObjectiveException, NotFoundException, ExecutionException, InterruptedException, TimeoutException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -537,8 +559,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksByObjectiveId(idUser, idObjective)
+                TaskViewDTO.fromList(service.getTasksByObjectiveId(idUser, idObjective), userZone)
         ));
     }
 
@@ -548,11 +571,12 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/{idUser}/{date}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksInDate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksInDateException, DataBaseException {
+    ) throws NotFoundTasksInDateException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -570,8 +594,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksInDate(idUser, date)
+                TaskViewDTO.fromList(service.getTasksInDate(idUser, date), userZone)
         ));
     }
 
@@ -581,10 +606,11 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/late/{idUser}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksLate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksLate(
             @PathVariable UUID idUser,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusLateException, DataBaseException {
+    ) throws NotFoundTasksWithStatusLateException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -602,8 +628,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksLate(idUser)
+                TaskViewDTO.fromList(service.getTasksLate(idUser), userZone)
         ));
     }
 
@@ -613,12 +640,13 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/todo/{idUser}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksToDoInDateRange(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksToDoInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -636,8 +664,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO)
+                TaskViewDTO.fromList(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.TODO), userZone)
         ));
     }
 
@@ -647,11 +676,12 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/todo/{idUser}/{date}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksToDoInDate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksToDoInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -669,8 +699,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTasksStatusInDate(idUser, date, Status.TODO)
+                TaskViewDTO.fromList(service.getTasksStatusInDate(idUser, date, Status.TODO), userZone)
         ));
     }
 
@@ -680,12 +711,13 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/progress/{idUser}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksInProgressInDateRange(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksInProgressInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -703,8 +735,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.IN_PROGRESS)
+                        TaskViewDTO.fromList(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.IN_PROGRESS), userZone)
         ));
     }
 
@@ -714,11 +747,12 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/progress/{idUser}/{date}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksInProgressInDate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksInProgressInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -736,8 +770,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDate(idUser, date, Status.IN_PROGRESS)
+                        TaskViewDTO.fromList(service.getTasksStatusInDate(idUser, date, Status.IN_PROGRESS), userZone)
         ));
     }
 
@@ -747,12 +782,13 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/done/{idUser}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksDoneInDateRange(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksDoneInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -770,8 +806,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.DONE)
+                        TaskViewDTO.fromList(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.DONE), userZone)
         ));
     }
 
@@ -781,11 +818,12 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/done/{idUser}/{date}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksDoneInDate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksDoneInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -803,8 +841,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDate(idUser, date, Status.DONE)
+                        TaskViewDTO.fromList(service.getTasksStatusInDate(idUser, date, Status.DONE), userZone)
         ));
     }
 
@@ -814,12 +853,13 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/canceled/{idUser}/{startDate}/{endDate}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksCanceledInDateRange(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksCanceledInDateRange(
             @PathVariable UUID idUser,
             @PathVariable Date startDate,
             @PathVariable Date endDate,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -837,8 +877,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.CANCELLED)
+                        TaskViewDTO.fromList(service.getTasksStatusInDateRange(idUser, startDate, endDate, Status.CANCELLED), userZone)
         ));
     }
 
@@ -848,11 +889,12 @@ public class TaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/status/canceled/{idUser}/{date}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getTasksCanceledInDate(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getTasksCanceledInDate(
             @PathVariable UUID idUser,
             @PathVariable Date date,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -870,18 +912,20 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                        service.getTasksStatusInDate(idUser, date, Status.CANCELLED)
+                        TaskViewDTO.fromList(service.getTasksStatusInDate(idUser, date, Status.CANCELLED), userZone)
         ));
     }
 
     @Async("asyncExecutor")
     @GetMapping("/task/{idUser}/{idTask}/{token}")
-    public CompletableFuture<ResponseEntity<Task>> getTask(
+    public CompletableFuture<ResponseEntity<TaskViewDTO>> getTask(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws NotFoundTasksWithStatusException, DataBaseException, NotFoundException {
+    ) throws NotFoundTasksWithStatusException, DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -899,8 +943,9 @@ public class TaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getTask(idUser, idTask)
+                new TaskViewDTO(service.getTask(idUser, idTask), userZone)
         ));
     }
 

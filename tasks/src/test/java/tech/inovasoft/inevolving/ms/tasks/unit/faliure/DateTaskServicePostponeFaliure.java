@@ -77,22 +77,7 @@ class DateTaskServicePostponeFaliure {
         LocalDate ref = LocalDate.of(2026, 3, 3);
         Date refSql = Date.valueOf(ref);
 
-        Task todo = new Task(
-                UUID.randomUUID(),
-                "x",
-                "y",
-                Status.TODO,
-                refSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task todo = new Task(UUID.randomUUID(), "x", "y", Status.TODO, refSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO)).thenReturn(List.of(todo));
         when(taskRepository.saveInDataBase(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
@@ -111,22 +96,7 @@ class DateTaskServicePostponeFaliure {
         LocalDate ref = LocalDate.of(2026, 3, 4);
         Date refSql = Date.valueOf(ref);
 
-        Task todo = new Task(
-                UUID.randomUUID(),
-                "x",
-                "y",
-                Status.TODO,
-                refSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task todo = new Task(UUID.randomUUID(), "x", "y", Status.TODO, refSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO)).thenReturn(List.of(todo));
         when(taskRepository.saveInDataBase(any(Task.class))).thenThrow(new DataBaseException("(save)", null));
@@ -143,22 +113,7 @@ class DateTaskServicePostponeFaliure {
         LocalDate ref = LocalDate.of(2026, 3, 5);
         Date refSql = Date.valueOf(ref);
 
-        Task prog = new Task(
-                UUID.randomUUID(),
-                "x",
-                "y",
-                Status.IN_PROGRESS,
-                refSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task prog = new Task(UUID.randomUUID(), "x", "y", Status.IN_PROGRESS, refSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO))
                 .thenReturn(Collections.emptyList());

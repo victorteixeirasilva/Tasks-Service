@@ -17,6 +17,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.DateTaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,29 +42,14 @@ class DateTaskServiceSuccess {
         LocalDate newLocalDate = LocalDate.of(2026, 4, 15);
         Date previousSqlDate = Date.valueOf("2025-05-12");
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                previousSqlDate,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, previousSqlDate, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(newLocalDate, idTask, idUser);
 
         when(taskRepository.findById(idTask, idUser)).thenReturn(task);
         when(taskRepository.saveInDataBase(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ResponseTaskDTO result = dateTaskService.updateDateTask(dto);
+        ResponseTaskDTO result = dateTaskService.updateDateTask(dto, ZoneId.of("America/Sao_Paulo"));
 
         assertNotNull(result);
         assertEquals(Date.valueOf(newLocalDate), result.dateTask());

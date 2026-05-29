@@ -20,6 +20,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -49,22 +50,7 @@ public class SimpleTaskServiceSuccess {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
         var request = new RequestCanceledDTO(idUser, idTask, "Cancellation Reason");
 
         task.setStatus(Status.CANCELLED);
@@ -73,7 +59,7 @@ public class SimpleTaskServiceSuccess {
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(task);
-        ResponseTaskDTO result = simpleTaskService.updateTaskStatusCancelled(request);
+        ResponseTaskDTO result = simpleTaskService.updateTaskStatusCancelled(request, ZoneId.of("America/Sao_Paulo"));
         // Then (Então)
         assertNotNull(result);
         assertEquals(Status.CANCELLED, result.status());
@@ -103,27 +89,12 @@ public class SimpleTaskServiceSuccess {
                 idUser
         );
 
-        Task expectedTask = new Task(
-                UUID.randomUUID(),
-                taskDTO.nameTask(),
-                taskDTO.descriptionTask(),
-                Status.TODO,
-                Date.valueOf(taskDTO.dateTask()),
-                idObjective,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task expectedTask = new Task(UUID.randomUUID(), taskDTO.nameTask(), taskDTO.descriptionTask(), Status.TODO, Date.valueOf(taskDTO.dateTask()), idObjective, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(expectedTask);
 //        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class), any(String.class))).thenReturn(ResponseEntity.ok().build());
-        var result = simpleTaskService.addTask(taskDTO);
+        var result = simpleTaskService.addTask(taskDTO, ZoneId.of("America/Sao_Paulo"));
 
         // Then (Então)
         assertNotNull(result);
@@ -154,33 +125,7 @@ public class SimpleTaskServiceSuccess {
                 idObjective
         );
 
-        ResponseTaskDTO responseTaskDTO = new ResponseTaskDTO(
-                idTask,
-                "nameTask",
-                "descriptionTask",
-                Status.TODO,
-                Date.valueOf(LocalDate.now()),
-                idObjective,
-                idUser,
-                null
-        );
-
-        Task oldTask = new Task(
-                UUID.randomUUID(),
-                requestUpdateTaskDTO.nameTask(),
-                requestUpdateTaskDTO.descriptionTask(),
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task oldTask = new Task(UUID.randomUUID(), requestUpdateTaskDTO.nameTask(), requestUpdateTaskDTO.descriptionTask(), Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
 
         // When (Quando)
@@ -188,7 +133,7 @@ public class SimpleTaskServiceSuccess {
         oldTask.setIdObjective(idObjective);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(oldTask);
 //        when(objectivesServiceClient.getObjectiveById(any(UUID.class), any(UUID.class), any(String.class))).thenReturn(ResponseEntity.ok().build());
-        var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO);
+        var result = simpleTaskService.updateTask(idUser, oldTask.getId(), requestUpdateTaskDTO, ZoneId.of("America/Sao_Paulo"));
 
         // Then (Então)
         assertNotNull(result);
@@ -209,29 +154,14 @@ public class SimpleTaskServiceSuccess {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         task.setStatus(Status.IN_PROGRESS);
 
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(task);
-        ResponseTaskDTO result = simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS);
+        ResponseTaskDTO result = simpleTaskService.updateTaskStatus(idUser, idTask, Status.IN_PROGRESS, ZoneId.of("America/Sao_Paulo"));
         // Then (Então)
         assertNotNull(result);
         assertEquals(Status.IN_PROGRESS, result.status());
@@ -251,22 +181,7 @@ public class SimpleTaskServiceSuccess {
         // Given (Dado)
         var idTask = UUID.randomUUID();
         var idUser = UUID.randomUUID();
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(taskRepository.findById(any(UUID.class), any(UUID.class))).thenReturn(task);

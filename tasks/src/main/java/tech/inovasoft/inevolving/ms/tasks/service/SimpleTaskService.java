@@ -12,11 +12,13 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.TaskTimestampHelper;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.MicroServices;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenCache;
 import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -68,10 +70,12 @@ public class SimpleTaskService {
      * @param dto - DTO (Data Transfer Object) to add a new task. | DTO (Data Transfer Object) para adicionar uma nova tarefa.
      * @return - ResponseTaskDTO with the new task. | ResponseTaskDTO com a nova tarefa.
      */
-    public ResponseTaskDTO addTask(RequestTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseTaskDTO addTask(RequestTaskDTO dto, ZoneId userZone) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         // validObjective(dto.idObjective(), dto.idUser());
         // TODO: Corrigir erro valida objetivo
-        return new ResponseTaskDTO(repository.saveInDataBase(new Task(dto)));
+        Task task = new Task(dto);
+        TaskTimestampHelper.applyOnCreate(task);
+        return new ResponseTaskDTO(repository.saveInDataBase(task), userZone);
     }
 
     /**
@@ -81,7 +85,7 @@ public class SimpleTaskService {
      * @param dto - DTO (Data Transfer Object) to update the task. | DTO (Data Transfer Object) para atualizar a tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.
      */
-    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
+    public ResponseTaskDTO updateTask(UUID idUser, UUID idTask, RequestUpdateTaskDTO dto, ZoneId userZone) throws DataBaseException, NotFoundException, ExecutionException, InterruptedException, TimeoutException {
         Task task = repository.findById(idUser, idTask);
         task.setNameTask(dto.nameTask());
         task.setDescriptionTask(dto.descriptionTask());
@@ -104,7 +108,7 @@ public class SimpleTaskService {
             }
         }
 
-        return new ResponseTaskDTO(savedTask);
+        return new ResponseTaskDTO(savedTask, userZone);
     }
 
     /**
@@ -114,10 +118,11 @@ public class SimpleTaskService {
      * @param status - Status of the task. | Status da tarefa.
      * @return - ResponseTaskDTO with the updated task. | ResponseTaskDTO com a tarefa atualizada.
      */
-    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String status) throws DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateTaskStatus(UUID idUser, UUID idTask, String status, ZoneId userZone) throws DataBaseException, NotFoundException {
         Task task = repository.findById(idUser, idTask);
         task.setStatus(status);
-        return new ResponseTaskDTO(repository.saveInDataBase(task));
+        TaskTimestampHelper.applyOnStatusChange(task, status);
+        return new ResponseTaskDTO(repository.saveInDataBase(task), userZone);
     }
 
     /**
@@ -142,10 +147,11 @@ public class SimpleTaskService {
     /**
      * @desciprion - Method to update the status of a task. | Metodo para atualizar o status de uma tarefa.
      */
-    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto) throws DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateTaskStatusCancelled(RequestCanceledDTO dto, ZoneId userZone) throws DataBaseException, NotFoundException {
         Task task = repository.findById(dto.idUser(), dto.idTask());
         task.setStatus(Status.CANCELLED);
         task.setCancellationReason(dto.cancellationReason());
-        return new ResponseTaskDTO(repository.saveInDataBase(task));
+        TaskTimestampHelper.applyOnStatusChange(task, Status.CANCELLED);
+        return new ResponseTaskDTO(repository.saveInDataBase(task), userZone);
     }
 }

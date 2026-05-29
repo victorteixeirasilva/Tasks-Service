@@ -9,9 +9,11 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.TaskTimestampHelper;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 
 import java.sql.Date;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class SubtaskService {
      *               hasSubtasks=true on the parent. | Cria uma nova subtarefa, herdando o objetivo da
      *               tarefa pai e definindo hasSubtasks=true na tarefa pai.
      */
-    public ResponseSubtaskDTO createSubtask(RequestSubtaskDTO dto)
+    public ResponseSubtaskDTO createSubtask(RequestSubtaskDTO dto, ZoneId userZone)
             throws DataBaseException, NotFoundException {
 
         if (dto.idParentTask() == null) {
@@ -47,6 +49,7 @@ public class SubtaskService {
         subtask.setHasSubtasks(false);
         subtask.setIsCopy(false);
         subtask.setBlockedByObjective(false);
+        TaskTimestampHelper.applyOnCreate(subtask);
 
         Task savedSubtask = repository.saveInDataBase(subtask);
 
@@ -55,7 +58,7 @@ public class SubtaskService {
             repository.saveInDataBase(parentTask);
         }
 
-        return new ResponseSubtaskDTO(savedSubtask);
+        return new ResponseSubtaskDTO(savedSubtask, userZone);
     }
 
     /**
@@ -75,14 +78,14 @@ public class SubtaskService {
      *               | Promove uma subtarefa para tarefa pai limpando o idParentTask.
      *               Atualiza o hasSubtasks da tarefa pai anterior se necessário.
      */
-    public ResponseSubtaskDTO promoteToParent(UUID idUser, UUID idTask)
+    public ResponseSubtaskDTO promoteToParent(UUID idUser, UUID idTask, ZoneId userZone)
             throws DataBaseException, NotFoundException {
 
         Task task = repository.findById(idUser, idTask);
 
         UUID previousParentId = task.getIdParentTask();
         if (previousParentId == null) {
-            return new ResponseSubtaskDTO(task);
+            return new ResponseSubtaskDTO(task, userZone);
         }
 
         task.setIdParentTask(null);
@@ -90,7 +93,7 @@ public class SubtaskService {
 
         updateParentHasSubtasks(idUser, previousParentId);
 
-        return new ResponseSubtaskDTO(savedTask);
+        return new ResponseSubtaskDTO(savedTask, userZone);
     }
 
     /**

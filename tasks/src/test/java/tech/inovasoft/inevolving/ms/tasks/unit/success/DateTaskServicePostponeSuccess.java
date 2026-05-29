@@ -97,22 +97,7 @@ class DateTaskServicePostponeSuccess {
         Date refSql = Date.valueOf(ref);
         Date nextSql = Date.valueOf(ref.plusDays(1));
 
-        Task task = new Task(
-                UUID.randomUUID(),
-                "n",
-                "d",
-                Status.IN_PROGRESS,
-                refSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(UUID.randomUUID(), "n", "d", Status.IN_PROGRESS, refSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO))
                 .thenReturn(Collections.emptyList());
@@ -166,22 +151,7 @@ class DateTaskServicePostponeSuccess {
         Date refSql = Date.valueOf(ref);
 
         Task todo = minimalTodo(UUID.randomUUID(), idUser, refSql);
-        Task prog = new Task(
-                UUID.randomUUID(),
-                "p",
-                "d",
-                Status.IN_PROGRESS,
-                refSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task prog = new Task(UUID.randomUUID(), "p", "d", Status.IN_PROGRESS, refSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.TODO)).thenReturn(List.of(todo));
         when(taskRepository.findAllByStatusAndDate(idUser, refSql, Status.IN_PROGRESS)).thenReturn(List.of(prog));
@@ -199,21 +169,6 @@ class DateTaskServicePostponeSuccess {
     }
 
     private static Task minimalTodo(UUID id, UUID idUser, Date dateSql) {
-        return new Task(
-                id,
-                "t",
-                "d",
-                Status.TODO,
-                dateSql,
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        return new Task(id, "t", "d", Status.TODO, dateSql, null, idUser, null, null, false, false, false, null, null, null, null, null, null);
     }
 }

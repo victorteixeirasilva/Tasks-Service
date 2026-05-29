@@ -149,22 +149,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, Date.valueOf(currentDate), null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -192,22 +177,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    idObjective,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, Date.valueOf(currentDate), idObjective, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -232,22 +202,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    idObjective,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, Date.valueOf(currentDate), idObjective, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -271,22 +226,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -310,22 +250,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.LATE,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.LATE, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -351,22 +276,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, Date.valueOf(currentDate), null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -391,22 +301,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.TODO, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -432,22 +327,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.IN_PROGRESS,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.IN_PROGRESS, Date.valueOf(currentDate), null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -472,22 +352,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.IN_PROGRESS,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.IN_PROGRESS, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -513,22 +378,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.DONE,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.DONE, Date.valueOf(currentDate), null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -553,22 +403,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.DONE,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.DONE, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)
@@ -594,22 +429,7 @@ public class TaskServiceFaliure {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.CANCELLED,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.CANCELLED, Date.valueOf(currentDate), null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -634,22 +454,7 @@ public class TaskServiceFaliure {
 
         List<Task> tasks = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "SubTask " + i,
-                    "Description " + i,
-                    Status.CANCELLED,
-                    date,
-                    null,
-                    idUser,
-                    UUID.randomUUID(),
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "SubTask " + i, "Description " + i, Status.CANCELLED, date, null, idUser, UUID.randomUUID(), null, false, false, false, null, null, null, null, null, null));
         }
 
         // When (Quando)

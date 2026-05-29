@@ -7,6 +7,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.TaskTimestampHelper;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.JpaRepositoryInterface;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 
@@ -75,7 +76,7 @@ public class TaskRepositoryImplementation implements TaskRepository {
         if (taskOptional.isEmpty()) {
             Task newTask = findById(task.getIdUser(), task.getId());
             try {
-                repository.save(new Task(
+                Task copy = new Task(
                         new RequestTaskDTO(
                                 newTask.getNameTask(),
                                 newTask.getDescriptionTask(),
@@ -84,7 +85,9 @@ public class TaskRepositoryImplementation implements TaskRepository {
                                 newTask.getIdUser()
                         ),
                         newTask.getId()
-                ));
+                );
+                TaskTimestampHelper.applyOnCreate(copy);
+                repository.save(copy);
                 return true;
             } catch (Exception e) {
                 throw new DataBaseException("(save)");

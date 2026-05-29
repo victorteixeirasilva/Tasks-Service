@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseMessageDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO;
+import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.TaskViewDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
+import tech.inovasoft.inevolving.ms.tasks.domain.exception.InvalidTimezoneException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
-import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.UserTimezoneResolver;
 import tech.inovasoft.inevolving.ms.tasks.service.SubtaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -40,8 +43,9 @@ public class SubtaskController {
     @PostMapping("/{token}")
     public CompletableFuture<ResponseEntity<ResponseSubtaskDTO>> createSubtask(
             @RequestBody RequestSubtaskDTO dto,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -59,8 +63,9 @@ public class SubtaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                subtaskService.createSubtask(dto)
+                subtaskService.createSubtask(dto, userZone)
         ));
     }
 
@@ -70,11 +75,12 @@ public class SubtaskController {
     )
     @Async("asyncExecutor")
     @GetMapping("/{idUser}/{idParentTask}/{token}")
-    public CompletableFuture<ResponseEntity<List<Task>>> getSubtasks(
+    public CompletableFuture<ResponseEntity<List<TaskViewDTO>>> getSubtasks(
             @PathVariable UUID idUser,
             @PathVariable UUID idParentTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -92,8 +98,9 @@ public class SubtaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                subtaskService.getSubtasks(idUser, idParentTask)
+                TaskViewDTO.fromList(subtaskService.getSubtasks(idUser, idParentTask), userZone)
         ));
     }
 
@@ -106,8 +113,9 @@ public class SubtaskController {
     public CompletableFuture<ResponseEntity<ResponseSubtaskDTO>> promoteToParent(
             @PathVariable UUID idUser,
             @PathVariable UUID idTask,
+            @RequestHeader(value = UserTimezoneResolver.HEADER_NAME, defaultValue = UserTimezoneResolver.DEFAULT_TIMEZONE) String userTimezone,
             @PathVariable String token
-    ) throws DataBaseException, NotFoundException {
+    ) throws DataBaseException, NotFoundException, InvalidTimezoneException {
         TokenValidateResponse tokenValidateResponse = null;
 
         try {
@@ -125,8 +133,9 @@ public class SubtaskController {
             }
         }
 
+        ZoneId userZone = UserTimezoneResolver.resolve(userTimezone);
         return CompletableFuture.completedFuture(ResponseEntity.ok(
-                subtaskService.promoteToParent(idUser, idTask)
+                subtaskService.promoteToParent(idUser, idTask, userZone)
         ));
     }
 

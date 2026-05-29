@@ -79,22 +79,7 @@ class ResponsibleUserTaskServiceFaliure {
         RequestUpdateResponsibleUserDTO dto =
                 new RequestUpdateResponsibleUserDTO(idTask, idUser, idResponsibleUser);
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(task);
         when(taskRepository.saveInDataBase(any(Task.class)))

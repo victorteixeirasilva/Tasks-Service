@@ -12,12 +12,14 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseSubtaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.service.SubtaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.TokenService;
 import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.TokenValidateResponse;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,7 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
     private static final String VALID_TOKEN = "valid-token";
     private static final String INVALID_TOKEN = "invalid-token";
     private static final String NULL_TOKEN = "null-token";
+    private static final ZoneId USER_ZONE = ZoneId.of("America/Sao_Paulo");
 
     @Mock
     private SubtaskService subtaskService;
@@ -56,9 +59,7 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
                 idUser
         );
 
-        when(tokenService.validateToken(VALID_TOKEN))
-                .thenReturn(new TokenValidateResponse("consumer", "tasks"));
-        when(subtaskService.createSubtask(any())).thenReturn(new ResponseSubtaskDTO(
+        Task subtask = new Task(
                 idSubtask,
                 "Subtarefa",
                 "Desc",
@@ -67,12 +68,25 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
                 idObjective,
                 idUser,
                 idParentTask,
+                null,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                null,
+                null,
                 null
-        ));
+        );
+
+        when(tokenService.validateToken(VALID_TOKEN))
+                .thenReturn(new TokenValidateResponse("consumer", "tasks"));
+        when(subtaskService.createSubtask(any(), any())).thenReturn(new ResponseSubtaskDTO(subtask, USER_ZONE));
 
         // When
         ResponseEntity<ResponseSubtaskDTO> response =
-                subtaskController.createSubtask(requestDto, VALID_TOKEN).get();
+                subtaskController.createSubtask(requestDto, null, VALID_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -85,6 +99,10 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
         assertEquals(idUser, response.getBody().idUser());
         assertEquals(idParentTask, response.getBody().idParentTask());
         assertNull(response.getBody().cancellationReason());
+        assertNull(response.getBody().createdAt());
+        assertNull(response.getBody().inProgressAt());
+        assertNull(response.getBody().completedAt());
+        assertNull(response.getBody().cancelledAt());
     }
 
     @Test
@@ -101,7 +119,7 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
 
         // When
         ResponseEntity<ResponseSubtaskDTO> response =
-                subtaskController.createSubtask(requestDto, NULL_TOKEN).get();
+                subtaskController.createSubtask(requestDto, null, NULL_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -123,7 +141,7 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
 
         // When
         ResponseEntity<ResponseSubtaskDTO> response =
-                subtaskController.createSubtask(requestDto, INVALID_TOKEN).get();
+                subtaskController.createSubtask(requestDto, null, INVALID_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -142,13 +160,13 @@ public class SubtaskControllerDefaultResponsibleUserSuccess {
         );
         when(tokenService.validateToken(VALID_TOKEN))
                 .thenReturn(new TokenValidateResponse("consumer", "tasks"));
-        when(subtaskService.createSubtask(any()))
+        when(subtaskService.createSubtask(any(), any()))
                 .thenThrow(new NotFoundException("Parent task not found"));
 
         // When / Then
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> subtaskController.createSubtask(requestDto, VALID_TOKEN).get()
+                () -> subtaskController.createSubtask(requestDto, null, VALID_TOKEN).get()
         );
         assertEquals("Parent task not found", exception.getMessage());
     }

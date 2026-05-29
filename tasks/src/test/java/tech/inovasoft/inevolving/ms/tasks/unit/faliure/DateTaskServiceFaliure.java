@@ -15,6 +15,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.DateTaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,7 +39,7 @@ class DateTaskServiceFaliure {
 
         when(taskRepository.findById(idTask, idUser)).thenThrow(new NotFoundException("(findById) Task not found"));
 
-        assertThrows(NotFoundException.class, () -> dateTaskService.updateDateTask(dto));
+        assertThrows(NotFoundException.class, () -> dateTaskService.updateDateTask(dto, ZoneId.of("America/Sao_Paulo")));
 
         verify(taskRepository, times(1)).findById(idTask, idUser);
         verify(taskRepository, never()).saveInDataBase(any());
@@ -53,7 +54,7 @@ class DateTaskServiceFaliure {
 
         when(taskRepository.findById(idTask, idUser)).thenThrow(new DataBaseException("(findById)", null));
 
-        assertThrows(DataBaseException.class, () -> dateTaskService.updateDateTask(dto));
+        assertThrows(DataBaseException.class, () -> dateTaskService.updateDateTask(dto, ZoneId.of("America/Sao_Paulo")));
 
         verify(taskRepository, times(1)).findById(idTask, idUser);
         verify(taskRepository, never()).saveInDataBase(any());
@@ -65,27 +66,12 @@ class DateTaskServiceFaliure {
         UUID idUser = UUID.randomUUID();
         RequestUpdateDateTaskDTO dto = new RequestUpdateDateTaskDTO(LocalDate.of(2026, 4, 15), idTask, idUser);
 
-        Task task = new Task(
-                idTask,
-                "Name",
-                "Desc",
-                Status.TODO,
-                Date.valueOf("2025-01-01"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(idTask, "Name", "Desc", Status.TODO, Date.valueOf("2025-01-01"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findById(idTask, idUser)).thenReturn(task);
         when(taskRepository.saveInDataBase(any(Task.class))).thenThrow(new DataBaseException("(save)", null));
 
-        assertThrows(DataBaseException.class, () -> dateTaskService.updateDateTask(dto));
+        assertThrows(DataBaseException.class, () -> dateTaskService.updateDateTask(dto, ZoneId.of("America/Sao_Paulo")));
 
         verify(taskRepository, times(1)).findById(idTask, idUser);
         verify(taskRepository, times(1)).saveInDataBase(any(Task.class));

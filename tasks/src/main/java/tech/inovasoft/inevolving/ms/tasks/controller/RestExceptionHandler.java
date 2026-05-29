@@ -84,5 +84,17 @@ public class RestExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(InvalidTimezoneException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTimezoneException(InvalidTimezoneException exception) {
+        log.error("ERROR: {} - {}", exception.getClass().getSimpleName(), exception.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(
+                        exception.getClass().getSimpleName(),
+                        exception.getMessage()
+                ));
+    }
+
 
 }

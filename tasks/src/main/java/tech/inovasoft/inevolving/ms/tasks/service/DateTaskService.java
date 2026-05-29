@@ -11,10 +11,12 @@ import tech.inovasoft.inevolving.ms.tasks.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
+import tech.inovasoft.inevolving.ms.tasks.domain.util.TaskTimestampHelper;
 import tech.inovasoft.inevolving.ms.tasks.repository.interfaces.TaskRepository;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -26,12 +28,12 @@ public class DateTaskService {
     @Autowired
     private TaskRepository repository;
 
-    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto) throws DataBaseException, NotFoundException {
+    public ResponseTaskDTO updateDateTask(RequestUpdateDateTaskDTO dto, ZoneId userZone) throws DataBaseException, NotFoundException {
         Task task = repository.findById(dto.idTask(), dto.idUser());
 
         task.setDateTask(Date.valueOf(dto.dateTask()));
 
-        return new ResponseTaskDTO(repository.saveInDataBase(task));
+        return new ResponseTaskDTO(repository.saveInDataBase(task), userZone);
     }
 
     /**

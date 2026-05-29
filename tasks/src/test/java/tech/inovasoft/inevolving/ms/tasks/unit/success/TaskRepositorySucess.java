@@ -40,22 +40,7 @@ public class TaskRepositorySucess {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(task));
@@ -141,6 +126,7 @@ public class TaskRepositorySucess {
         ArgumentCaptor<Task> captor = ArgumentCaptor.forClass(Task.class);
         verify(repository, times(1)).save(captor.capture());
         assertEquals(existingTask.getIdUser(), captor.getValue().getIdResponsibleUser());
+        assertNotNull(captor.getValue().getCreatedAt());
     }
 
     @Test
@@ -165,22 +151,7 @@ public class TaskRepositorySucess {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenReturn(List.of(task));
@@ -200,22 +171,7 @@ public class TaskRepositorySucess {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class))).thenReturn(List.of(task));
@@ -237,22 +193,7 @@ public class TaskRepositorySucess {
         List<Task> expectedTasks = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             expectedTasks.add(
-                    new Task(
-                            UUID.randomUUID(),
-                            "Name Task",
-                            "Description Task",
-                            Status.TODO,
-                            Date.valueOf("2025-05-12"),
-                            null,
-                            idObjective,
-                            null,
-                            null,
-                            false,
-                            false,
-                            false,
-                            null,
-                            null
-                    )
+                    new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idObjective, null, null, false, false, false, null, null, null, null, null, null)
             );
         }
 
@@ -275,22 +216,7 @@ public class TaskRepositorySucess {
         List<Task> expectedTasks = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             expectedTasks.add(
-                    new Task(
-                            UUID.randomUUID(),
-                            "Name Task",
-                            "Description Task",
-                            Status.TODO,
-                            Date.valueOf("2025-05-12"),
-                            UUID.randomUUID(),
-                            idUser,
-                            null,
-                            null,
-                            false,
-                            false,
-                            false,
-                            null,
-                            null
-                    )
+                    new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), UUID.randomUUID(), idUser, null, null, false, false, false, null, null, null, null, null, null)
             );
         }
 
@@ -311,22 +237,7 @@ public class TaskRepositorySucess {
         Date date = Date.valueOf("2025-05-12");
         List<Task> expectedTasks = new ArrayList<>();
         expectedTasks.add(
-                new Task(
-                        UUID.randomUUID(),
-                        "Name Task",
-                        "Description Task",
-                        Status.TODO,
-                        Date.valueOf("2025-05-12"),
-                        UUID.randomUUID(),
-                        idUser,
-                        null,
-                        null,
-                        false,
-                        false,
-                        false,
-                        null,
-                        null
-                )
+                new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), UUID.randomUUID(), idUser, null, null, false, false, false, null, null, null, null, null, null)
         );
 
         // When (Quando)
@@ -349,22 +260,7 @@ public class TaskRepositorySucess {
         var idUser = UUID.randomUUID();
         List<Task> expectedTasks = new ArrayList<>();
         expectedTasks.add(
-                new Task(
-                        UUID.randomUUID(),
-                        "Name Task",
-                        "Description Task",
-                        Status.TODO,
-                        Date.valueOf("2025-05-12"),
-                        UUID.randomUUID(),
-                        idUser,
-                        null,
-                        null,
-                        false,
-                        false,
-                        false,
-                        null,
-                        null
-                )
+                new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), UUID.randomUUID(), idUser, null, null, false, false, false, null, null, null, null, null, null)
         );
 
         // When (Quando)
@@ -389,22 +285,7 @@ public class TaskRepositorySucess {
         List<Task> tasks = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2025, 5, 1);
         for (int i = 1; i <= 31; i++) {
-            tasks.add(new Task(
-                    UUID.randomUUID(),
-                    "Task " + i,
-                    "Description " + i,
-                    Status.TODO,
-                    Date.valueOf(currentDate),
-                    null,
-                    idUser,
-                    null,
-                    null,
-                    false,
-                    false,
-                    false,
-                    null,
-                    null
-            ));
+            tasks.add(new Task(UUID.randomUUID(), "Task " + i, "Description " + i, Status.TODO, Date.valueOf(currentDate), null, idUser, null, null, false, false, false, null, null, null, null, null, null));
             currentDate = currentDate.plusDays(1);
         }
 
@@ -431,22 +312,7 @@ public class TaskRepositorySucess {
         List<Task> expectedTasks = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             expectedTasks.add(
-                    new Task(
-                            UUID.randomUUID(),
-                            "Name Task",
-                            "Description Task",
-                            Status.TODO,
-                            Date.valueOf("2025-05-12"),
-                            UUID.randomUUID(),
-                            idUser,
-                            null,
-                            idObjective,
-                            false,
-                            false,
-                            false,
-                            null,
-                            null
-                    )
+                    new Task(UUID.randomUUID(), "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), UUID.randomUUID(), idUser, null, idObjective, false, false, false, null, null, null, null, null, null)
             );
         }
 

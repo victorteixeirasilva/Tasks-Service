@@ -16,6 +16,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.SubtaskService;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +48,7 @@ public class SubtaskServiceFailure {
         );
 
         // When / Then
-        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto));
+        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto, ZoneId.of("America/Sao_Paulo")));
         verifyNoInteractions(taskRepository);
     }
 
@@ -65,7 +66,7 @@ public class SubtaskServiceFailure {
         );
 
         // When / Then
-        NotFoundException ex = assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto));
+        NotFoundException ex = assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto, ZoneId.of("America/Sao_Paulo")));
         assertNotNull(ex.getMessage());
         assertTrue(ex.getMessage().contains("idParentTask"));
     }
@@ -84,7 +85,7 @@ public class SubtaskServiceFailure {
         );
 
         // When / Then
-        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto));
+        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto, ZoneId.of("America/Sao_Paulo")));
         verify(taskRepository, never()).saveInDataBase(any(Task.class));
     }
 
@@ -111,7 +112,7 @@ public class SubtaskServiceFailure {
                 .thenThrow(new NotFoundException("(findById) Task not found"));
 
         // When / Then
-        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto));
+        assertThrows(NotFoundException.class, () -> subtaskService.createSubtask(dto, ZoneId.of("America/Sao_Paulo")));
         verify(taskRepository, never()).saveInDataBase(any(Task.class));
     }
 
@@ -148,7 +149,7 @@ public class SubtaskServiceFailure {
                 .thenThrow(new NotFoundException("(findById) Task not found"));
 
         // When / Then
-        assertThrows(NotFoundException.class, () -> subtaskService.promoteToParent(idUser, idTask));
+        assertThrows(NotFoundException.class, () -> subtaskService.promoteToParent(idUser, idTask, ZoneId.of("America/Sao_Paulo")));
 
         verify(taskRepository, never()).saveInDataBase(any(Task.class));
     }
@@ -207,27 +208,17 @@ public class SubtaskServiceFailure {
         var idParentTask = UUID.randomUUID();
         var idObjective = UUID.randomUUID();
 
-        var parentTask = new Task(
-                idParentTask, "Parent", "Desc",
-                Status.TODO, Date.valueOf("2025-05-12"),
-                idObjective, idUser,
-                null, null, false, false, false, null, null
-        );
+        var parentTask = new Task(idParentTask, "Parent", "Desc", Status.TODO, Date.valueOf("2025-05-12"), idObjective, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         var dto = new RequestSubtaskDTO("Sub", "Desc", LocalDate.of(2025, 5, 12), idParentTask, idUser);
 
-        var savedSubtask = new Task(
-                UUID.randomUUID(), "Sub", "Desc",
-                Status.TODO, Date.valueOf("2025-05-12"),
-                idObjective, idUser,
-                idParentTask, null, false, false, false, null, null
-        );
+        var savedSubtask = new Task(UUID.randomUUID(), "Sub", "Desc", Status.TODO, Date.valueOf("2025-05-12"), idObjective, idUser, idParentTask, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findById(idUser, idParentTask)).thenReturn(parentTask);
         when(taskRepository.saveInDataBase(any(Task.class))).thenReturn(savedSubtask);
 
         // When
-        ResponseSubtaskDTO result = subtaskService.createSubtask(dto);
+        ResponseSubtaskDTO result = subtaskService.createSubtask(dto, ZoneId.of("America/Sao_Paulo"));
 
         // Then - subtask always has idParentTask set
         assertNotNull(result.idParentTask());

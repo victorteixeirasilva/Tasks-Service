@@ -7,6 +7,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.service.client.ObjectivesServiceClient;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -34,6 +35,10 @@ public class Task {
     private Boolean isCopy;
     private String cancellationReason;
     private UUID idResponsibleUser;
+    private Instant createdAt;
+    private Instant inProgressAt;
+    private Instant completedAt;
+    private Instant cancelledAt;
 
     public Task(RequestTaskDTO dto) {
         this.nameTask = dto.nameTask();

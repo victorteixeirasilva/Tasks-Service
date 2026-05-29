@@ -37,22 +37,7 @@ public class TaskRepositoryFaliure {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenThrow(new RuntimeException());
@@ -73,22 +58,7 @@ public class TaskRepositoryFaliure {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
@@ -179,22 +149,7 @@ public class TaskRepositoryFaliure {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class), any(Date.class))).thenThrow(new RuntimeException());
@@ -215,22 +170,7 @@ public class TaskRepositoryFaliure {
         UUID idUser = UUID.randomUUID();
         UUID idTask = UUID.randomUUID();
 
-        var task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        var task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         // When (Quando)
         when(repository.findAllByIdOriginalTaskAndIsCopy(any(UUID.class))).thenThrow(new RuntimeException());

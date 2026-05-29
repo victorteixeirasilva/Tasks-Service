@@ -41,22 +41,7 @@ class ResponsibleUserTaskServiceSuccess {
         UUID idUser = UUID.randomUUID();
         UUID idResponsibleUser = UUID.randomUUID();
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         RequestUpdateResponsibleUserDTO dto =
                 new RequestUpdateResponsibleUserDTO(idTask, idUser, idResponsibleUser);
@@ -87,22 +72,7 @@ class ResponsibleUserTaskServiceSuccess {
         UUID idUser = UUID.randomUUID();
         UUID existingResponsibleUser = UUID.randomUUID();
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                existingResponsibleUser
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, existingResponsibleUser, null, null, null, null);
 
         RequestUpdateResponsibleUserDTO dto =
                 new RequestUpdateResponsibleUserDTO(idTask, idUser, null);
@@ -132,22 +102,7 @@ class ResponsibleUserTaskServiceSuccess {
         UUID idUser = UUID.randomUUID();
         UUID idResponsibleUser = UUID.randomUUID();
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                idResponsibleUser
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, idResponsibleUser, null, null, null, null);
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(task);
 
@@ -171,22 +126,7 @@ class ResponsibleUserTaskServiceSuccess {
         UUID idTask = UUID.randomUUID();
         UUID idUser = UUID.randomUUID();
 
-        Task task = new Task(
-                idTask,
-                "Name Task",
-                "Description Task",
-                Status.TODO,
-                Date.valueOf("2025-05-12"),
-                null,
-                idUser,
-                null,
-                null,
-                false,
-                false,
-                false,
-                null,
-                null
-        );
+        Task task = new Task(idTask, "Name Task", "Description Task", Status.TODO, Date.valueOf("2025-05-12"), null, idUser, null, null, false, false, false, null, null, null, null, null, null);
 
         when(taskRepository.findById(idUser, idTask)).thenReturn(task);
 

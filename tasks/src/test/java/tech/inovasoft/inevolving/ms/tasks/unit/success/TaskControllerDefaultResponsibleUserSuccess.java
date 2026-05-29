@@ -12,6 +12,7 @@ import tech.inovasoft.inevolving.ms.tasks.domain.dto.request.RequestTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.dto.response.ResponseTaskDTO;
 import tech.inovasoft.inevolving.ms.tasks.domain.exception.NotFoundException;
 import tech.inovasoft.inevolving.ms.tasks.domain.model.Status;
+import tech.inovasoft.inevolving.ms.tasks.domain.model.Task;
 import tech.inovasoft.inevolving.ms.tasks.service.RecurringTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.SimpleTaskService;
 import tech.inovasoft.inevolving.ms.tasks.service.TaskService;
@@ -20,6 +21,7 @@ import tech.inovasoft.inevolving.ms.tasks.service.client.Auth_For_MService.dto.T
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +34,7 @@ public class TaskControllerDefaultResponsibleUserSuccess {
     private static final String VALID_TOKEN = "valid-token";
     private static final String INVALID_TOKEN = "invalid-token";
     private static final String NULL_TOKEN = "null-token";
+    private static final ZoneId USER_ZONE = ZoneId.of("America/Sao_Paulo");
 
     @Mock
     private SimpleTaskService simpleTaskService;
@@ -63,9 +66,7 @@ public class TaskControllerDefaultResponsibleUserSuccess {
                 idUser
         );
 
-        when(tokenService.validateToken(VALID_TOKEN))
-                .thenReturn(new TokenValidateResponse("consumer", "tasks"));
-        when(simpleTaskService.addTask(any())).thenReturn(new ResponseTaskDTO(
+        Task task = new Task(
                 idTask,
                 "Tarefa",
                 "Desc",
@@ -73,12 +74,26 @@ public class TaskControllerDefaultResponsibleUserSuccess {
                 Date.valueOf("2025-05-16"),
                 idObjective,
                 idUser,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                null,
+                null,
                 null
-        ));
+        );
+
+        when(tokenService.validateToken(VALID_TOKEN))
+                .thenReturn(new TokenValidateResponse("consumer", "tasks"));
+        when(simpleTaskService.addTask(any(), any())).thenReturn(new ResponseTaskDTO(task, USER_ZONE));
 
         // When
         ResponseEntity<ResponseTaskDTO> response =
-                taskController.addTask(requestDto, VALID_TOKEN).get();
+                taskController.addTask(requestDto, null, VALID_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -90,6 +105,10 @@ public class TaskControllerDefaultResponsibleUserSuccess {
         assertEquals(idObjective, response.getBody().idObjective());
         assertEquals(idUser, response.getBody().idUser());
         assertNull(response.getBody().cancellationReason());
+        assertNull(response.getBody().createdAt());
+        assertNull(response.getBody().inProgressAt());
+        assertNull(response.getBody().completedAt());
+        assertNull(response.getBody().cancelledAt());
     }
 
     @Test
@@ -106,7 +125,7 @@ public class TaskControllerDefaultResponsibleUserSuccess {
 
         // When
         ResponseEntity<ResponseTaskDTO> response =
-                taskController.addTask(requestDto, NULL_TOKEN).get();
+                taskController.addTask(requestDto, null, NULL_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -128,7 +147,7 @@ public class TaskControllerDefaultResponsibleUserSuccess {
 
         // When
         ResponseEntity<ResponseTaskDTO> response =
-                taskController.addTask(requestDto, INVALID_TOKEN).get();
+                taskController.addTask(requestDto, null, INVALID_TOKEN).get();
 
         // Then
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -147,13 +166,13 @@ public class TaskControllerDefaultResponsibleUserSuccess {
         );
         when(tokenService.validateToken(VALID_TOKEN))
                 .thenReturn(new TokenValidateResponse("consumer", "tasks"));
-        when(simpleTaskService.addTask(any()))
+        when(simpleTaskService.addTask(any(), any()))
                 .thenThrow(new NotFoundException("Task not found"));
 
         // When / Then
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                () -> taskController.addTask(requestDto, VALID_TOKEN).get()
+                () -> taskController.addTask(requestDto, null, VALID_TOKEN).get()
         );
         assertEquals("Task not found", exception.getMessage());
     }

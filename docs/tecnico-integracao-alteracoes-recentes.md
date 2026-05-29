@@ -12,7 +12,8 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 | Área | Mudança | Impacto no consumidor |
 |------|---------|------------------------|
-| Usuário responsável | Nova API `/ms/tasks/responsible`; criação preenche `idResponsibleUser = idUser` | Atribuir/consultar via `/responsible`; respostas legadas de criação ainda não expõem o campo |
+| Timestamps + fuso | Header `X-User-Timezone`; 4 campos datetime em mutações e GETs | Enviar fuso IANA; parsear `OffsetDateTime`; GET retorna `TaskViewDTO` |
+| Usuário responsável | Nova API `/ms/tasks/responsible`; criação preenche `idResponsibleUser = idUser` | Atribuir/consultar via `/responsible`; `TaskViewDTO` expõe `idResponsibleUser` nas listagens |
 | Subtarefas | Nova API `/ms/tasks/subtask` | Usar endpoints dedicados; não esperar subtarefas nas listagens antigas |
 | Listagens | Filtro `idParentTask == null` | Listas por data/status/objetivo retornam só tarefas pai |
 | Adiamento diário | Novo `POST .../postpone-day/{token}` | Integrar job/noturno ou ação do usuário para virar `LATE` e mover datas |
@@ -23,7 +24,7 @@ Documento para desenvolvedores que consomem este microsserviço (frontend, BFF, 
 
 ## 1. Usuário responsável por tarefa
 
-Feature **independente** do CRUD e das listagens em `/ms/tasks` quanto a contratos HTTP. A criação de tarefa, subtarefa e cópia recorrente **persiste** `idResponsibleUser = idUser`, mas **não retorna** esse campo em `ResponseTaskDTO` / `ResponseSubtaskDTO`.
+Feature **independente** do CRUD e das listagens em `/ms/tasks` quanto a contratos HTTP dedicados. A criação de tarefa, subtarefa e cópia recorrente **persiste** `idResponsibleUser = idUser`. Esse campo **não** aparece em `ResponseTaskDTO` / `ResponseSubtaskDTO`, mas **sim** em `TaskViewDTO` (GETs).
 
 ### Modelo
 
@@ -97,9 +98,13 @@ Processamento: `@Async` → `CompletableFuture<ResponseEntity<...>>`
 
 ### O que **não** muda para o consumidor
 
-- Respostas de criar/atualizar tarefa (`POST`/`PUT` em `/ms/tasks`) e criar subtarefa **não expõem** `idResponsibleUser` no JSON (`ResponseTaskDTO` / `ResponseSubtaskDTO` inalterados).
-- Listagens por data, status e objetivo continuam iguais (sem campo responsável).
+- Respostas de criar/atualizar tarefa (`POST`/`PUT` em `/ms/tasks`) e criar subtarefa **não expõem** `idResponsibleUser` no JSON de mutação (`ResponseTaskDTO` / `ResponseSubtaskDTO`).
 - Atualizar tarefa (`PUT`) **não altera** o responsável já persistido.
+
+### O que **muda** nas respostas (desde 2026-05-29)
+
+- `ResponseTaskDTO` e `ResponseSubtaskDTO` incluem `createdAt`, `inProgressAt`, `completedAt`, `cancelledAt` (`OffsetDateTime` no fuso de `X-User-Timezone`).
+- Listagens GET retornam `TaskViewDTO` (inclui `idResponsibleUser` e os 4 timestamps).
 
 ### O que **muda** na persistência (desde 2026-05-29)
 
@@ -134,6 +139,8 @@ Prefixo: `/ms/tasks/subtask`
 
 #### `POST /{token}` — Criar subtarefa
 
+**Header:** `X-User-Timezone` (recomendado)
+
 **Body (`RequestSubtaskDTO`):**
 
 ```json
@@ -151,6 +158,7 @@ Prefixo: `/ms/tasks/subtask`
 | HTTP | Corpo | Condição |
 |------|-------|----------|
 | 200 | `ResponseSubtaskDTO` | Sucesso |
+| 400 | `ExceptionResponse` | Timezone inválido (`InvalidTimezoneException`) |
 | 401 | vazio | Token inválido ou ausente |
 | 404 | `ExceptionResponse` | Pai não encontrado ou `idParentTask` ausente no body |
 | 500 | `ExceptionResponse` | Erro de persistência |
@@ -167,27 +175,37 @@ Prefixo: `/ms/tasks/subtask`
   "idObjective": "uuid",
   "idUser": "uuid",
   "idParentTask": "uuid",
-  "cancellationReason": null
+  "cancellationReason": null,
+  "createdAt": "2026-05-29T10:15:00-03:00",
+  "inProgressAt": null,
+  "completedAt": null,
+  "cancelledAt": null
 }
 ```
 
 #### `GET /{idUser}/{idParentTask}/{token}` — Listar subtarefas
 
+**Header:** `X-User-Timezone` (recomendado)
+
 **Respostas:**
 
 | HTTP | Corpo | Condição |
 |------|-------|----------|
-| 200 | `Task[]` (entidade JPA) | Lista (pode ser vazia) |
+| 200 | `TaskViewDTO[]` | Lista (pode ser vazia) |
+| 400 | `ExceptionResponse` | Timezone inválido |
 | 401 | vazio | Token inválido |
 | 404 | `ExceptionResponse` | Tarefa pai inexistente |
 
 #### `PUT /promote/{idUser}/{idTask}/{token}` — Promover a tarefa pai
+
+**Header:** `X-User-Timezone` (recomendado)
 
 Remove `idParentTask` da subtarefa. Atualiza `hasSubtasks` da pai anterior se era a última filha.
 
 | HTTP | Corpo |
 |------|-------|
 | 200 | `ResponseSubtaskDTO` |
+| 400 | `ExceptionResponse` | Timezone inválido |
 | 401 | vazio |
 | 404 | `ExceptionResponse` |
 
@@ -207,6 +225,10 @@ Remove `idParentTask` da subtarefa. Atualiza `hasSubtasks` da pai anterior se er
 ---
 
 ## 3. Listagens legadas (somente tarefas pai)
+
+**Header:** `X-User-Timezone` (recomendado em todos os GETs abaixo)
+
+**Tipo de retorno:** `List<TaskViewDTO>` (antes: entidade JPA `Task` serializada diretamente).
 
 Os métodos abaixo em `TaskService` aplicam `.filter(task -> task.getIdParentTask() == null)`:
 
@@ -284,9 +306,9 @@ Para o usuário `idUser` e o dia `referenceDay`:
 | 401 | Token inválido |
 | 500 | `DataBaseException` |
 
-### Outro endpoint de data (inalterado neste pacote)
+### Outro endpoint de data
 
-- `PUT /ms/tasks/date/{token}` — atualiza data de **uma** tarefa via `RequestUpdateDateTaskDTO` (`idTask`, `idUser`, `dateTask`).
+- `PUT /ms/tasks/date/{token}` — atualiza data de **uma** tarefa via `RequestUpdateDateTaskDTO` (`idTask`, `idUser`, `dateTask`). Requer header `X-User-Timezone`. Resposta: `ResponseTaskDTO` com timestamps. **Não altera** os campos de ciclo de vida além da conversão para exibição.
 
 ---
 
@@ -302,6 +324,7 @@ Para o usuário `idUser` e o dia `referenceDay`:
 
 | Exceção | HTTP |
 |---------|------|
+| `InvalidTimezoneException` | 400 |
 | `NotFoundException` | 404 |
 | `NotFoundTasksInDateException` e similares | 404 |
 | `DataBaseException` | 500 |
@@ -352,12 +375,44 @@ Para o usuário `idUser` e o dia `referenceDay`:
 | inProgressDatesMoved | int |
 | totalTasksUpdated | int |
 
+### `ResponseTaskDTO` / `ResponseSubtaskDTO` (campos de timestamp)
+
+| Campo | Tipo |
+|-------|------|
+| createdAt | OffsetDateTime ou `null` |
+| inProgressAt | OffsetDateTime ou `null` |
+| completedAt | OffsetDateTime ou `null` |
+| cancelledAt | OffsetDateTime ou `null` |
+
+### `TaskViewDTO` (GETs)
+
+Campos da entidade `Task` expostos na API + os 4 timestamps acima + `idResponsibleUser`. Ver exemplo completo em [tecnico-timestamps-fuso-horario.md](./tecnico-timestamps-fuso-horario.md).
+
 ---
 
 ## 7. Swagger
 
 Contratos interativos: `http://localhost:8085/swagger-ui/index.html`  
 Tags: **Responsible User Task**, **Subtasks**, **Date Task**, **Tasks**.
+
+Endpoints de tarefa/subtarefa/data documentam o header `X-User-Timezone` via `@RequestHeader` no código.
+
+---
+
+## 8. Timestamps e fuso horário
+
+Resumo da feature de 2026-05-29. **Guia completo:** [tecnico-timestamps-fuso-horario.md](./tecnico-timestamps-fuso-horario.md)
+
+| Item | Detalhe |
+|------|---------|
+| Header | `X-User-Timezone` (IANA); fallback `America/Sao_Paulo` |
+| Persistência | UTC (`created_at`, `in_progress_at`, `completed_at`, `cancelled_at`) |
+| Resposta | `OffsetDateTime` ISO-8601 com offset do usuário |
+| Retransição | Última entrada em IN PROGRESS / DONE / CANCELLED sobrescreve o campo |
+| Excluídos | `postpone-day`, status `LATE`, `PUT` genérico de tarefa não gravam timestamps de status |
+| Erro | Timezone inválido → HTTP 400 |
+
+**Notas de segurança:** [seguranca-notas-timestamps-fuso-horario.md](./seguranca-notas-timestamps-fuso-horario.md)
 
 ---
 
@@ -372,3 +427,4 @@ Tags: **Responsible User Task**, **Subtasks**, **Date Task**, **Tasks**.
 | 2026-05-16 | `ee8ca4f` | Subtarefas excluídas do fluxo automático `TODO` → `LATE` no adiamento |
 | 2026-05-17 | — | API `/ms/tasks/responsible`, campo `idResponsibleUser` e testes unitários do serviço |
 | 2026-05-29 | — | `idResponsibleUser` preenchido automaticamente na criação (tarefa, subtarefa, cópia recorrente) |
+| 2026-05-29 | — | Timestamps de ciclo de vida (`createdAt`, etc.) + header `X-User-Timezone` + `TaskViewDTO` nos GETs |
